@@ -1,13 +1,13 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_excel('Book3.xlsx')
+df = pd.read_excel('ColumbusCircle_Zero.xlsx')
 
 X = df['X'] * 0.3048
 # X = X.tolist()
 # X = X * 0.3048
 
-Y = df['Y'] * 0.3048
+Y = df['y'] * 0.3048
 # Y = Y.tolist()
 # Y = Y * 0.3048
 
@@ -52,7 +52,7 @@ for i in range(1, max(ID) + 1):
 
 file.close()
 for i in range(max(ID)):
-	print ID.count(i)
+	print(ID.count(i))
 
 plt.scatter(X, Y, marker = 'h', linewidths = 0.01)
 plt.show()
