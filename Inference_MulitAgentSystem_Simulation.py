@@ -1,5 +1,8 @@
-#!python
-# !/14usr/Bin/env python
+# -*- coding:   utf-8 -*-
+# @author: Maziar Fooladi Mahani
+
+# This code calculates online filtering inference for Multi-Agent Systems
+
 # from scipy.io import loadmat
 # import pandas as pd
 import numpy as np
@@ -7,34 +10,19 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.stats import norm, logistic, rv_discrete
 
-
+# Performances (p1, p2) and Intervention (I) and Levels of Autonomy (L1, L2)
 np.random.seed(11)
-K = 400
-
-p1 = np.arange(0., 1., 1. / 400.)
-p2 = np.arange(0., 1., 1. / 400.)
-# p1 = np.concatenate((np.ones(30) * .6, np.ones(30) * .1, np.ones(40) * .1))
-# p2 = np.concatenate((np.ones(30) * .6, np.ones(30) * .9, np.ones(40) * .6))
-# p1 = np.random.random((K)) ** .1
-# p2 = np.random.random((K))
-
-print 'p1:', p1
-print 'p2:', p2
-# I = np.random.random_integers(0, 2, K)
-I = np.concatenate((np.zeros(K - 300), np.ones(50), np.ones(50) * 2., np.zeros(100), np.ones(50), np.ones(50) * 2.))
-L1 = np.zeros(400)
-L2 = np.ones(400) / 2.
-# I = np.zeros(K) * 2.
-# L1 = np.random.random_integers(0, 1, K) / 2.
-# L2 = np.random.random_integers(0, 1, K) / 2.
-print 'I:', I
-print 'L1:', L1
-print 'L2:', L2
+K = 100
+p1 = np.arange(0., 1., 1. / K)
+p2 = np.arange(0., 1., 1. / K)
+I = np.concatenate((np.zeros(K - 50), np.ones(10), np.ones(10) * 2., np.zeros(10), np.ones(10), np.ones(10) * 2.))
+L1 = np.zeros(K)
+L2 = np.ones(K) / 2.
 
 ### Prob(Tk|Tk-1, Pk, Pk-1) ####################################################
-wt = np.array([.2, .7, .3])
+wt = np.array([.2, .7, .3]) # trustWeights = Normal Distribution weights
 sigma_t = 0.15
-Bin = 50.
+Bin = 20.
 vec_t = np.arange(0., 1. + 1. / Bin, 1. / Bin)
 del_t = np.subtract.outer(vec_t, vec_t).T
 
@@ -43,6 +31,7 @@ def Prob_t(p0, p1):
 	return pt
 
 beta = np.array([-2., 4., 6., 3.])
+
 
 def Prob_t_logit(p0, p1):
 	beta_p = np.delete(beta, 1)
@@ -169,7 +158,6 @@ var_BelT2 = np.std(Bel_T2, axis = 1)
 
 
 sharp_bel = np.ones(len(vec_t)) / Bin
-# sharp_bel[10]  = 1.
 
 MDS1 = []
 for k in range(K):
@@ -189,14 +177,11 @@ for k in range(K):
 			MD += Bel_T2[k][i] * Bel_T2[k-1][j] * abs(np.float(i) / len(vec_t) - np.float(j) / len(vec_t))
 	MD = MD / Bin ** 2
 	MDS2.append(MD)
-# print MDS2
-print
 
 ### plot the data ############################################################
 X, Y = np.meshgrid(np.arange(0, K, 1), vec_t)
-Z1 = np.asarray(map(list, zip(*Bel_T1)))
-Z2 = np.asarray(map(list, zip(*Bel_T2)))
-
+Z1 = np.asarray(Bel_T1)
+Z2 = np.asarray(Bel_T2)
 max_bel = 0.
 min_bel = 0.
 for i in range(len(Z1)):
@@ -228,8 +213,8 @@ ax2 = Axes3D(fig2)
 ax2.view_init(elev = 90., azim = -90.)
 colors = plt.cm.jet(data2.flatten() / float(data2.max()))
 ax2.bar3d(xpos2, ypos2, zpos2, .8, .8, data2.flatten(), color = colors)
-ax2.set_xlabel('Time')
-ax2.set_ylabel('Trust')
+ax2.set_xlabel('Trust')
+ax2.set_ylabel('Time')
 
 fig3, (axp1, axp2, axvar1, axvar2) = plt.subplots(4, 1)
 axp1.plot(np.arange(K), p1)
