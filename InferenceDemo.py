@@ -36,12 +36,12 @@ per_frame = tk.Frame(master)
 per_frame.pack(side=tk.LEFT, padx = 30, )
 
 per_1 = tk.Scale(per_frame, from_ = 1, to = 0, resolution = 0.01, length = 350, width = 35, cursor = 'spider', takefocus = True, label = 'Per. 1', troughcolor = '#000000')
-per_1.set(.5)
+per_1.set(.2)
 per_1_pre = per_1.get()
 per_1.pack(pady = 50)
 
 per_2 = tk.Scale(per_frame, from_ = 1, to = 0, resolution = 0.01, length = 350, width = 35, cursor = 'spider', takefocus = True, label = 'Per. 2', troughcolor = '#000000')
-per_2.set(.5)
+per_2.set(.2)
 per_2_pre = per_2.get()
 per_2.pack(pady  = 50)
 
