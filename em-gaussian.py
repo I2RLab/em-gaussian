@@ -3,7 +3,7 @@ import pandas as pd
 import random as rand
 import matplotlib.pyplot as plt
 from scipy.stats import norm
-from sys import maxint
+# from sys import maxint
 
 ### Setup
 # set random seed
@@ -92,7 +92,7 @@ def distance(old_params, new_params):
   return dist ** 0.5
 
 # loop until parameters converge
-shift = maxint
+shift = 10**16
 epsilon = 0.01
 iters = 0
 df_copy = df.copy()
