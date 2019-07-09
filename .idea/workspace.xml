@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8db38a9f-2780-4c07-86ca-ead842fef6de" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Baum_Welch.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Baum_Welch_Factorial_IOHMM.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DAC_graphviz.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dirichlet_distribution.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBN_Learning.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBN_Learning.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classic.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/classic.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classic.png" beforeDir="false" afterPath="$PROJECT_DIR$/classic.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/em-gaussian.py" beforeDir="false" afterPath="$PROJECT_DIR$/em-gaussian.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pgm_rendering.py" beforeDir="false" afterPath="$PROJECT_DIR$/pgm_rendering.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Baum_Welch_Factorial_IOHMM.py" beforeDir="false" afterPath="$PROJECT_DIR$/Baum_Welch_Factorial_IOHMM.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Baum_Welch_Factorial_IOHMM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="191">
-              <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+            <state relative-caret-position="680">
+              <caret line="40" column="57" selection-start-line="40" selection-start-column="57" selection-end-line="40" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -267,8 +258,8 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32937366" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32829374" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3034557" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32829374" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3034557" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -305,23 +296,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Baum_Welch_Factorial_IOHMM.py</url>
-          <line>131</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Baum_Welch_Factorial_IOHMM.py</url>
           <line>20</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Baum_Welch_Factorial_IOHMM.py</url>
-          <line>53</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Baum_Welch_Factorial_IOHMM.py</url>
-          <line>60</line>
-          <option name="timeStamp" value="12" />
+          <line>16</line>
+          <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -329,37 +310,47 @@
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>a_ijk</expression-string>
+        <expression-string>O[3, 0, observations[3]]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>shape(a_ijk)</expression-string>
+        <expression-string>O[3, 0, observations[0]]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>Bel_T1[0]</expression-string>
+        <expression-string>O[2, 0, observations[0]]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>Bel_T1</expression-string>
+        <expression-string>O[1, 0, observations[0]]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>X</expression-string>
+        <expression-string>O[0, 0, observations[0]]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>x</expression-string>
+        <expression-string>O[0, 8, observations[0]]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>map(list, zip(*Bel_T1))</expression-string>
+        <expression-string>O[0, 7, observations[0]]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>O[0, 6, observations[0]]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>O[0, 5, observations[0]]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -683,8 +674,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Baum_Welch_Factorial_IOHMM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+        <state relative-caret-position="680">
+          <caret line="40" column="57" selection-start-line="40" selection-start-column="57" selection-end-line="40" selection-end-column="57" />
         </state>
       </provider>
     </entry>
