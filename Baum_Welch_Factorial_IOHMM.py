@@ -125,6 +125,7 @@ def transition_matrix(input_seq, weights):
     return aaa
 
 
+
 def emission_matrix(output_seq, weights):
     x = np.ones(4)
     emi = []
