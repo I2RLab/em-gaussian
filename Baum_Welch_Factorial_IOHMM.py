@@ -77,18 +77,17 @@ def baum_welch(training, pi, A, O, iterations):
         for s in range(S):
             A[s, :] = A1[s, :] / np.sum(A1[s, :])
             O[s, :] = O1[s, :] / np.sum(O1[s, :])
-        print('A=\n',A,'\n')
-        print('O=\n',O,'\n')
+        print('A=\n', A, '\n')
+        print('O=\n', O, '\n')
 
     return pi, A, O
 
 
 A = np.array([[0.575, 0.025, 0.05, 0.05, 0.05, 0.025, 0.05, 0.175], [0.05, 0.625, 0.025, 0.05, 0.05, 0.05, 0.1, 0.05], [0.05, 0.075, 0.65, 0.05, 0.05, 0.025, 0.05, 0.05], [0.05, 0.05, 0.05, 0.35, 0.15, 0.1, 0.15, 0.1], [0.05, 0.05, 0.1, 0.1, 0.15, 0.35, 0.1, 0.1], [0.1, 0.15, 0.15, 0.1, 0.2, 0.1, 0.1, 0.1], [0.15, 0.2, 0.125, 0.125, 0.05, 0.15, 0.1, 0.1], [0.05, 0.05, 0.15, 0.15, 0.15, 0.1, 0.2, 0.15]])
-print(A.sum(1))
 pi = np.array([0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125])
 O = np.array([[0.05, 0.05, 0.2, 0.2, 0.15, 0.1, 0.1, 0.15], [0.15, 0.05, 0.05, 0.1, 0.1, 0.15, 0.25, 0.15], [0.15, 0.15, 0.15, 0.1, 0.1, 0.1, 0.15, 0.1], [0.15, 0.1, 0.1, 0.15, 0.1, 0.1, 0.1, 0.2], [0.1, 0.05, 0.1, 0.1, 0.1, 0.1, 0.25, 0.2], [0.05, 0.05, 0.1, 0.1, 0.15, 0.15, 0.2, 0.2], [0.15, 0.15, 0.1, 0.1, 0.15, 0.15, 0.1, 0.1], [0.05, 0.05, 0.15, 0.1, 0.2, 0.1, 0.15, 0.2]])
 
-input_seq = [10,10,10,1,0,2,3,3,3,0,0,0,5,4,5,4,3,4,3,7,6,2,5,3,4,0,0,0]
+input_seq = [[10,10,10,1,0,2,3,3,3,0,0,0,5,4,5,4,3,4,3,7,6,2,5,3,4,0,0,0],[10,10,10,1,0,2,3,3,3,0,0,0,5,4,5,4,3,4,3,7,6,2,5,3,4,0,0,0],[10,10,10,1,0,2,3,3,3,0,0,0,5,4,5,4,3,4,3,7,6,2,5,3,4,0,0,0]]
 output_seq = [0,0,0,1,0,2,3,3,3,0,0,0,5,4,5,4,3,4,3,7,6,2,5,3,4,0,0,0]
 transition_weights = np.array([[0.5, -.4, -.4, -.4], [.001, 1., -.8, -.8], [.001, -.8, 1., -.8], [.001, -.8, -.8, 1.], [.001, .55, .55, -1.7], [.001, .55, -1.7, .55], [.001, -1.7, .55, .55]])
 emission_weigths = np.array([[0.5, -.4, -.4, -.4], [.001, 1., -.8, -.8], [.001, -.8, 1., -.8], [.001, -.8, -.8, 1.], [.001, .55, .55, -1.7], [.001, .55, -1.7, .55], [.001, -1.7, .55, .55]])
@@ -98,32 +97,32 @@ def transition_matrix(input_seq, weights):
     x = np.ones(4)
     aaa = []
 
-    for t in range(len(input_seq)):
-        x[2] = input_seq[t]
-        if t == 0:
-            x[3] = 10
-        else:
-            x[3] = input_seq[t-1]
-        aa = []
-        for i in range(8):
-            a = []
-            den = 1
-            for j in range(8):
-                x[1] = j+1
-                for k in range(7):
-                    den += np.exp(np.dot(weights[k], x))
+    for t, input_agent in enumerate(input_seq):
+        for input_i, input_value in enumerate(input_agent):
+            x[2] = input_value
+            if t == 0:
+                x[3] = input_value
+            else:
+                x[3] = input_seq[t-1]
+            aa = []
+            for i in range(8):
+                a = []
+                den = 1
+                for j in range(8):
+                    x[1] = j+1
+                    for k in range(7):
+                        den += np.exp(np.dot(weights[k], x))
 
-                if j != 7:
-                    p = np.exp(np.dot(weights[j], x)) / den
-                else:
-                    p = 1. / den
+                    if j != 7:
+                        p = np.exp(np.dot(weights[j], x)) / den
+                    else:
+                        p = 1. / den
 
-                a.append(p)
-            aa.append(a)
-        aaa.append(aa)
+                    a.append(p)
+                aa.append(a)
+            aaa.append(aa)
 
     return aaa
-
 
 
 def emission_matrix(output_seq, weights):
@@ -148,6 +147,7 @@ def emission_matrix(output_seq, weights):
                 if j != 7:
                     p = np.exp(np.dot(weights[j], x)) / den
                 else:
+
                     p = 1. / den
 
                 a.append(p)
