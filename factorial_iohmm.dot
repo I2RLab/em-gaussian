@@ -1,0 +1,81 @@
+digraph subscript {
+    graph [pad="0.212,0.055" bgcolor=white]
+    splines=true
+    splines=spline
+    node [fontname = "Trubechet MS Regular" fontsize=14 fixedsize=true width=.7];
+
+    p0 [pos="-1.5,7.5!" shape=circle label=<U<SUB>1</SUB>(0)>]
+    p1 [pos="0.0,7.5!" shape=circle label=<U<SUB>1</SUB>(1)>]
+    p2 [pos="1.5,7.5!" shape=circle label=<U<SUB>1</SUB>(2)>]
+    p3 [pos="3.0,7.5!" shape=circle label=<U<SUB>1</SUB>(3)>]
+    t0 [pos="-1.49,3.0!" shape=circle label=<S<SUB>1</SUB>(0)>]
+    t1 [pos="0.01,3.0!" shape=circle label=<S<SUB>1</SUB>(1)>]
+    t2 [pos="1.51,3.0!" shape=circle label=<S<SUB>1</SUB>(2)>]
+    t3 [pos="3.01,3.0!" shape=circle label=<S<SUB>1</SUB>(3)>]
+
+    p01 [pos="-1.5,6.0!" shape=circle label=<U<SUB>2</SUB>(0)>]
+    p11 [pos="0.0,6.0!" shape=circle label=<U<SUB>2</SUB>(1)>]
+    p21 [pos="1.5,6.0!" shape=circle label=<U<SUB>2</SUB>(2)>]
+    p31 [pos="3.0,6.0!" shape=circle label=<U<SUB>2</SUB>(3)>]
+    t01 [pos="-1.49,1.5!" shape=circle label=<S<SUB>2</SUB>(0)>]
+    t11 [pos="0.01,1.5!" shape=circle label=<S<SUB>2</SUB>(1)>]
+    t21 [pos="1.51,1.5!" shape=circle label=<S<SUB>2</SUB>(2)>]
+    t31 [pos="3.01,1.5!" shape=circle label=<S<SUB>2</SUB>(3)>]
+
+    p02 [pos="-1.5,4.5!" shape=circle label=<U<SUB>3</SUB>(0)>]
+    p12 [pos="0.0,4.5!" shape=circle label=<U<SUB>3</SUB>(1)>]
+    p22 [pos="1.5,4.5!" shape=circle label=<U<SUB>3</SUB>(2)>]
+    p32 [pos="3.0,4.5!" shape=circle label=<U<SUB>3</SUB>(3)>]
+    t02 [pos="-1.49,0.0!" shape=circle label=<S<SUB>3</SUB>(0)>]
+    t12 [pos="0.01,0.0!" shape=circle label=<S<SUB>3</SUB>(1)>]
+    t22 [pos="1.51,0.0!" shape=circle label=<S<SUB>3</SUB>(2)>]
+    t32 [pos="3.01,0.0!" shape=circle label=<S<SUB>3</SUB>(3)>]
+
+    i0 [pos="-1.48,-1.5!" shape=circle label=<Y(0)>]
+    i1 [pos="0.02,-1.5!" shape=circle label=<Y(1)>]
+    i2 [pos="1.52,-1.5!" shape=circle label=<Y(2)>]
+    i3 [pos="3.02,-1.5!" shape=circle label=<Y(3)>]
+
+    p0 -> t1
+    p01 -> t11
+    p02 -> t12
+    p0 -> t0
+    p01 -> t01
+    p02 -> t02
+    p1 -> t1
+    p11 -> t11
+    p12 -> t12
+    p1 -> t2
+    p11 -> t21
+    p12 -> t22
+    p2 -> t2
+    p21 -> t21
+    p22-> t22
+    p2 -> t3
+    p21 -> t31
+    p22 -> t32
+    p3 -> t3
+    p31 -> t31
+    p32 -> t32
+    t0 -> t1
+    t01 -> t11
+    t02 -> t12
+    t0 -> i0
+    t01 -> i0
+    t02 -> i0
+    t1 -> t2
+    t11 -> t21
+    t12 -> t22
+    t2 -> t3
+    t21 -> t31
+    t22 -> t32
+    t1 -> i1
+    t11 -> i1
+    t12 -> i1
+    t2 -> i2
+    t21 -> i2
+    t22 -> i2
+    t3 -> i3
+    t31 -> i3
+    t32 -> i3
+      }
