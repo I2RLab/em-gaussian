@@ -1,6 +1,6 @@
 import numpy as np
 
-weights = np.arange(64).reshape((8,8))/100.
+weights = np.arange(64).reshape((8, 8))/100.
 
 state = np.arange(1,9)
 input = np.array([3., 4., 5., 6., 7., 8.])
