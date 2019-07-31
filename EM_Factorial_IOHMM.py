@@ -7,14 +7,13 @@ input_seq_r = np.transpose(input_seq)
 time_seq = np.arange(len(input_seq))
 time_length = len(time_seq)
 
-output_seq = np.random.randint(1, 9, (time_length,1))
+output_seq = np.random.randint(0, 8, (time_length, 1))
 
 # print(output_seq)
 # plot the input sequence
-# for i, u_t in enumerate(input_seq_r):
-#         plt.plot(time_seq, u_t)
-#
-# plt.show()
+for i, u_t in enumerate(input_seq_r):
+        plt.plot(time_seq, u_t)
+
 
 pi = np.array([0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125])
 
@@ -125,15 +124,11 @@ def mlogit_emission_int(w, o):
     b_jt = np.empty((1, 8))
 
     for t in range(time_length):
-        # print('b_jt.shape')
-        # print(b_jt.shape)
-        # print('b_lj[o[t]].shape')
-        # print(b_lj[o[t]])
-        # print('bjt')
-        # print(b_jt)
-        # print('blt')
-        # print(b_lj[o[t]])
+        # print('1',b_jt.shape)
+        print('ot', o[t])
+        # print('2',b_lj[o[t]].shape)
         b_jt = np.concatenate((b_jt, b_lj[o[t]]))
+
     b_jt = b_jt[1::]
 
     return b_jt
@@ -227,3 +222,4 @@ def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int
 
 baum_welch(output_seq, pi, 10, input_seq, w_transition, w_emission_int)
 
+plt.show()

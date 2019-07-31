@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8db38a9f-2780-4c07-86ca-ead842fef6de" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/EM_Factorial_IOHMM.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testlogistic.py" beforeDir="false" afterPath="$PROJECT_DIR$/testlogistic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EM_Factorial_IOHMM.py" beforeDir="false" afterPath="$PROJECT_DIR$/EM_Factorial_IOHMM.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,8 +24,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/EM_Factorial_IOHMM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1484">
-              <caret line="208" column="24" selection-start-line="208" selection-start-column="24" selection-end-line="208" selection-end-column="24" />
+            <state relative-caret-position="136">
+              <caret line="8" selection-start-line="8" selection-end-line="8" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -330,8 +328,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/EM_Factorial_IOHMM.py</url>
-          <line>212</line>
+          <line>207</line>
           <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/EM_Factorial_IOHMM.py</url>
+          <line>131</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -699,8 +702,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/EM_Factorial_IOHMM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1484">
-          <caret line="208" column="24" selection-start-line="208" selection-start-column="24" selection-end-line="208" selection-end-column="24" />
+        <state relative-caret-position="136">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
