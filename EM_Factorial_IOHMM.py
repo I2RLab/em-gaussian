@@ -1,7 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-input_seq = np.random.rand(10, 3)
+# print(np.random.randint(0,11,(3,4))/10.)
+input_seq = np.random.randint(0, 11,(100, 3))/10.  # robots' performances
+# print(input_seq)
 input_seq_r = np.transpose(input_seq)
 
 time_seq = np.arange(len(input_seq))
@@ -11,8 +13,12 @@ output_seq = np.random.randint(0, 8, (time_length, 1))
 
 # print(output_seq)
 # plot the input sequence
+
 for i, u_t in enumerate(input_seq_r):
         plt.plot(time_seq, u_t)
+
+        plt.grid(color='r', axis='y', linewidth=1)
+
 
 
 pi = np.array([0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125])
@@ -43,7 +49,7 @@ w_emission_int[7, :] = [0.017, 0.27]
 
 
 def mlogit_transition(w, u):
-    time_len = len(u)
+    # time_len = len(u)
     x_matrix = np.ones((1, 8))
     y_matrix = state_vec
     z_matrix = np.concatenate((x_matrix, y_matrix))
@@ -93,11 +99,9 @@ def mlogit_transition(w, u):
     a_ijt = a_ijt[1::]
     # a_ijt = np.reshape(a_ijt, (8, 8, 9))
 
-    # a_ijt = a_ijt.reshape((9, 8, 8))
+    A_ijt = a_ijt.reshape((int(len(a_ijt)/8), 8, 8))
 
-    # print(a_ijt, a_ijt.shape)
-
-    return a_ijt
+    return A_ijt
 
 
 def mlogit_emission_int(w, o):
@@ -125,7 +129,7 @@ def mlogit_emission_int(w, o):
 
     for t in range(time_length):
         # print('1',b_jt.shape)
-        print('ot', o[t])
+        # print('ot', o[t])
         # print('2',b_lj[o[t]].shape)
         b_jt = np.concatenate((b_jt, b_lj[o[t]]))
 
@@ -173,53 +177,60 @@ def backward(params, observations):
 
 def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int):
     A = mlogit_transition(w_transition, input_seq)
+    # print('A matrix=\n', A)
     O = mlogit_emission_int(w_emission_int, output_seq)
 
     pi, A, O = np.copy(pi), np.copy(A), np.copy(O)  # take copies, as we modify them
     S = pi.shape[0]
-
+    obs_length = int(len(A) / S)
     # do several steps of EM hill climbing
     for it in range(iterations):
         print('iteration=', it)
         pi1 = np.zeros_like(pi)
         A1 = np.zeros_like(A)
-        O1 = np.zeros_like(O)
+        # O1 = np.zeros_like(O)
+        O1 = np.zeros((len(O), S))
 
         for obs_t, observations in enumerate(training):
             # compute forward-backward matrices
             alpha, za = forward((pi, A, O), observations)
-            print('alpha\n', alpha)
-            print('za\n', za)
+            # print('alpha\n', alpha)
+            # print('za\n', za)
             beta, zb = backward((pi, A, O), observations)
-            print('beta\n', beta)
-            print('zb\n', zb)
+            # print('beta\n', beta)
+            # print('zb\n', zb)
 
             # assert abs(za - zb) < 1e-1, "it's badness 10 if the marginals don't agree"
 
             # M-step here, calculating the frequency of starting state, transitions and (state, obs) pairs
             pi1 += alpha[0, :] * beta[0, :] / za
 
-
-            for i in range(0, obs_t):
+            for i in range(0, obs_length):
                 O1[i] += alpha[i, :] * beta[i, :] / za
 
-            for i in range(1, obs_t):
-                for s1 in range(S):
-                    A1[s1] += alpha[i - 1, s1] * A[i, s1] * O[i] * beta[i] / za
+            # for i in range(1, obs_length):
+            #     for s1 in range(S):
+            #         A1[s1] += alpha[i - 1, s1] * A[i, s1] * O[i] * beta[i] / za
+            # P(s(t)=i|s(t-1)=j,u(t))
+            for t in range(1, obs_length):
+                for i in range(S):
+                    for j in range(S):
+                        A1[t, i] = alpha[j - 1, s1] * A[i, s1] * O[i] * beta[i] / za
 
             # print('A1\n', A1)
-
         # normalise pi1, A1, O1
         pi = pi1 / np.sum(pi1)
+
         for s in range(S):
             A[s, :] = A1[s, :] / np.sum(A1[s, :])
             O[s, :] = O1[s, :] / np.sum(O1[s, :])
-        print('A=\n', A, '\n')
-        print('O=\n', O, '\n')
 
+    print('A=\n', A, '\n')
+    print('O=\n', O, '\n')
+    print()
     return pi, A, O
 
 
 baum_welch(output_seq, pi, 10, input_seq, w_transition, w_emission_int)
 
-plt.show()
+# plt.show()
