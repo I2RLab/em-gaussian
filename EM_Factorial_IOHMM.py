@@ -1,24 +1,39 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import collections as col
 
 # print(np.random.randint(0,11,(3,4))/10.)
-input_seq = np.random.randint(0, 11,(100, 3))/10.  # robots' performances
-# print(input_seq)
+input_seq = np.random.randint(0, 6, (100, 3)) / 5.  # robots' performances
+
+
+def sigma_input(input_seq, t_len):
+    sigma = np.zeros((216, t_len))  # 6^3 = total input variations = 216)
+    input_k = dict()
+    for i1 in range(6):
+        for i2 in range(6):
+            for i3 in range(6):
+                input_k[i1/5, i2/5, i3/5] = []
+                for k in range(t_len):
+                    if list(input_seq[k]) == [i1/5, i2/5, i3/5]:
+                        input_k[i1/5, i2/5, i3/5].append(1)
+                    else:
+                        input_k[i1/5, i2/5, i3/5].append(0)
+
+
 input_seq_r = np.transpose(input_seq)
 
 time_seq = np.arange(len(input_seq))
+
 time_length = len(time_seq)
 
 output_seq = np.random.randint(0, 8, (time_length, 1))
 
-# print(output_seq)
-# plot the input sequence
+sigma_input(input_seq, time_length)
 
+# plot the input sequence
 for i, u_t in enumerate(input_seq_r):
         plt.plot(time_seq, u_t)
-
         plt.grid(color='r', axis='y', linewidth=1)
-
 
 
 pi = np.array([0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125])
@@ -90,16 +105,11 @@ def mlogit_transition(w, u):
         a_ij = a_ij[1::]
 
         a_ijt = np.concatenate((a_ijt, a_ij))
-        # print('aij')
-        # print(a_ij)
-        # print('sum')
-        # print(np.sum(a_ij, 1))
-        # print()
 
     a_ijt = a_ijt[1::]
-    # a_ijt = np.reshape(a_ijt, (8, 8, 9))
 
     A_ijt = a_ijt.reshape((int(len(a_ijt)/8), 8, 8))
+    print()
 
     return A_ijt
 
@@ -128,9 +138,6 @@ def mlogit_emission_int(w, o):
     b_jt = np.empty((1, 8))
 
     for t in range(time_length):
-        # print('1',b_jt.shape)
-        # print('ot', o[t])
-        # print('2',b_lj[o[t]].shape)
         b_jt = np.concatenate((b_jt, b_lj[o[t]]))
 
     b_jt = b_jt[1::]
@@ -146,13 +153,16 @@ def forward(params, observations):
     alpha = np.zeros((N, S))
     # base case
     for s in range(S):
+        # print('first observation', O[0])
+        # print('initial trust distribution:', pi)
         alpha[0, :] = pi * O[0]
 
     # recursive case
     # print('A\n', A)
     for k in range(1, N):
         for s1 in range(S):
-            alpha[k] += alpha[k - 1, s1] * A[k, s1] * O[k]
+            for j in range(S):
+                alpha[k, s1] += alpha[k - 1, j] * A[k - 1, j, s1] * O[k, s1]
 
     return alpha, np.sum(alpha[N - 1, :])
 
@@ -170,7 +180,8 @@ def backward(params, observations):
     # recursive case
     for k in range(N - 2, -1, -1):
         for s1 in range(S):
-            beta[k] += beta[k + 1, s1] * A[k, s1] * O[k]
+            for j in range(S):
+                beta[k, s1] += beta[k + 1, j] * A[k, s1, j] * O[k + 1, s1]
 
     return beta, np.sum(pi * O[0] * beta[0, :])
 
@@ -183,6 +194,9 @@ def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int
     pi, A, O = np.copy(pi), np.copy(A), np.copy(O)  # take copies, as we modify them
     S = pi.shape[0]
     obs_length = int(len(A) / S)
+
+    OMEGA = np.zeros((216,))
+
     # do several steps of EM hill climbing
     for it in range(iterations):
         print('iteration=', it)
@@ -205,25 +219,33 @@ def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int
             # M-step here, calculating the frequency of starting state, transitions and (state, obs) pairs
             pi1 += alpha[0, :] * beta[0, :] / za
 
-            for i in range(0, obs_length):
-                O1[i] += alpha[i, :] * beta[i, :] / za
+            for k in range(0, obs_length):
+                O1[k] += alpha[k, :] * beta[k, :] / za
 
             # for i in range(1, obs_length):
             #     for s1 in range(S):
             #         A1[s1] += alpha[i - 1, s1] * A[i, s1] * O[i] * beta[i] / za
             # P(s(t)=i|s(t-1)=j,u(t))
-            for t in range(1, obs_length):
+
+            for k in range(0, obs_length):
                 for i in range(S):
                     for j in range(S):
-                        A1[t, i] = alpha[j - 1, s1] * A[i, s1] * O[i] * beta[i] / za
+                        A1[k, i, j] = alpha[k, j] * A[k, i, j] * O[k, i] * beta[k, i] / za
 
-            # print('A1\n', A1)
-        # normalise pi1, A1, O1
+        # normalise pi1
         pi = pi1 / np.sum(pi1)
 
-        for s in range(S):
-            A[s, :] = A1[s, :] / np.sum(A1[s, :])
-            O[s, :] = O1[s, :] / np.sum(O1[s, :])
+        for k in range(216):
+            OMEGA[0]
+
+
+
+
+
+
+        # for s in range(S):
+        #     A[s, :] = A1[s, :] / np.sum(A1[s, :])
+        #     O[s, :] = O1[s, :] / np.sum(O1[s, :])
 
     print('A=\n', A, '\n')
     print('O=\n', O, '\n')
