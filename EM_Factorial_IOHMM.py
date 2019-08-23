@@ -1,9 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import collections as col
+import xlsxwriter
 
 # print(np.random.randint(0,11,(3,4))/10.)
 input_seq = np.random.randint(0, 6, (100, 3)) / 5.  # robots' performances
+
+
+# workbook = xlsxwriter.Workbook('Input.xlsx')
+# worksheet = workbook.add_worksheet()
 
 
 def sigma_input(input_seq, t_len):
@@ -12,12 +17,18 @@ def sigma_input(input_seq, t_len):
     for i1 in range(6):
         for i2 in range(6):
             for i3 in range(6):
-                input_k[i1/5, i2/5, i3/5] = []
+                input_k[i1 / 5, i2 / 5, i3 / 5] = []
                 for k in range(t_len):
-                    if list(input_seq[k]) == [i1/5, i2/5, i3/5]:
-                        input_k[i1/5, i2/5, i3/5].append(1)
+                    if list(input_seq[k]) == [i1 / 5, i2 / 5, i3 / 5]:
+                        input_k[i1 / 5, i2 / 5, i3 / 5].append(1)
                     else:
-                        input_k[i1/5, i2/5, i3/5].append(0)
+                        input_k[i1 / 5, i2 / 5, i3 / 5].append(0)
+
+    # for i, inp in enumerate(input_k):
+    #     worksheet.write_row(i, 0, list(input_k.values())[i])
+    # workbook.close()
+
+    return input_k
 
 
 input_seq_r = np.transpose(input_seq)
@@ -28,13 +39,12 @@ time_length = len(time_seq)
 
 output_seq = np.random.randint(0, 8, (time_length, 1))
 
-sigma_input(input_seq, time_length)
+input_sigma = sigma_input(input_seq, time_length)
 
 # plot the input sequence
 for i, u_t in enumerate(input_seq_r):
-        plt.plot(time_seq, u_t)
-        plt.grid(color='r', axis='y', linewidth=1)
-
+    plt.plot(time_seq, u_t)
+    plt.grid(color='r', axis='y', linewidth=1)
 
 pi = np.array([0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125])
 
@@ -63,30 +73,27 @@ w_emission_int[6, :] = [0.016, 0.26]
 w_emission_int[7, :] = [0.017, 0.27]
 
 
-def mlogit_transition(w, u):
-    # time_len = len(u)
+def mlogit_transition(w, u, pi):
     x_matrix = np.ones((1, 8))
     y_matrix = state_vec
     z_matrix = np.concatenate((x_matrix, y_matrix))
-
-    # print(np.ones((1,8)) * u[0, 0])
-    # print('u\n', u)
-
     a = np.ones((8, 3))
     E_matrix = []
+
     for t, u_t in enumerate(u):
         try:
             b = np.multiply(a, u_t)
-            c = np.multiply(a, u[t+1])
+
+            c = np.multiply(a, u[t + 1])
 
             e_matrix = np.concatenate((z_matrix, np.transpose(b), np.transpose(c)))
-            # print('e_matrix=')
-            # print(e_matrix, e_matrix.shape)
+
             E_matrix.append(np.transpose(e_matrix))
+
         except:
             pass
 
-    a_ijt = np.empty((1, 8))
+    a_ijt = np.ones((8, 8)) / 8
 
     for t in range(len(E_matrix)):
         a_ij = np.empty((1, 8))
@@ -106,10 +113,9 @@ def mlogit_transition(w, u):
 
         a_ijt = np.concatenate((a_ijt, a_ij))
 
-    a_ijt = a_ijt[1::]
+    # a_ijt = a_ijt[1::]
 
-    A_ijt = a_ijt.reshape((int(len(a_ijt)/8), 8, 8))
-    print()
+    A_ijt = a_ijt.reshape((int(len(a_ijt) / 8), 8, 8))
 
     return A_ijt
 
@@ -187,7 +193,7 @@ def backward(params, observations):
 
 
 def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int):
-    A = mlogit_transition(w_transition, input_seq)
+    A = mlogit_transition(w_transition, input_seq, pi)
     # print('A matrix=\n', A)
     O = mlogit_emission_int(w_emission_int, output_seq)
 
@@ -235,13 +241,20 @@ def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int
         # normalise pi1
         pi = pi1 / np.sum(pi1)
 
-        for k in range(216):
-            OMEGA[0]
 
 
+        for t, u_k_index in enumerate(input_sigma):
+            h_num = np.empty((8, 8))
+            for i, u_k_val in enumerate(input_sigma[u_k_index]):
+                if u_k_val != 0:
+                    # print('t', t, 'ukindex', u_k_index, 'i', i, 'A1[i]', A1[i])
+                    h_num += u_k_val * A1[i]
 
+            print('hnum', h_num)
+            print()
 
-
+        # for k in range(216):
+        #     OMEGA[0]
 
         # for s in range(S):
         #     A[s, :] = A1[s, :] / np.sum(A1[s, :])
