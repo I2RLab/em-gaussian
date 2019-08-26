@@ -3,12 +3,14 @@ import matplotlib.pyplot as plt
 import collections as col
 import xlsxwriter
 
+# input_seq = np.random.randint(0, 6, (300, 3)) / 5.  # temp random robots' performances {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}
 input_seq = np.random.randint(0, 6, (300, 3)) / 5.  # temp random robots' performances {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}
 input_seq_r = np.transpose(input_seq)  # input sequence transpose
 
 time_seq = np.arange(len(input_seq))  # time sequence
 time_length = len(time_seq)
 
+# output_seq = np.random.randint(0, 8, (time_length, 1))
 output_seq = np.random.randint(0, 8, (time_length, 1))
 output_lambda = dict()  # output_lambda(t) = 1 when the t'th output is l
 
@@ -66,14 +68,14 @@ state_vec = np.arange(1, 9).reshape((1, 8))
 
 w_transition = np.ndarray((8, 8))
 # w_transition = [w_mb, w_ms, w_m10, w_m20, w_m30, w_m11, w_m21, w_m31]
-w_transition[0, :] = [0.01, 0.1, 0.02, 0.02, 0.02, -0.02, -0.02, -0.02]
+w_transition[0, :] = [0.01, 0.04, 0.02, 0.02, 0.02, -0.02, -0.02, -0.02]
 w_transition[1, :] = [0.01, 0.03, 0.10, 0.02, 0.02, -0.08, -0.02, -0.02]
 w_transition[2, :] = [0.01, 0.03, 0.02, 0.10, 0.02, -0.02, -0.08, -0.02]
 w_transition[3, :] = [0.01, 0.03, 0.02, 0.02, 0.10, -0.02, -0.02, -0.08]
 w_transition[4, :] = [0.01, 0.01, 0.05, 0.05, 0.02, -0.04, -0.04, -0.02]
 w_transition[5, :] = [0.01, 0.01, 0.05, 0.02, 0.05, -0.04, -0.02, -0.04]
 w_transition[6, :] = [0.01, 0.01, 0.02, 0.05, 0.05, -0.02, -0.04, -0.04]
-w_transition[7, :] = [-0.01, -0.1, 0.02, 0.02, 0.10, -0.02, -0.02, -0.08]
+w_transition[7, :] = [-0.01, -0.1, 0.02, 0.02, 0.02, -0.02, -0.02, -0.02]
 
 w_emission_int = np.ndarray((8, 2))
 # w_emission_int = [w_be, w_se]
@@ -227,9 +229,9 @@ def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int
         print('alpha\n', alpha)
         print('za\n', za)
         print('beta\n', beta)
-        print('zb\n', zb)
+        # print('zb\n', zb)
 
-        # assert abs(za - zb) < 1e-4, "it's badness 10000 if the marginals don't agree"
+        assert abs(za - zb) < 1e-2, "it's badness 10000 if the marginals don't agree"
 
         # M-step here, calculating the frequency of starting state, transitions and (state, obs) pairs
         pi1 += alpha[0, :] * beta[0, :] / za
@@ -254,11 +256,12 @@ def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int
                     else:
                         H1[t] = 0
 
-        OM = np.zeros((1, 8))
-        OM_dict = np.zeros((8,8))
+
+        OM_dict = np.zeros((8, 8))
         OM1 = np.zeros_like(O)
 
         for i in range(8):
+            OM = np.zeros((1, 8))
             if len(output_lambda[i]) > 0:
                 for t, l in enumerate(output_lambda[i]):
                     OM += O1[l]
@@ -268,7 +271,7 @@ def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int
             else:
                 OM_dict[i] = 0
 
-        OM_dict = OM_dict / np.sum(OM_dict, 0)
+        OM_dict /= np.sum(OM_dict, 0)
 
         for i in range(8):
             if len(output_lambda[i]) > 0:
@@ -277,9 +280,9 @@ def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int
 
         A, O = H1, OM1
 
-        # print('A=\n', A, '\n')
-        # print('O=\n', O, '\n')
-        print()
+        print('A=\n', A, '\n')
+        print('O=\n', O, '\n')
+    print()
     return pi, A, O
 
 
