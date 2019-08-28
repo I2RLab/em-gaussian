@@ -15,13 +15,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/EM_Factorial_IOHMM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2803">
-              <caret line="70" column="32" selection-start-line="70" selection-start-column="32" selection-end-line="70" selection-end-column="32" />
+            <state relative-caret-position="376">
+              <caret line="64" column="69" lean-forward="true" selection-start-line="64" selection-start-column="69" selection-end-line="64" selection-end-column="69" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
                 <element signature="e#343#985#0" />
-                <element signature="e#2796#3050#0" />
-                <element signature="e#4941#5307#0" />
+                <element signature="e#2609#3660#0" />
+                <element signature="e#3210#3487#0" />
+                <element signature="e#3698#4355#0" />
               </folding>
             </state>
           </provider>
@@ -267,7 +268,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32937366" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.29913607" />
-      <window_info anchor="bottom" auto_hide="true" x="1920" y="28" width="1920" height="1052" id="Debug" maximized="true" order="3" type="WINDOWED" visible="true" weight="0.31641468" />
+      <window_info anchor="bottom" auto_hide="true" x="1920" y="28" width="1920" height="1052" id="Debug" maximized="true" order="3" type="WINDOWED" weight="0.31641468" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32937366" />
@@ -304,12 +305,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/EM_Factorial_IOHMM.py</url>
-          <line>280</line>
+          <line>277</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/EM_Factorial_IOHMM.py</url>
-          <line>284</line>
+          <line>281</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
       </breakpoints>
@@ -381,47 +382,47 @@ for i in range(len(B)):
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>np.sum(OM_dict,0)</expression-string>
+        <expression-string>np.sum(A[8],1)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.sum(OM_dict)</expression-string>
+        <expression-string>np.sum(A[7],1)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>OM_dict</expression-string>
+        <expression-string>np.sum(A[6],1)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.sum(OM_dict,1)</expression-string>
+        <expression-string>np.sum(A[5],1)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.sum(OM1,1)</expression-string>
+        <expression-string>np.sum(A[],1)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.sum(OM1,0)</expression-string>
+        <expression-string>np.sum(A[4],1)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.sum(OM1)</expression-string>
+        <expression-string>np.sum(A[3],1)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>OM1</expression-string>
+        <expression-string>np.sum(A[3],0)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.sum(M_dict)</expression-string>
+        <expression-string>np.sum(A[3])</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -751,13 +752,14 @@ for i in range(len(B)):
     </entry>
     <entry file="file://$PROJECT_DIR$/EM_Factorial_IOHMM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2803">
-          <caret line="70" column="32" selection-start-line="70" selection-start-column="32" selection-end-line="70" selection-end-column="32" />
+        <state relative-caret-position="376">
+          <caret line="64" column="69" lean-forward="true" selection-start-line="64" selection-start-column="69" selection-end-line="64" selection-end-column="69" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
             <element signature="e#343#985#0" />
-            <element signature="e#2796#3050#0" />
-            <element signature="e#4941#5307#0" />
+            <element signature="e#2609#3660#0" />
+            <element signature="e#3210#3487#0" />
+            <element signature="e#3698#4355#0" />
           </folding>
         </state>
       </provider>

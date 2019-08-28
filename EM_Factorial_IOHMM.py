@@ -79,14 +79,14 @@ w_transition[7, :] = [-0.01, -0.1, 0.02, 0.02, 0.02, -0.02, -0.02, -0.02]
 
 w_emission_int = np.ndarray((8, 2))
 # w_emission_int = [w_be, w_se]
-w_emission_int[0, :] = [0.010, 0.20]
+w_emission_int[0, :] = [0.011, 0.21]
 w_emission_int[1, :] = [0.011, 0.21]
-w_emission_int[2, :] = [0.012, 0.22]
-w_emission_int[3, :] = [0.013, 0.23]
-w_emission_int[4, :] = [0.014, 0.24]
-w_emission_int[5, :] = [0.015, 0.25]
-w_emission_int[6, :] = [0.016, 0.26]
-w_emission_int[7, :] = [0.017, 0.27]
+w_emission_int[2, :] = [0.011, 0.21]
+w_emission_int[3, :] = [0.011, 0.21]
+w_emission_int[4, :] = [0.011, 0.21]
+w_emission_int[5, :] = [0.011, 0.21]
+w_emission_int[6, :] = [0.011, 0.21]
+w_emission_int[7, :] = [0.011, 0.21]
 
 
 def mlogit_transition(w, u, pi):
@@ -179,9 +179,7 @@ def forward(params):
     for k in range(1, N):
         for s1 in range(S):
             for j in range(S):
-                alpha[k, s1] += alpha[k - 1, j] * A[k - 1, j, s1] * O[k, s1]
-
-
+                alpha[k, s1] += alpha[k - 1, j] * A[k, j, s1] * O[k, s1]
 
     return alpha, np.sum(alpha[N - 1, :])
 
@@ -200,12 +198,12 @@ def backward(params):
     for k in range(N - 2, -1, -1):
         for s1 in range(S):
             for j in range(S):
-                beta[k, s1] += beta[k + 1, j] * A[k, s1, j] * O[k + 1, s1]
+                beta[k, s1] += beta[k + 1, j] * A[k + 1, s1, j] * O[k + 1, s1]
 
     return beta, np.sum(pi * O[0] * beta[0, :])
 
 
-def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int):
+def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_emission_int):
     A = mlogit_transition(w_transition, input_seq, pi)
     O = mlogit_emission_int(w_emission_int, output_seq)
 
@@ -242,7 +240,7 @@ def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int
         for k in range(1, obs_length):
             for i in range(S):
                 for j in range(S):
-                    A1[k - 1, i, j] = alpha[k - 1, j] * A[k, i, j] * O[k, i] * beta[k, i] / za
+                    A1[k - 1, j, i] = alpha[k - 1, j] * A[k, j, i] * O[k, i] * beta[k, i] / za
 
         # normalise pi1
         pi = pi1 / np.sum(pi1)
@@ -255,7 +253,6 @@ def baum_welch(training, pi, iterations, input_seq, w_transition, w_emission_int
                         H1[t] = np.transpose(np.transpose(H)/np.sum(H, 1))
                     else:
                         H1[t] = 0
-
 
         OM_dict = np.zeros((8, 8))
         OM1 = np.zeros_like(O)
