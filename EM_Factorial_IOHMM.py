@@ -2,16 +2,37 @@ import numpy as np
 import matplotlib.pyplot as plt
 import collections as col
 import xlsxwriter
+import xlrd
 
-# input_seq = np.random.randint(0, 6, (300, 3)) / 5.  # temp random robots' performances {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}
-input_seq = np.random.randint(0, 6, (300, 3)) / 5.  # temp random robots' performances {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}
+
+workbook = xlrd.open_workbook('IO_sample.xlsx')
+worksheet = workbook.sheet_by_index(0)
+data_sample_i = list()
+
+for i in range(3):
+    data_sample_i.append(worksheet.col_values(i))
+
+data_input = np.transpose(np.array(data_sample_i))
+
+
+# temp random robots' performances {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}
+input_seq = np.random.randint(0, 6, (300, 3)) / 5.
+
+# sampled inputs
+# input_seq = data_input
+
 input_seq_r = np.transpose(input_seq)  # input sequence transpose
 
 time_seq = np.arange(len(input_seq))  # time sequence
 time_length = len(time_seq)
 
-# output_seq = np.random.randint(0, 8, (time_length, 1))
+# random output seq
 output_seq = np.random.randint(0, 8, (time_length, 1))
+
+# sampled output
+# output_seq = np.transpose(np.array(worksheet.col_values(4))).reshape(300, 1)
+
+
 output_lambda = dict()  # output_lambda(t) = 1 when the t'th output is l
 
 for i in range(8):
@@ -59,8 +80,11 @@ for u, t in enumerate(array):
 
 # plot the input sequence
 for i, u_t in enumerate(input_seq_r):
+    plt.subplot(int('31{}'.format(i+1)))
     plt.plot(time_seq, u_t)
     plt.grid(color='r', axis='y', linewidth=1)
+
+# plt.show()
 
 pi = np.array([0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125])  # initial distribution
 
@@ -79,14 +103,14 @@ w_transition[7, :] = [-0.01, -0.1, 0.02, 0.02, 0.02, -0.02, -0.02, -0.02]
 
 w_emission_int = np.ndarray((8, 2))
 # w_emission_int = [w_be, w_se]
-w_emission_int[0, :] = [0.011, 0.21]
-w_emission_int[1, :] = [0.011, 0.21]
-w_emission_int[2, :] = [0.011, 0.21]
-w_emission_int[3, :] = [0.011, 0.21]
-w_emission_int[4, :] = [0.011, 0.21]
-w_emission_int[5, :] = [0.011, 0.21]
-w_emission_int[6, :] = [0.011, 0.21]
-w_emission_int[7, :] = [0.011, 0.21]
+w_emission_int[0, :] = [0.21, 0.31]
+w_emission_int[1, :] = [0.08, 0.21]
+w_emission_int[2, :] = [0.08, 0.21]
+w_emission_int[3, :] = [0.08, 0.21]
+w_emission_int[4, :] = [0.04, 0.11]
+w_emission_int[5, :] = [0.04, 0.11]
+w_emission_int[6, :] = [0.04, 0.11]
+w_emission_int[7, :] = [-0.10, 0.31]
 
 
 def mlogit_transition(w, u, pi):
@@ -129,6 +153,8 @@ def mlogit_transition(w, u, pi):
 
         a_ijt = np.concatenate((a_ijt, a_ij))
 
+    # a_ijt = a_ijt[8::]
+
     A_ijt = a_ijt.reshape((int(len(a_ijt) / 8), 8, 8))
 
     return A_ijt
@@ -158,7 +184,9 @@ def mlogit_emission_int(w, o):
     b_jt = np.empty((1, 8))
 
     for t in range(time_length):
-        b_jt = np.concatenate((b_jt, b_lj[o[t]]))
+        # print(int(o[t][0]))
+        oo = [int(o[t][0])]
+        b_jt = np.concatenate((b_jt, b_lj[oo]))
 
     b_jt = b_jt[1::]
 
@@ -206,6 +234,8 @@ def backward(params):
 def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_emission_int):
     A = mlogit_transition(w_transition, input_seq, pi)
     O = mlogit_emission_int(w_emission_int, output_seq)
+    print('A init\n', A)
+    print('O init\n', O)
 
     pi, A, O = np.copy(pi), np.copy(A), np.copy(O)  # take copies, as we modify them
     S = pi.shape[0]
@@ -285,4 +315,3 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_emission_i
 
 baum_welch(output_seq, pi, 10, input_seq, w_transition, w_emission_int)
 
-# plt.show()
