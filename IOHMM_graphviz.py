@@ -11,7 +11,7 @@ __author__ = """Maziar Fooladi"""
 import pygraphviz as pgv
 
 
-B=pgv.AGraph('iohmm.dot') # create a new graph from file
+B=pgv.AGraph('factorial_iohmm.dot') # create a new graph from file
 B.layout() # layout with default (neato)
-B.draw('iohmm.png') # draw png
+B.draw('F_iohmm.png') # draw png
 print("Wrote iohmm.png")

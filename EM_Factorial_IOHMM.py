@@ -16,10 +16,10 @@ data_input = np.transpose(np.array(data_sample_i))
 
 
 # temp random robots' performances {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}
-input_seq = np.random.randint(0, 6, (300, 3)) / 5.
+# input_seq = np.random.randint(0, 6, (300, 3)) / 5.
 
 # sampled inputs
-# input_seq = data_input
+input_seq = data_input
 
 input_seq_r = np.transpose(input_seq)  # input sequence transpose
 
@@ -55,10 +55,6 @@ def sigma_input(input_seq, t_len):
                     else:
                         input_k[i1 / 5., i2 / 5., i3 / 5.].append(0)
 
-
-
-
-
     # uncomment to write the input sequence onto a spreadsheet
     # workbook = xlsxwriter.Workbook('Input.xlsx')
     # worksheet = workbook.add_worksheet()
@@ -77,12 +73,15 @@ array = np.array(list(sigma_k.values()))
 for u, t in enumerate(array):
     sigma_u[u] = list(np.where(t == 1)[0])
 
+plt.subplots(1, 1, sharex='all', sharey='all')
 
 # plot the input sequence
 for i, u_t in enumerate(input_seq_r):
-    plt.subplot(int('31{}'.format(i+1)))
+    # plt.subplot(int('31{}'.format(i+1)))
+
     plt.plot(time_seq, u_t)
-    plt.grid(color='r', axis='y', linewidth=1)
+    # plt.grid(color='b', axis='y')
+
 
 # plt.show()
 
@@ -153,8 +152,6 @@ def mlogit_transition(w, u, pi):
 
         a_ijt = np.concatenate((a_ijt, a_ij))
 
-    # a_ijt = a_ijt[8::]
-
     A_ijt = a_ijt.reshape((int(len(a_ijt) / 8), 8, 8))
 
     return A_ijt
@@ -184,7 +181,6 @@ def mlogit_emission_int(w, o):
     b_jt = np.empty((1, 8))
 
     for t in range(time_length):
-        # print(int(o[t][0]))
         oo = [int(o[t][0])]
         b_jt = np.concatenate((b_jt, b_lj[oo]))
 
