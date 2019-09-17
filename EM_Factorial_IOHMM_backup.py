@@ -13,7 +13,7 @@ for i in range(3):
     data_sample_i.append(worksheet.col_values(i))
 
 data_input = np.transpose(np.array(data_sample_i))
-data_input = data_input[0:149]
+
 
 # temp random robots' performances {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}
 # input_seq = np.random.randint(0, 6, (300, 3)) / 5.
@@ -35,7 +35,7 @@ output_seq = np.random.randint(0, 8, (time_length, 1))
 
 output_lambda = dict()  # output_lambda(t) = 1 when the t'th output is l
 
-for i in range(343):
+for i in range(8):
     output_lambda[i] = np.where(output_seq == i)[0]
 
 # print('output lambda', output_lambda)
@@ -114,7 +114,7 @@ agent_num = 3
 
 state_total = state_scale ** agent_num
 
-pi = np.ones((state_total,)) / state_total  # initial distribution
+pi = np.ones((1, state_total)) / state_total  # initial distribution
 
 w_transition = np.ndarray((state_total, 5))  # w_transition = [w_mb, w_ms, w_x1, w_x2, w_x3]
 
@@ -138,9 +138,9 @@ def mlogit_transition(w, u):
 
     for t, u_t in enumerate(u):
         try:
-            # b = np.multiply(a, u_t)
+            b = np.multiply(a, u_t)
             c = np.multiply(a, u[t + 1])
-            e_matrix = np.concatenate((z_matrix, np.transpose(c)))
+            e_matrix = np.concatenate((z_matrix, np.transpose(b), np.transpose(c)))
             E_matrix.append(np.transpose(e_matrix))
 
         except:
@@ -149,7 +149,6 @@ def mlogit_transition(w, u):
     a_ijt = np.ones((state_total, state_total)) / state_total
 
     for t in range(len(E_matrix)):
-        print('t', t)
         a_ij = np.empty((1, state_total))
 
         for ix, x in enumerate(E_matrix[0]):
@@ -173,12 +172,12 @@ def mlogit_transition(w, u):
 
 
 def mlogit_emission_int(w, o):
-    x_matrix = np.ones((1, state_total))
+    x_matrix = np.ones((1, 8))
     y_matrix = state_vec
     z_matrix = np.concatenate((x_matrix, y_matrix))
     z_matrix = np.transpose(z_matrix)
 
-    b_lj = np.empty((1, state_total))
+    b_lj = np.empty((1, 8))
 
     for ix, x in enumerate(z_matrix):
         beta_e = list()
@@ -189,11 +188,11 @@ def mlogit_emission_int(w, o):
         beta_e /= den
         beta_e[-1] = 1. / den
 
-        b_lj = np.concatenate((b_lj, np.array(beta_e).reshape(1, state_total)))
+        b_lj = np.concatenate((b_lj, np.array(beta_e).reshape(1, 8)))
 
     b_lj = b_lj[1::]
 
-    b_jt = np.empty((1, state_total))
+    b_jt = np.empty((1, 8))
 
     for t in range(time_length):
         oo = [int(o[t][0])]
@@ -295,11 +294,11 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_emission_i
                     else:
                         H1[t] = 0
 
-        OM_dict = np.zeros((state_total, state_total))
+        OM_dict = np.zeros((8, 8))
         OM1 = np.zeros_like(O)
 
-        for i in range(state_total):
-            OM = np.zeros((1, state_total))
+        for i in range(8):
+            OM = np.zeros((1, 8))
             if len(output_lambda[i]) > 0:
                 for t, l in enumerate(output_lambda[i]):
                     OM += O1[l]
