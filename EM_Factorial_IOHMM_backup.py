@@ -1,3 +1,4 @@
+
 import numpy as np
 import matplotlib.pyplot as plt
 import collections as col
@@ -5,7 +6,7 @@ import xlsxwriter
 import xlrd
 
 
-workbook = xlrd.open_workbook('IO_sample.xlsx')
+workbook = xlrd.open_workbook('IO_sample1.xlsx')
 worksheet = workbook.sheet_by_index(0)
 data_sample_i = list()
 
@@ -14,9 +15,7 @@ for i in range(3):
 
 data_input = np.transpose(np.array(data_sample_i))
 
-
-# temp random robots' performances {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}
-# input_seq = np.random.randint(0, 6, (300, 3)) / 5.
+data_output = np.transpose(np.array(worksheet.col_values(4))).reshape((len(worksheet.col_values(4)),1))
 
 # sampled inputs
 input_seq = data_input
@@ -27,7 +26,7 @@ time_seq = np.arange(len(input_seq))  # time sequence
 time_length = len(time_seq)
 
 # random output seq
-output_seq = np.random.randint(0, 8, (time_length, 1))
+output_seq = data_output
 
 # sampled output
 # output_seq = np.transpose(np.array(worksheet.col_values(4))).reshape(300, 1)
@@ -109,12 +108,13 @@ for i, u_t in enumerate(input_seq_r):
 # w_observation[6, :] = [0.04, 0.11]
 # w_observation[7, :] = [-0.10, 0.31]
 
-state_scale = 7
+state_scale = 2
 agent_num = 3
 
 state_total = state_scale ** agent_num
 
-pi = np.ones((1, state_total)) / state_total  # initial distribution
+pi = np.ones((state_total,)) / state_total  # initial distribution
+
 
 w_transition = np.ndarray((state_total, 5))  # w_transition = [w_mb, w_ms, w_x1, w_x2, w_x3]
 
@@ -138,9 +138,9 @@ def mlogit_transition(w, u):
 
     for t, u_t in enumerate(u):
         try:
-            b = np.multiply(a, u_t)
+            # b = np.multiply(a, u_t)
             c = np.multiply(a, u[t + 1])
-            e_matrix = np.concatenate((z_matrix, np.transpose(b), np.transpose(c)))
+            e_matrix = np.concatenate((z_matrix, np.transpose(c)))
             E_matrix.append(np.transpose(e_matrix))
 
         except:

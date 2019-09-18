@@ -13,7 +13,7 @@ for i in range(3):
     data_sample_i.append(worksheet.col_values(i))
 
 data_input = np.transpose(np.array(data_sample_i))
-data_input = data_input[0:149]
+# data_input = data_input[0:4]
 
 # temp random robots' performances {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}
 # input_seq = np.random.randint(0, 6, (300, 3)) / 5.
@@ -28,6 +28,7 @@ time_length = len(time_seq)
 
 # random output seq
 output_seq = np.random.randint(0, 8, (time_length, 1))
+
 
 # sampled output
 # output_seq = np.transpose(np.array(worksheet.col_values(4))).reshape(300, 1)
@@ -83,7 +84,7 @@ for i, u_t in enumerate(input_seq_r):
     # plt.grid(color='b', axis='y')
 
 
-# plt.show()
+plt.show()
 
 # pi = np.array([0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125])  # initial distribution
 
@@ -155,7 +156,7 @@ def mlogit_transition(w, u):
         for ix, x in enumerate(E_matrix[0]):
             beta = list()
             for iw, w_m in enumerate(w):
-                beta.append(np.exp(np.matmul(w_m, x)))  # w_m = [w_mb, w_ms, w_m10, w_m20, w_m30, w_m11, w_m21, w_m31] & x = [1, S(t-1), u10, u20, u30, u11, u21, u31]
+                beta.append(np.exp(np.matmul(w_m, x)))  # w_m = [w_mb, w_ms, w_x1, w_x2, w_x3] & x = [1, S(t-1), x1, x2, x3]
 
             den = 1 + sum(beta[0:-1])
             beta /= den
