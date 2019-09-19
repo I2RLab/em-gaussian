@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import collections as col
 import xlsxwriter
 import xlrd
-
+np.set_printoptions(linewidth=520)
+np.set_printoptions(precision=4)
 
 workbook = xlrd.open_workbook('IO_sample1.xlsx')
 worksheet = workbook.sheet_by_index(0)
@@ -126,7 +127,7 @@ w_observation = np.ndarray((state_total, 2))  # w_observation = [w_b, w_s]
 state_vec = np.arange(1, state_total + 1).reshape((1, state_total))
 
 for i in range(state_total):
-    w_observation[i, :] = [-8, 2]
+    w_observation[i, :] = [-4, 1.5]
 
 
 def mlogit_transition(w, u):
@@ -215,9 +216,9 @@ def forward(params):
 
     # recursive case
     for k in range(1, N):
-        for s1 in range(S):
-            for j in range(S):
-                alpha[k, s1] += alpha[k - 1, j] * A[k, j, s1] * O[k, s1]
+        for j in range(S):
+            for i in range(S):
+                alpha[k, j] += alpha[k - 1, i] * A[k, i, j] * O[k, j]
 
     return alpha, np.sum(alpha[N - 1, :])
 
@@ -234,9 +235,9 @@ def backward(params):
 
     # recursive case
     for k in range(N - 2, -1, -1):
-        for s1 in range(S):
+        for i in range(S):
             for j in range(S):
-                beta[k, s1] += beta[k + 1, j] * A[k + 1, s1, j] * O[k + 1, s1]
+                beta[k, i] += beta[k + 1, j] * A[k + 1, i, j] * O[k + 1, j]
 
     return beta, np.sum(pi * O[0] * beta[0, :])
 
@@ -265,8 +266,8 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_emission_i
         alpha, za = forward((pi, A, O))
         beta, zb = backward((pi, A, O))
         print('alpha\n', alpha)
-        print('za\n', za)
-        print('beta\n', beta)
+        # print('za\n', za)
+        # print('beta\n', beta)
         # print('zb\n', zb)
 
         assert abs(za - zb) < 1e-2, "it's badness 10000 if the marginals don't agree"
@@ -278,9 +279,9 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_emission_i
             O1[k] += alpha[k, :] * beta[k, :] / za
 
         for k in range(1, obs_length):
-            for i in range(S):
-                for j in range(S):
-                    A1[k - 1, j, i] = alpha[k - 1, j] * A[k, j, i] * O[k, i] * beta[k, i] / za
+            for j in range(S):
+                for i in range(S):
+                    A1[k - 1, i, j] = alpha[k - 1, i] * A[k, i, j] * O[k, j] * beta[k, j] / za
 
         # normalise pi1
         pi = pi1 / np.sum(pi1)
