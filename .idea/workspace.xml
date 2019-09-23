@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8db38a9f-2780-4c07-86ca-ead842fef6de" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.~lock.IO_sample1.xlsx#" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py" beforeDir="false" afterPath="$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IO_sample1.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/IO_sample1.xlsx" afterDir="false" />
     </list>
@@ -16,8 +17,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="355" column="32" selection-start-line="355" selection-start-column="19" selection-end-line="355" selection-end-column="32" />
+            <state relative-caret-position="2684">
+              <caret line="322" lean-forward="true" selection-start-line="322" selection-end-line="322" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -292,7 +293,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32937366" />
-      <window_info active="true" anchor="bottom" x="1920" y="28" width="1920" height="1052" id="Run" order="2" sideWeight="0.49967128" type="WINDOWED" visible="true" weight="0.18466523" />
+      <window_info active="true" anchor="bottom" x="57" y="55" width="1863" height="1025" id="Run" maximized="true" order="2" sideWeight="0.49967128" type="WINDOWED" visible="true" weight="0.18466523" />
       <window_info anchor="bottom" auto_hide="true" x="1920" y="28" width="1920" height="1052" id="Debug" maximized="true" order="3" type="WINDOWED" visible="true" weight="0.31641468" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -340,38 +341,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py</url>
-          <line>364</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py</url>
-          <line>366</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py</url>
-          <line>371</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py</url>
-          <line>221</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py</url>
-          <line>219</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py</url>
-          <line>217</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py</url>
-          <line>215</line>
-          <option name="timeStamp" value="32" />
+          <line>270</line>
+          <option name="timeStamp" value="34" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -804,8 +775,8 @@ for i in range(len(B)):
     </entry>
     <entry file="file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="355" column="32" selection-start-line="355" selection-start-column="19" selection-end-line="355" selection-end-column="32" />
+        <state relative-caret-position="2684">
+          <caret line="322" lean-forward="true" selection-start-line="322" selection-end-line="322" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

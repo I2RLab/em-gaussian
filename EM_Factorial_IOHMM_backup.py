@@ -7,7 +7,7 @@ import xlrd
 np.set_printoptions(linewidth=520)
 np.set_printoptions(precision=4, edgeitems=6)
 
-workbook = xlrd.open_workbook('IO_sample1.xlsx')
+workbook = xlrd.open_workbook('IO_sample2.xlsx')
 worksheet = workbook.sheet_by_index(0)
 data_sample_i = list()
 
@@ -89,24 +89,24 @@ for i, u_t in enumerate(input_seq_r):
 
 # w_transition = [w_mb, w_ms, w_m10, w_m20, w_m30, w_m11, w_m21, w_m31]
 w_transition = np.ndarray((8, 5))
-w_transition[0, :] = [-6.0, -.01, 4.2, 4.2, 4.2]
-w_transition[1, :] = [-6.0, -.01, 1.1, 5.6, 5.6]
-w_transition[2, :] = [-6.0, -.01, 5.6, 1.1, 5.6]
-w_transition[3, :] = [-6.0, -.01, 5.6, 5.6, 1.1]
-w_transition[4, :] = [-6.0, -.01, 2.1, 2.1, 8.1]
-w_transition[5, :] = [-6.0, -.01, 2.1, 8.1, 2.1]
-w_transition[6, :] = [-6.0, -.01, 8.1, 2.1, 2.1]
-w_transition[7, :] = [-6.0, -.02, 1., 1., 1.]
+w_transition[0, :] = [-8.0, .2, 4.0, 4.0, 4.0]
+w_transition[1, :] = [0.5, .1, -4.0, 4.0, 4.0]
+w_transition[2, :] = [0.5, .1, 4.0, -4.0, 4.0]
+w_transition[3, :] = [0.5, .1, 4.0, 4.0, -4.0]
+w_transition[4, :] = [4.0, -.1, -4.0, -4.0, 4.0]
+w_transition[5, :] = [4.0, -.1, -4.0, 4.0, -4.0]
+w_transition[6, :] = [4.0, -.1, 4.0, -4.0, -4.0]
+w_transition[7, :] = [8.0, -.2, -4.0, -4.0, -4.0]
 
 w_observation = np.ndarray((8, 5))
-w_observation[0, :] = [6.0, -2., 1., 1., 1.]
-w_observation[1, :] = [2.0, -.1, -2., 2., 2.]
-w_observation[2, :] = [2.1, -.1, 2., -2., 2.]
-w_observation[3, :] = [2.2, -.1, 2., 2., -2.]
-w_observation[4, :] = [-5.0, 1., -2., -2., 2.]
-w_observation[5, :] = [-6.0, 1., -2., 2., -2.]
-w_observation[6, :] = [-7.0, 1., -2., 2., 2.]
-w_observation[7, :] = [-10, 1.5, -2, -2, -2]
+w_observation[0, :] = [8.0, -2.0, .1, .1, .1]
+w_observation[1, :] = [6.0, -1.6, .1, .1, .1]
+w_observation[2, :] = [4.0, -1.2, .1, .1, .1]
+w_observation[3, :] = [2.0, -0.8, .1, .1, .1]
+w_observation[4, :] = [-2.0, -0.8, .1, .1, .1]
+w_observation[5, :] = [-4.0, 1.2, .1, .1, .1]
+w_observation[6, :] = [-6.0, 1.6, .1, .1, .1]
+w_observation[7, :] = [-8.0, 2.0, .1, .1, .1]
 
 # w_observation = np.ndarray((8, 2))
 # w_observation = [w_be, w_se]
@@ -292,10 +292,10 @@ def backward(params):
     return beta, np.sum(pi * O[0] * beta[0, :])
 
 
-def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_emission_int):
+def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
     A = mlogit_transition(w_transition, input_seq)
     # O = mlogit_emission_int(w_emission_int, output_seq)
-    O = mlogit_observation(w_emission_int, output_seq)
+    O = mlogit_observation(w_obs, output_seq)
     print('A init\n', A)
     print('O init\n', O)
 
