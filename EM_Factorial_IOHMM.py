@@ -68,7 +68,7 @@ def sigma_input(input_seq, t_len):
 
 
 sigma_k = sigma_input(input_seq, time_length)
-sigma_u = dict()  # sigma_u is a dict to show what time instances each input was observed
+sigma_u = dict()  # input_lambda is a dict to show what time instances each input was observed
 array = np.array(list(sigma_k.values()))
 
 for u, t in enumerate(array):
