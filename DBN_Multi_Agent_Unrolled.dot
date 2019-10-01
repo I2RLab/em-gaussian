@@ -1,0 +1,83 @@
+digraph subscript {
+    graph [pad="0.212,0.055" bgcolor=white]
+    splines=true
+    splines=spline
+    node [fontname = "Trubechet MS Regular" fontsize=14 fixedsize=true width=.7];
+
+    t0_0 [pos="-1.5,7.!" shape=circle label=<T<SUB>1</SUB>(0)>]
+    t1_0 [pos="-1.5,5.!" shape=circle label=<T<SUB>2</SUB>(0)>]
+    t2_0 [pos="-1.5,3.!" shape=circle label=<T<SUB>3</SUB>(0)>]
+
+    p0_1 [pos="0.0,8.0!" shape=circle label=<U<SUB>1</SUB>(1)>]
+    t0_1 [pos="0.0,7.0!" shape=circle label=<T<SUB>1</SUB>(1)>]
+    p1_1 [pos="0.0,6.0!" shape=circle label=<U<SUB>2</SUB>(1)>]
+    t1_1 [pos="0.0,5.0!" shape=circle label=<T<SUB>2</SUB>(1)>]
+    p2_1 [pos="0.0,4.0!" shape=circle label=<U<SUB>3</SUB>(1)>]
+    t2_1 [pos="0.0,3.0!" shape=circle label=<T<SUB>3</SUB>(1)>]
+
+
+    p0_2 [pos="1.5,8.0!" shape=circle label=<U<SUB>1</SUB>(2)>]
+    t0_2 [pos="1.5,7.0!" shape=circle label=<T<SUB>1</SUB>(2)>]
+    p1_2 [pos="1.5,6.0!" shape=circle label=<U<SUB>2</SUB>(2)>]
+    t1_2 [pos="1.5,5.0!" shape=circle label=<T<SUB>2</SUB>(2)>]
+    p2_2 [pos="1.5,4.0!" shape=circle label=<U<SUB>3</SUB>(2)>]
+    t2_2 [pos="1.5,3.0!" shape=circle label=<T<SUB>3</SUB>(2)>]
+
+
+    p0_3 [pos="3.0,8.0!" shape=circle label=<U<SUB>1</SUB>(3)>]
+    t0_3 [pos="3.0,7.0!" shape=circle label=<T<SUB>1</SUB>(3)>]
+    p1_3 [pos="3.0,6.0!" shape=circle label=<U<SUB>2</SUB>(3)>]
+    t1_3 [pos="3.0,5.0!" shape=circle label=<T<SUB>2</SUB>(3)>]
+    p2_3 [pos="3.0,4.0!" shape=circle label=<U<SUB>3</SUB>(3)>]
+    t2_3 [pos="3.0,3.0!" shape=circle label=<T<SUB>3</SUB>(3)>]
+
+
+    i_1 [pos="1.0,1.75!" shape=circle label=<Y(1)>]
+    i_2 [pos="2.5,1.75!" shape=circle label=<Y(2)>]
+    i_3 [pos="4.0,1.75!" shape=circle label=<Y(3)>]
+
+    t0_0 -> t0_1
+    t1_0 -> t1_1
+    t2_0 -> t2_1
+
+    p0_1 -> t0_1
+    p1_1 -> t1_1
+    p2_1 -> t2_1
+
+    t0_1 -> t0_2
+    t1_1 -> t1_2
+    t2_1 -> t2_2
+
+    p0_2 -> t0_2
+    p1_2 -> t1_2
+    p2_2 -> t2_2
+
+    t0_2 -> t0_3
+    t1_2 -> t1_3
+    t2_2 -> t2_3
+
+    p0_3 -> t0_3
+    p1_3 -> t1_3
+    p2_3 -> t2_3
+
+    p0_1 -> i_1
+    p1_1 -> i_1
+    p2_1 -> i_1
+    t0_1 -> i_1
+    t1_1 -> i_1
+    t2_1 -> i_1
+
+    p0_2 -> i_2
+    p1_2 -> i_2
+    p2_2 -> i_2
+    t0_2 -> i_2
+    t1_2 -> i_2
+    t2_2 -> i_2
+
+    p0_3 -> i_3
+    p1_3 -> i_3
+    p2_3 -> i_3
+    t0_3 -> i_3
+    t1_3 -> i_3
+    t2_3 -> i_3
+      }
