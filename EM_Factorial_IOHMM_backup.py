@@ -6,10 +6,10 @@ import xlsxwriter
 import xlrd
 
 np.set_printoptions(linewidth=520)
-np.set_printoptions(precision=3, edgeitems=100)
+np.set_printoptions(precision=3, edgeitems=10)
 
 
-workbook = xlrd.open_workbook('IO_sample4.xlsx')
+workbook = xlrd.open_workbook('IO_sample2.xlsx')
 worksheet = workbook.sheet_by_index(0)
 
 data_sample_i = list()
@@ -82,32 +82,24 @@ plt.plot(time_seq, output_seq, '.')
 
 # w_transition = [w_b, w_s, w_x1, w_x2, w_x3]
 w_transition = np.ndarray((8, 5))
-w_transition[0, :] = [7.0, -2.0, .5, .5, .5]
-w_transition[1, :] = [9.0, -2.0, .5, .5, .5]
-w_transition[2, :] = [11.0, -2.0, .5, .5, .5]
-w_transition[3, :] = [13.0, -2.0, .5, .5, .5]
-w_transition[4, :] = [-5.0, 2.0, .5, .5, .5]
-w_transition[5, :] = [-7.0, 2.0, .5, .5, .5]
-w_transition[6, :] = [-9.0, 2.0, .5, .5, .5]
-w_transition[7, :] = [-11.0, 2.0, .5, .5, .5]
+w_transition[0, :] = [.1, -4, 4, 4, 4]
+w_transition[1, :] = [8, -4, -8, 4, 4]
+w_transition[2, :] = [8, -4, 4, -8, 4]
+w_transition[3, :] = [8, -4, 4, 4, -8]
+w_transition[4, :] = [-16, 4, -8, -8, 8]
+w_transition[5, :] = [-16, 4, -8, 8, -8]
+w_transition[6, :] = [-16, 4, 8, -8, -8]
+w_transition[7, :] = [-8, 2, -4, -4, -4]
 
 w_observation = np.ndarray((8, 5))
-# w_observation[0, :] = [-8.0, .2, 4.0, 4.0, 4.0]
-# w_observation[1, :] = [0.5, .1, -4.0, 4.0, 4.0]
-# w_observation[2, :] = [0.5, .1, 4.0, -4.0, 4.0]
-# w_observation[3, :] = [0.5, .1, 4.0, 4.0, -4.0]
-# w_observation[4, :] = [4.0, -.1, -4.0, -4.0, 4.0]
-# w_observation[5, :] = [4.0, -.1, -4.0, 4.0, -4.0]
-# w_observation[6, :] = [4.0, -.1, 4.0, -4.0, -4.0]
-# w_observation[7, :] = [8.0, -.2, -4.0, -4.0, -4.0]
-w_observation[0, :] = [7.0, -2.0, .5, .5, .5]
-w_observation[1, :] = [9.0, -2.0, .5, .5, .5]
-w_observation[2, :] = [11.0, -2.0, .5, .5, .5]
-w_observation[3, :] = [13.0, -2.0, .5, .5, .5]
-w_observation[4, :] = [-5.0, 2.0, .5, .5, .5]
-w_observation[5, :] = [-7.0, 2.0, .5, .5, .5]
-w_observation[6, :] = [-9.0, 2.0, .5, .5, .5]
-w_observation[7, :] = [-11.0, 2.0, .5, .5, .5]
+w_observation[0, :] = [6, -4, 1, 1, 1]
+w_observation[1, :] = [12, -4, -4, 1, 1]
+w_observation[2, :] = [16, -4, 1, -4, 1]
+w_observation[3, :] = [20, -4, 1, 1, -4]
+w_observation[4, :] = [-17, 4, -4, -4, 4]
+w_observation[5, :] = [-21, 4, -4, 4, -4]
+w_observation[6, :] = [-25, 4, 4, -4, -4]
+w_observation[7, :] = [-25, 4, -4, -4, -4]
 
 state_scale = 2
 agent_num = 3
@@ -145,7 +137,7 @@ def mlogit_transition(w, u):
     for t in range(len(E_matrix)):
         a_ij = np.empty((1, state_total))
 
-        for ix, x in enumerate(E_matrix[0]):
+        for ix, x in enumerate(E_matrix[t]):
             beta = list()
             for iw, w_m in enumerate(w):
                 beta.append(np.exp(np.matmul(w_m, x)))
@@ -157,7 +149,6 @@ def mlogit_transition(w, u):
             a_ij = np.concatenate((a_ij, np.array(beta).reshape(1, state_total)))
 
         a_ij = a_ij[1::]
-        # a_ij = np.transpose(a_ij)
 
         a_ijt = np.concatenate((a_ijt, a_ij))
 
@@ -173,7 +164,6 @@ def mlogit_observation(w, output, input):
 
     for t, u_t in enumerate(input):
         try:
-            # b = np.multiply(a, input[t + 1])
             b = np.multiply(a, input[t])
             e_matrix = np.concatenate((z_matrix, np.transpose(b)))
             E_matrix.append(np.transpose(e_matrix))
@@ -186,18 +176,25 @@ def mlogit_observation(w, output, input):
     for t in range(len(E_matrix)):
         b_ij = np.empty((1, state_total))
 
-        for ix, x in enumerate(E_matrix[0]):
+        for iw, w_m in enumerate(w):
             beta = list()
-            for iw, w_m in enumerate(w):
+            for ix, x in enumerate(E_matrix[t]):
+                # print('w_m')
+                # print(w_m)
+                # print('x')
+                # print(x)
+                # print(np.matmul(w_m, x))
+                # print(np.exp(np.matmul(w_m, x)))
                 beta.append(np.exp(np.matmul(w_m, x)))  # w_l = [w_lb, w_ls, w_l1, w_l2, w_l3] & x = [1, S(t), u1, u2, u3]
+                # print()
 
             den = 1 + sum(beta[0:-1])
             beta /= den
             beta[-1] = 1. / den
 
             b_ij = np.concatenate((b_ij, np.array(beta).reshape(1, state_total)))
-
         b_ij = b_ij[1::]
+        b_ij = np.transpose(b_ij)
         b_jt = np.concatenate((b_jt, b_ij[[int(output[t][0])-1]]))
 
     b_jt = b_jt[1::]
@@ -220,6 +217,7 @@ def forward(params):
         for j in range(S):
             for i in range(S):
                 alpha[k, j] += alpha[k - 1, i] * A[k, i, j] * O[k, j]
+
 
     return alpha, np.sum(alpha[N - 1, :])
 
@@ -264,10 +262,10 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
         # compute forward-backward matrices
         alpha, za = forward((pi, A, O))
         beta, zb = backward((pi, A, O))
-        # print('alpha\n', alpha)
-        # print('za\n', za)
-        # print('beta\n', beta)
-        # print('zb\n', zb)
+        print('alpha\n', alpha)
+        print('za\n', za)
+        print('beta\n', beta)
+        print('zb\n', zb)
 
         assert abs(za - zb) < 1e-2, "it's badness 10000 if the marginals don't agree"
 
@@ -289,7 +287,7 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
                 for i, t in enumerate(u):
                     H += A1[t]
                     if np.sum(H) > 0:
-                        H1[t] = np.transpose(np.transpose(H)/np.sum(H, 1))
+                        H1[t] = np.transpose(np.transpose(H) / np.sum(H, 1))
                     else:
                         H1[t] = 0
 
@@ -316,6 +314,7 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
                             OM1[ts] = w_ilk[ti, to-1]
 
         A, O = H1, OM1
+
 
     print('A=\n', A, '\n')
     print('O=\n', O, '\n')

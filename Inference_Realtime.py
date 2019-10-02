@@ -125,7 +125,7 @@ class Inference:
         self.Sim_BelT1_denumerator = np.sum(self.Sim_BelT1_numerator)
         self.Sim_BelT1 = np.divide(self.Sim_BelT1_numerator, self.Sim_BelT1_denumerator)
         self.t1Bel.append(self.Sim_BelT1)
-        # print(self.t1Bel)
+        print(self.t1Bel)
 
         self.sim_Pi2_4d = self.sim_pi2.reshape((len(self.vec_t), len(self.vec_t), len(self.vec_t), len(self.vec_t)))
         self.sim_pT1I = np.multiply(self.sim_Pi2_4d, self.sim_pt1)
@@ -137,7 +137,7 @@ class Inference:
         self.Sim_BelT2_denumerator = np.sum(self.Sim_BelT2_numerator)
         self.Sim_BelT2 = np.divide(self.Sim_BelT2_numerator, self.Sim_BelT2_denumerator)
         self.t2Bel.append(self.Sim_BelT2)
-        # print(self.t2Bel)
+        print(self.t2Bel)
 
         return self.t1Bel, self.t2Bel
 
