@@ -5,11 +5,11 @@ import collections as col
 import xlsxwriter
 import xlrd
 
-np.set_printoptions(linewidth=520)
-np.set_printoptions(precision=3, edgeitems=10)
+np.set_printoptions(linewidth=600)
+np.set_printoptions(precision=2, edgeitems=5)
 
 
-workbook = xlrd.open_workbook('IO_sample2.xlsx')
+workbook = xlrd.open_workbook('IO_sample6.xlsx')
 worksheet = workbook.sheet_by_index(0)
 
 data_sample_i = list()
@@ -102,17 +102,20 @@ w_observation[6, :] = [-25, 4, 4, -4, -4]
 w_observation[7, :] = [-25, 4, -4, -4, -4]
 
 state_scale = 2
+
 agent_num = 3
+
 input_num = 6
+
 output_num = 8
+
 state_total = state_scale ** agent_num
+
 input_tot = input_num ** agent_num
 
 pi = np.ones((state_total,)) / state_total  # initial distribution
-# pi = np.array([0.01, 0.01, 0.1, 0.84, 0.01, 0.01, 0.01, 0.01])
-# pi = pi.reshape((8,))
-state_vec = np.arange(1, state_total + 1).reshape((1, state_total))
 
+state_vec = np.arange(1, state_total + 1).reshape((1, state_total))
 
 
 def mlogit_transition(w, u):
@@ -124,7 +127,6 @@ def mlogit_transition(w, u):
 
     for t, u_t in enumerate(u):
         try:
-            # c = np.multiply(a, u[t+1])
             c = np.multiply(a, u_t)
             e_matrix = np.concatenate((z_matrix, np.transpose(c)))
             E_matrix.append(np.transpose(e_matrix))
@@ -216,10 +218,20 @@ def forward(params):
     for k in range(1, N):
         for j in range(S):
             for i in range(S):
-                alpha[k, j] += alpha[k - 1, i] * A[k, i, j] * O[k, j]
+                if np.isnan(alpha[k - 1, i]) or np.isnan(A[k, i, j]) or np.isnan(O[k,j]):
+                    # print('alpha')
+                    # print(alpha)
+                    # print('A[k, i, j]')
+                    # print(A[k, i, j])
+                    # print('A')
+                    # print(A)
+                    # print('O')
+                    # print(O)
+                    print()
+                else:
+                    alpha[k, j] += alpha[k - 1, i] * A[k, i, j] * O[k, j]
 
-
-    return alpha, np.sum(alpha[N - 1, :])
+    return alpha, max(np.sum(alpha[N - 1, :]), 10 ** -250)
 
 
 def backward(params):
@@ -238,7 +250,7 @@ def backward(params):
             for j in range(S):
                 beta[k, i] += beta[k + 1, j] * A[k + 1, i, j] * O[k + 1, j]
 
-    return beta, np.sum(pi * O[0] * beta[0, :])
+    return beta, max(np.sum(pi * O[0] * beta[0, :]), 10 ** -250)
 
 
 def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
@@ -262,16 +274,16 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
         # compute forward-backward matrices
         alpha, za = forward((pi, A, O))
         beta, zb = backward((pi, A, O))
-        print('alpha\n', alpha)
+        # print('alpha\n', alpha)
         print('za\n', za)
-        print('beta\n', beta)
+        # print('beta\n', beta)
         print('zb\n', zb)
 
         assert abs(za - zb) < 1e-2, "it's badness 10000 if the marginals don't agree"
 
         # M-step here, calculating the frequency of starting state, transitions and (state, obs) pairs
         pi1 += alpha[0, :] * beta[0, :] / za
-        pi = pi1 / np.sum(pi1)  # normalise pi1
+        pi = pi1 / max(np.sum(pi1), 10 ** -250)  # normalise pi1
 
         for k in range(0, obs_length):
             O1[k] += alpha[k, :] * beta[k, :] / za
@@ -282,17 +294,20 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
                     A1[k - 1, i, j] = alpha[k - 1, i] * A[k, i, j] * O[k, j] * beta[k, j] / za
 
         for k, u in enumerate(input_lambda.values()):
-            H = np.zeros_like(A[0])
+            H = np.zeros_like(A[0]) + 10 ** -250
             if len(u) > 0:
                 for i, t in enumerate(u):
                     H += A1[t]
                     if np.sum(H) > 0:
+
+                        # print('np.sum(H, 1)')
+                        # print(np.sum(H, 1))
+                        # print('H')
+                        # print(H)
                         H1[t] = np.transpose(np.transpose(H) / np.sum(H, 1))
-                    else:
-                        H1[t] = 0
 
         OM1 = np.zeros_like(O)
-        w_ilk = np.zeros((input_tot, output_num, state_total))
+        w_ilk = np.zeros((input_tot, output_num, state_total)) + 10 ** -250
 
         for i, ti in enumerate(input_lambda):
             for o, to in enumerate(output_lambda):
@@ -301,20 +316,16 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
                     for i, ts in enumerate(io_lambda[ti, to]):
                         w_ilk_temp += O1[ts]
                     w_ilk[ti, to-1, :] = w_ilk_temp
-        # print('w_ilk')
-        # print(w_ilk)
+
         for i, ti in enumerate(input_lambda):
             if np.sum(w_ilk[ti]) > 0:
                 w_ilk[ti] /= np.sum(w_ilk[ti], 0)
-                # print('w_ilk normalized')
-                # print(w_ilk)
                 for o, to in enumerate(output_lambda):
                     if len(io_lambda[ti, to]) > 0:
                         for i, ts in enumerate(io_lambda[ti, to]):
                             OM1[ts] = w_ilk[ti, to-1]
 
         A, O = H1, OM1
-
 
     print('A=\n', A, '\n')
     print('O=\n', O, '\n')
