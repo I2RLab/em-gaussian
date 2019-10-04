@@ -100,25 +100,24 @@ for i, ti in enumerate(input_lambda):
 
 # w_transition = [w_b, w_s, w_x1, w_x2, w_x3]
 w_transition = np.ndarray((8, 5))
-w_transition[0, :] = [.1, -4, 4/3, 4/3, 4/3]
+w_transition[0, :] = [1, -4, 4/3, 4/3, 4/3]
 w_transition[1, :] = [8, -4, -8/3, 4/3, 4/3]
 w_transition[2, :] = [8, -4, 4/3, -8/3, 4/3]
 w_transition[3, :] = [8, -4, 4/3, 4/3, -8/3]
 w_transition[4, :] = [-16, 4, -8/3, -8/3, 8/3]
 w_transition[5, :] = [-16, 4, -8/3, 8/3, -8/3]
 w_transition[6, :] = [-16, 4, 8/3, -8/3, -8/3]
-w_transition[7, :] = [-8, 2, -4/3, -4/3, -4/3]
+w_transition[7, :] = [-10, 4, -4/3, -4/3, -4/3]
 
 w_observation = np.ndarray((8, 5))
-w_observation[0, :] = [6, -4, 1/3, 1/3, 1/3]
-w_observation[1, :] = [12, -4, -4/3, 1/3, 1/3]
-w_observation[2, :] = [16, -4, 1/3, -4/3, 1/3]
-w_observation[3, :] = [20, -4, 1/3, 1/3, -4/3]
-w_observation[4, :] = [-17, 4, -4/3, -4/3, 4/3]
-w_observation[5, :] = [-21, 4, -4/3, 4/3, -4/3]
-w_observation[6, :] = [-25, 4, 4/3, -4/3, -4/3]
-w_observation[7, :] = [-25, 4, -4/3, -4/3, -4/3]
-
+w_observation[0, :] = [3, -1.4, 1/3, 1/3, 1/3]
+w_observation[1, :] = [7, -1.4, -4/3, 1/3, 1/3]
+w_observation[2, :] = [7, -1.4, 1/3, -4/3, 1/3]
+w_observation[3, :] = [7, -1.4, 1/3, 1/3, -4/3]
+w_observation[4, :] = [-6, 1.4, -4/3, -4/3, 4/3]
+w_observation[5, :] = [-6, 1.4, -4/3, 4/3, -4/3]
+w_observation[6, :] = [-6, 1.4, 4/3, -4/3, -4/3]
+w_observation[7, :] = [-.1, 1.4, -4/3, -4/3, -4/3]
 
 
 def mlogit_transition(w, u):
