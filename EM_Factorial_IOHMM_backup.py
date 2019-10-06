@@ -100,24 +100,24 @@ for i, ti in enumerate(input_lambda):
 
 # w_transition = [w_b, w_s, w_x1, w_x2, w_x3]
 w_transition = np.ndarray((8, 5))
-w_transition[0, :] = [1, -4, 4/3, 4/3, 4/3]
-w_transition[1, :] = [8, -4, -8/3, 4/3, 4/3]
-w_transition[2, :] = [8, -4, 4/3, -8/3, 4/3]
-w_transition[3, :] = [8, -4, 4/3, 4/3, -8/3]
-w_transition[4, :] = [-16, 4, -8/3, -8/3, 8/3]
-w_transition[5, :] = [-16, 4, -8/3, 8/3, -8/3]
-w_transition[6, :] = [-16, 4, 8/3, -8/3, -8/3]
-w_transition[7, :] = [-10, 4, -4/3, -4/3, -4/3]
+w_transition[0, :] = [-4.5, -1, 1, 1, 1]
+w_transition[1, :] = [2, -1, -2, .5, .5]
+w_transition[2, :] = [2, -1, .5, -2, .5]
+w_transition[3, :] = [2, -1, .5, .5, -2]
+w_transition[4, :] = [-5, 1, -1, -1, 1]
+w_transition[5, :] = [-5, 1, -1, 1, -1]
+w_transition[6, :] = [-5, 1, 1, -1, -1]
+w_transition[7, :] = [1.5, 1, -1, -1, -1]
 
 w_observation = np.ndarray((8, 5))
-w_observation[0, :] = [3, -1.4, 1/3, 1/3, 1/3]
-w_observation[1, :] = [7, -1.4, -4/3, 1/3, 1/3]
-w_observation[2, :] = [7, -1.4, 1/3, -4/3, 1/3]
-w_observation[3, :] = [7, -1.4, 1/3, 1/3, -4/3]
-w_observation[4, :] = [-6, 1.4, -4/3, -4/3, 4/3]
-w_observation[5, :] = [-6, 1.4, -4/3, 4/3, -4/3]
-w_observation[6, :] = [-6, 1.4, 4/3, -4/3, -4/3]
-w_observation[7, :] = [-.1, 1.4, -4/3, -4/3, -4/3]
+w_observation[0, :] = [-9, -1, 2, 2, 2]
+w_observation[1, :] = [-1, -1, -2, 2, 2]
+w_observation[2, :] = [-1, -1, 2, -2, 2]
+w_observation[3, :] = [-1, -1, 2, 2, -2]
+w_observation[4, :] = [-2, 1, -2, -2, 2]
+w_observation[5, :] = [-2, 1, -2, 2, -2]
+w_observation[6, :] = [-2, 1, 2, -2, -2]
+w_observation[7, :] = [6, 1, -2, -2, -2]
 
 
 def mlogit_transition(w, u):
@@ -318,7 +318,8 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
 
         OM1 = np.zeros_like(O)
         w_ilk = np.zeros((input_tot, output_num, state_total)) + 10 ** -300
-
+        w_ilk_final = np.zeros_like(w_ilk)
+        
         for i, ti in enumerate(input_lambda):
             for o, to in enumerate(output_lambda):
                 if len(io_lambda[ti, to]) > 0:
@@ -334,6 +335,10 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
                     if len(io_lambda[ti, to]) > 0:
                         for i, ts in enumerate(io_lambda[ti, to]):
                             OM1[ts] = w_ilk[ti, to-1]
+                            
+
+            else:
+            
 
         A, O = H1, OM1
 
