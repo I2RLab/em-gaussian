@@ -83,6 +83,8 @@ for i, ti in enumerate(input_lambda):
     for o, to in enumerate(output_lambda):
         io_lambda[ti, to] = list(set(input_lambda[ti]).intersection(output_lambda[to]))
 
+print('io_lambda')
+print(io_lambda)
 #####################################################################
 # plot input sequence
 # plt.subplots(1, 1, sharex='all', sharey='all')
@@ -100,24 +102,24 @@ for i, ti in enumerate(input_lambda):
 
 # w_transition = [w_b, w_s, w_x1, w_x2, w_x3]
 w_transition = np.ndarray((8, 5))
-w_transition[0, :] = [-4.5, -1, 1, 1, 1]
-w_transition[1, :] = [2, -1, -2, .5, .5]
-w_transition[2, :] = [2, -1, .5, -2, .5]
-w_transition[3, :] = [2, -1, .5, .5, -2]
-w_transition[4, :] = [-5, 1, -1, -1, 1]
-w_transition[5, :] = [-5, 1, -1, 1, -1]
-w_transition[6, :] = [-5, 1, 1, -1, -1]
-w_transition[7, :] = [1.5, 1, -1, -1, -1]
+w_transition[0, :] = [0.0, -.1, .1, .1, .1]
+w_transition[1, :] = [0.8, -.1, -.2, .05, .05]
+w_transition[2, :] = [0.8, -.1, .05, -.2, .05]
+w_transition[3, :] = [0.8, -.1, .05, .05, -.2]
+w_transition[4, :] = [0, .1, -.1, -.1, .1]
+w_transition[5, :] = [0, .1, -.1, .1, -.1]
+w_transition[6, :] = [0, .1, .1, -.1, -.1]
+w_transition[7, :] = [0, .1, -.1, -.1, -.1]
 
 w_observation = np.ndarray((8, 5))
-w_observation[0, :] = [-9, -1, 2, 2, 2]
-w_observation[1, :] = [-1, -1, -2, 2, 2]
-w_observation[2, :] = [-1, -1, 2, -2, 2]
-w_observation[3, :] = [-1, -1, 2, 2, -2]
-w_observation[4, :] = [-2, 1, -2, -2, 2]
-w_observation[5, :] = [-2, 1, -2, 2, -2]
-w_observation[6, :] = [-2, 1, 2, -2, -2]
-w_observation[7, :] = [6, 1, -2, -2, -2]
+w_observation[0, :] = [-.7, -.1, .2, .2, .2]
+w_observation[1, :] = [0, -.1, -.2, .2, .2]
+w_observation[2, :] = [0, -.1, .2, -.2, .2]
+w_observation[3, :] = [0, -.1, .2, .2, -.2]
+w_observation[4, :] = [-.2, .2, -.2, -.2, .2]
+w_observation[5, :] = [-.2, .2, -.2, .2, -.2]
+w_observation[6, :] = [-.2, .2, .2, -.2, -.2]
+w_observation[7, :] = [-.2, .2, -.2, -.2, -.2]
 
 
 def mlogit_transition(w, u):
@@ -136,15 +138,15 @@ def mlogit_transition(w, u):
         except:
             pass
 
-    # a_ijt = np.ones((state_total, state_total)) / state_total
-    a_ijt = np.array([[.24, .15, .15, .15, .1, .1, .1, .01],
-                      [.2, .24, .1, .1, .15, .15, .05, .01],
-                      [.2, .1, .24, .1, .15, .05, .15, .01],
-                      [.2, .1, .1, .24, .05, .15, .15, .01],
-                      [.06, .15, .15, .05, .34, .1, .1, .05],
-                      [.06, .15, .05, .15, .1, .34, .1, .05],
-                      [.06, .05, .15, .15, .1, .1, .34, .05],
-                      [.01, .1, .1, .1, .15, .15, .15, .24]])
+    a_ijt = np.ones((state_total, state_total)) / state_total
+    # a_ijt = np.array([[.24, .15, .15, .15, .1, .1, .1, .01],
+    #                   [.2, .24, .1, .1, .15, .15, .05, .01],
+    #                   [.2, .1, .24, .1, .15, .05, .15, .01],
+    #                   [.2, .1, .1, .24, .05, .15, .15, .01],
+    #                   [.06, .15, .15, .05, .34, .1, .1, .05],
+    #                   [.06, .15, .05, .15, .1, .34, .1, .05],
+    #                   [.06, .05, .15, .15, .1, .1, .34, .05],
+    #                   [.01, .1, .1, .1, .15, .15, .15, .24]])
     
     for t in range(len(E_matrix)):
         a_ij = np.empty((1, state_total))
@@ -268,11 +270,11 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
     O = mlogit_observation(w_obs, output_seq, input_seq)
     print('A init\n', A)
     print('O init\n', O)
-
+    
     pi, A, O = np.copy(pi), np.copy(A), np.copy(O)  # take copies, as we modify them
     S = pi.shape[0]
     obs_length = int(len(A))
-
+    
     # do several steps of EM hill climbing
     for it in range(iterations):
         print('iteration=', it)
@@ -280,7 +282,7 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
         A1 = np.zeros_like(A)
         H1 = np.zeros_like(A)
         O1 = np.zeros((obs_length, S))
-
+    
         # compute forward-backward matrices
         alpha, za = forward((pi, A, O))
         beta, zb = backward((pi, A, O))
@@ -288,67 +290,77 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
         # print('za\n', za)
         # print('beta\n', beta)
         # print('zb\n', zb)
-
+    
         assert abs(za - zb) < 1e-2, "it's badness 10000 if the marginals don't agree"
-
+    
         # M-step here, calculating the frequency of starting state, transitions and (state, obs) pairs
         pi1 += alpha[0, :] * beta[0, :] / za
         pi = pi1 / np.sum(pi1)  # normalise pi1
-
+       
+    
         for k in range(0, obs_length):
             O1[k] += alpha[k, :] * beta[k, :] / za
-
+    
         for k in range(1, obs_length):
             for j in range(S):
                 for i in range(S):
                     A1[k - 1, i, j] = alpha[k - 1, i] * A[k, i, j] * O[k, j] * beta[k, j] / za
-
-        for k, u in enumerate(input_lambda.values()):
+    
+    
+        for k, ti in enumerate(input_lambda.values()):
             H = np.zeros_like(A[0]) + 10 ** -300
-            if len(u) > 0:
-                for i, t in enumerate(u):
+            if len(ti) > 0:
+                for ki, t in enumerate(ti):
                     H += A1[t]
-                    # if np.sum(H) > 0:
-
-                        # print('np.sum(H, 1)')
-                        # print(np.sum(H, 1))
-                        # print('H')
-                        # print(H)
                     H1[t] = np.transpose(np.transpose(H) / np.sum(H, 1))
-
+    
         OM1 = np.zeros_like(O)
         w_ilk = np.zeros((input_tot, output_num, state_total)) + 10 ** -300
-        w_ilk_final = np.zeros_like(w_ilk)
         
-        for i, ti in enumerate(input_lambda):
-            for o, to in enumerate(output_lambda):
+        for k, ti in enumerate(input_lambda):
+            for l, to in enumerate(output_lambda):
                 if len(io_lambda[ti, to]) > 0:
                     w_ilk_temp = np.zeros((1, state_total))
                     for i, ts in enumerate(io_lambda[ti, to]):
                         w_ilk_temp += O1[ts]
-                    w_ilk[ti, to-1, :] = w_ilk_temp
-
-        for i, ti in enumerate(input_lambda):
+                    w_ilk[ti, to - 1, :] = w_ilk_temp
+    
+        for k, ti in enumerate(input_lambda):
             if np.sum(w_ilk[ti]) > 0:
                 w_ilk[ti] /= np.sum(w_ilk[ti], 0)
-                for o, to in enumerate(output_lambda):
+                for l, to in enumerate(output_lambda):
                     if len(io_lambda[ti, to]) > 0:
-                        for i, ts in enumerate(io_lambda[ti, to]):
+                        for kl, ts in enumerate(io_lambda[ti, to]):
                             OM1[ts] = w_ilk[ti, to-1]
-                            
-
-            else:
-            
-
+        
         A, O = H1, OM1
+    
+    A_ijk = dict()
+
+    for k, ti in enumerate(input_lambda.values()):
+        if len(ti) > 0:
+            A_ijk[k] = A[ti[0]]
+        else:
+            A_ijk[k] = np.zeros_like(A[0])
+
+    O_jlk = dict()
+
+    for k, ti in enumerate(input_lambda):
+        for l, to in enumerate(output_lambda):
+            if len(io_lambda[ti, to]) > 0:
+                O_jlk[k, l] = O[io_lambda[ti, to][0]]
+            else:
+                O_jlk[k, l] = np.zeros_like(O[0])
 
     print('A=\n', A, '\n')
     print('O=\n', O, '\n')
-    print()
-    return pi, A, O
+    return pi, A, O, A_ijk, O_jlk
 
 
-pi_trained, A_trained, O_trained = baum_welch(output_seq, pi, 10, input_seq, w_transition, w_observation)
+if __name__ == "__main__":
+    
+    pi_trained, A_trained, O_trained, A_ijk, O_jlk = baum_welch(output_seq, pi, 10, input_seq, w_transition, w_observation)
+
 
 # plt.plot(np.transpose(A_trained[-1]),'*')
 # plt.show()
