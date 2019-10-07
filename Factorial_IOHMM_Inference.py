@@ -26,7 +26,7 @@ input_tot = agent_num ** input_num
 # u1 = np.random.randint(1, 4, (test_session_len,))
 # u2 = np.random.randint(1, 4, (test_session_len,))
 # u3 = np.random.randint(1, 4, (test_session_len,))
-workbook = xlrd.open_workbook('IO_sample7.xlsx')
+workbook = xlrd.open_workbook('IO_test1.xlsx')
 worksheet = workbook.sheet_by_index(0)
 
 data_read = list()
@@ -39,7 +39,6 @@ data_input = np.transpose(np.array(data_read))
 data_output = np.transpose(np.array(worksheet.col_values(5))).reshape((len(worksheet.col_values(5)),))
 
 test_session_len = len(data_input)
-
 u_dict = dict()
 input_id = 0
 
@@ -73,7 +72,7 @@ def io_index_func(i_index, y_data):
 
 input_sequence = i_index_func(data_input)
 
-pi_trained, A_trained, O_trained, A_ijk, O_jlk = EM.baum_welch(EM.output_seq, EM.pi, 10, EM.input_seq, EM.w_transition, EM.w_observation)
+pi_trained, A_trained, O_trained, A_ijk, O_jlk = EM.baum_welch(EM.output_seq, EM.pi, 5, EM.input_seq, EM.w_transition, EM.w_observation)
 
 
 

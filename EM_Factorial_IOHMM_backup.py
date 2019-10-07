@@ -112,14 +112,14 @@ w_transition[6, :] = [0, .1, .1, -.1, -.1]
 w_transition[7, :] = [0, .1, -.1, -.1, -.1]
 
 w_observation = np.ndarray((8, 5))
-w_observation[0, :] = [-.7, -.1, .2, .2, .2]
-w_observation[1, :] = [0, -.1, -.2, .2, .2]
-w_observation[2, :] = [0, -.1, .2, -.2, .2]
-w_observation[3, :] = [0, -.1, .2, .2, -.2]
-w_observation[4, :] = [-.2, .2, -.2, -.2, .2]
-w_observation[5, :] = [-.2, .2, -.2, .2, -.2]
-w_observation[6, :] = [-.2, .2, .2, -.2, -.2]
-w_observation[7, :] = [-.2, .2, -.2, -.2, -.2]
+w_observation[0, :] = [-.7, -.1, .1, .1, .1]
+w_observation[1, :] = [0.0, -.1, -.1, .1, .1]
+w_observation[2, :] = [0.0, -.1, .1, -.1, .1]
+w_observation[3, :] = [0.0, -.1, .1, .1, -.1]
+w_observation[4, :] = [-.2, 0.1, -.1, -.1, .1]
+w_observation[5, :] = [-.2, 0.1, -.1, .1, -.1]
+w_observation[6, :] = [-.2, 0.1, .1, -.1, -.1]
+w_observation[7, :] = [-.2, 0.1, -.1, -.1, -.1]
 
 
 def mlogit_transition(w, u):
