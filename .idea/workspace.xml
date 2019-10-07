@@ -2,10 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8db38a9f-2780-4c07-86ca-ead842fef6de" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/em-gaussian.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/em-gaussian.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py" beforeDir="false" afterPath="$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" beforeDir="false" afterPath="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IO_sample7.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/IO_sample7.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IO_test1.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/IO_test1.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/~$IO_test1.xlsx" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,11 +18,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-371">
-              <caret line="118" column="31" selection-start-line="118" selection-start-column="31" selection-end-line="118" selection-end-column="31" />
+            <state relative-caret-position="768">
+              <caret line="333" column="53" selection-start-line="333" selection-start-column="53" selection-end-line="333" selection-end-column="53" />
               <folding>
                 <element signature="e#1#19#0" expanded="true" />
               </folding>
@@ -27,14 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="438">
-              <caret line="28" column="39" selection-start-line="28" selection-start-column="39" selection-end-line="28" selection-end-column="39" />
-              <folding>
-                <element signature="e#188#206#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-724">
+              <caret line="75" selection-start-line="75" selection-end-line="75" />
             </state>
           </provider>
         </entry>
@@ -42,8 +42,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Inference_Realtime.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="753">
+            <state relative-caret-position="2329">
               <caret line="140" selection-start-line="140" selection-end-line="140" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_7.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -94,15 +103,15 @@
         <option value="$PROJECT_DIR$/IOHMM_graphviz.py" />
         <option value="$PROJECT_DIR$/DBN_Multi_Agent_Unrolled.dot" />
         <option value="$PROJECT_DIR$/Inference_Realtime.py" />
-        <option value="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" />
         <option value="$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py" />
+        <option value="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="-2" />
     <option name="width" value="1920" />
-    <option name="height" value="986" />
+    <option name="height" value="1082" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -310,15 +319,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1920" height="986" extended-state="0" />
+    <frame x="57" y="25" width="1863" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48918918" visible="true" weight="0.14149947" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48918918" visible="true" weight="0.14130434" />
       <window_info id="Structure" order="1" sideWeight="0.5108108" side_tool="true" weight="0.19904964" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32937366" />
-      <window_info anchor="bottom" x="0" y="154" width="1440" height="855" id="Run" order="2" sideWeight="0.49967128" type="WINDOWED" weight="0.18466523" />
+      <window_info anchor="bottom" x="1920" y="28" width="1920" height="1052" id="Run" maximized="true" order="2" sideWeight="0.49967128" type="WINDOWED" weight="0.18466523" />
       <window_info anchor="bottom" auto_hide="true" x="0" y="225" width="1440" height="855" id="Debug" maximized="true" order="3" type="WINDOWED" visible="true" weight="0.31641468" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -370,17 +379,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py</url>
-          <line>106</line>
-          <option name="timeStamp" value="111" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py</url>
-          <line>96</line>
+          <line>94</line>
           <option name="timeStamp" value="113" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py</url>
-          <line>142</line>
+          <line>138</line>
           <option name="timeStamp" value="115" />
         </line-breakpoint>
       </breakpoints>
@@ -693,7 +697,13 @@ for i in range(len(B)):
     <entry file="file://$PROJECT_DIR$/mlogit_weights_observation.ods">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_7.py" />
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_7.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
@@ -703,28 +713,25 @@ for i in range(len(B)):
     </entry>
     <entry file="file://$PROJECT_DIR$/Inference_Realtime.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="753">
+        <state relative-caret-position="2329">
           <caret line="140" selection-start-line="140" selection-end-line="140" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="438">
-          <caret line="28" column="39" selection-start-line="28" selection-start-column="39" selection-end-line="28" selection-end-column="39" />
-          <folding>
-            <element signature="e#188#206#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-371">
-          <caret line="118" column="31" selection-start-line="118" selection-start-column="31" selection-end-line="118" selection-end-column="31" />
+        <state relative-caret-position="768">
+          <caret line="333" column="53" selection-start-line="333" selection-start-column="53" selection-end-line="333" selection-end-column="53" />
           <folding>
             <element signature="e#1#19#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-724">
+          <caret line="75" selection-start-line="75" selection-end-line="75" />
         </state>
       </provider>
     </entry>
