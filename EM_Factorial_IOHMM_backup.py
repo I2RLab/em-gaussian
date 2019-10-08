@@ -9,7 +9,7 @@ np.set_printoptions(linewidth=600)
 np.set_printoptions(precision=2, edgeitems=25)
 
 
-workbook = xlrd.open_workbook('IO_sample7.xlsx')
+workbook = xlrd.open_workbook('IO_sample9.xlsx')
 worksheet = workbook.sheet_by_index(0)
 
 state_scale = 2
@@ -231,15 +231,8 @@ def forward(params):
         for j in range(S):
             for i in range(S):
                 if np.isnan(alpha[k - 1, i]) or np.isnan(A[k, i, j]) or np.isnan(O[k,j]):
-                    # print('alpha')
-                    # print(alpha)
-                    # print('A[k, i, j]')
-                    # print(A[k, i, j])
-                    # print('A')
-                    # print(A)
-                    # print('O')
-                    # print(O)
-                    print()
+                    pass
+                
                 else:
                     alpha[k, j] += alpha[k - 1, i] * A[k, i, j] * O[k, j]
 
@@ -280,23 +273,23 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
         print('iteration=', it)
         pi1 = np.zeros_like(pi)
         A1 = np.zeros_like(A)
-        H1 = np.zeros_like(A)
+        A1_New = np.zeros_like(A)
         O1 = np.zeros((obs_length, S))
     
         # compute forward-backward matrices
         alpha, za = forward((pi, A, O))
         beta, zb = backward((pi, A, O))
         # print('alpha\n', alpha)
-        # print('za\n', za)
+        print('za\n', za)
         # print('beta\n', beta)
-        # print('zb\n', zb)
+        print('zb\n', zb)
     
         assert abs(za - zb) < 1e-2, "it's badness 10000 if the marginals don't agree"
     
         # M-step here, calculating the frequency of starting state, transitions and (state, obs) pairs
         pi1 += alpha[0, :] * beta[0, :] / za
         pi = pi1 / np.sum(pi1)  # normalise pi1
-       
+    
     
         for k in range(0, obs_length):
             O1[k] += alpha[k, :] * beta[k, :] / za
@@ -312,28 +305,55 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
             if len(ti) > 0:
                 for ki, t in enumerate(ti):
                     H += A1[t]
-                    H1[t] = np.transpose(np.transpose(H) / np.sum(H, 1))
+            
+                H_temp = np.transpose(np.transpose(H) / np.sum(H, 1))
+            
+                for ki, t in enumerate(ti):
+                    A1_New[t] = H_temp
     
-        OM1 = np.zeros_like(O)
-        w_ilk = np.zeros((input_tot, output_num, state_total)) + 10 ** -300
+        O_New = np.zeros_like(O)
+        w_jl = np.zeros((output_num, state_total)) + 10 ** -250
         
-        for k, ti in enumerate(input_lambda):
-            for l, to in enumerate(output_lambda):
-                if len(io_lambda[ti, to]) > 0:
-                    w_ilk_temp = np.zeros((1, state_total))
-                    for i, ts in enumerate(io_lambda[ti, to]):
-                        w_ilk_temp += O1[ts]
-                    w_ilk[ti, to - 1, :] = w_ilk_temp
+        for t1, to in enumerate(output_lambda):
+            if len(output_lambda[to]) > 0:
+                O1_temp = np.zeros((1, state_total))
+                for t, ut in enumerate(output_lambda[to]):
+                    O1_temp += O1[ut]
+        
+                w_jl[t1] = O1_temp
+            else:
+                w_jl[t1] = np.zeros_like(O[0]) + 10 ** -250
+                
+        w_jl /= np.sum(w_jl, 0)
+        
+        for t1, to in enumerate(output_lambda):
+            if len(output_lambda[to]) > 0:
+                for t, ut in enumerate(output_lambda[to]):
+                    O_New[ut] = w_jl[t1]
     
-        for k, ti in enumerate(input_lambda):
-            if np.sum(w_ilk[ti]) > 0:
-                w_ilk[ti] /= np.sum(w_ilk[ti], 0)
-                for l, to in enumerate(output_lambda):
-                    if len(io_lambda[ti, to]) > 0:
-                        for kl, ts in enumerate(io_lambda[ti, to]):
-                            OM1[ts] = w_ilk[ti, to-1]
-        
-        A, O = H1, OM1
+    
+        # uncomment to compute O_jlk instead
+        # w_ilk = np.zeros((input_tot, output_num, state_total)) + 10 ** -300
+    
+        # for k, ti in enumerate(input_lambda):
+        #     for l, to in enumerate(output_lambda):
+        #         if len(io_lambda[ti, to]) > 0:
+        #             w_ilk_temp = np.zeros((1, state_total))
+        #             for i, ts in enumerate(io_lambda[ti, to]):
+        #                 w_ilk_temp += O1[ts]
+        #             w_ilk[ti, to - 1, :] = w_ilk_temp
+        #
+        # for k, ti in enumerate(input_lambda):
+        #     if np.sum(w_ilk[ti]) > 0:
+        #         w_ilk[ti] /= np.sum(w_ilk[ti], 0)
+        #         for l, to in enumerate(output_lambda):
+        #             if len(io_lambda[ti, to]) > 0:
+        #                 for kl, ts in enumerate(io_lambda[ti, to]):
+        #                     O_New[ts] = w_ilk[ti, to-1]
+    
+        A, O = A1_New, O_New
+        # print('A=\n', A, '\n')
+        # print('O=\n', O, '\n')
     
     A_ijk = dict()
 
@@ -343,23 +363,32 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
         else:
             A_ijk[k] = np.zeros_like(A[0])
 
-    O_jlk = dict()
+    O_jl = dict()
 
-    for k, ti in enumerate(input_lambda):
-        for l, to in enumerate(output_lambda):
-            if len(io_lambda[ti, to]) > 0:
-                O_jlk[k, l] = O[io_lambda[ti, to][0]]
-            else:
-                O_jlk[k, l] = np.zeros_like(O[0])
+    
+    for l, to in enumerate(output_lambda):
+        if len(output_lambda[to]) > 0:
+            O_jl[l] = O[output_lambda[to][0]]
+        else:
+            O_jl[l] = np.zeros_like(O[0])
+    
+    # O_jlk = dict()
+    #
+    # for k, ti in enumerate(input_lambda):
+    #     for l, to in enumerate(output_lambda):
+    #         if len(io_lambda[ti, to]) > 0:
+    #             O_jlk[k, l] = O[io_lambda[ti, to][0]]
+    #         else:
+    #             O_jlk[k, l] = np.zeros_like(O[0])
 
     print('A=\n', A, '\n')
     print('O=\n', O, '\n')
-    return pi, A, O, A_ijk, O_jlk
+    return pi, A, O, A_ijk, O_jl
 
 
 if __name__ == "__main__":
     
-    pi_trained, A_trained, O_trained, A_ijk, O_jlk = baum_welch(output_seq, pi, 10, input_seq, w_transition, w_observation)
+    pi_trained, A_trained, O_trained, A_ijk, O_jl = baum_welch(output_seq, pi, 7, input_seq, w_transition, w_observation)
 
 
 # plt.plot(np.transpose(A_trained[-1]),'*')
