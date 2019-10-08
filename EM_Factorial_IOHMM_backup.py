@@ -9,7 +9,7 @@ np.set_printoptions(linewidth=600)
 np.set_printoptions(precision=2, edgeitems=25)
 
 
-workbook = xlrd.open_workbook('IO_sample9.xlsx')
+workbook = xlrd.open_workbook('IO_sample10.xlsx')
 worksheet = workbook.sheet_by_index(0)
 
 state_scale = 2
@@ -102,14 +102,14 @@ print(io_lambda)
 
 # w_transition = [w_b, w_s, w_x1, w_x2, w_x3]
 w_transition = np.ndarray((8, 5))
-w_transition[0, :] = [0.0, -.1, .1, .1, .1]
-w_transition[1, :] = [0.8, -.1, -.2, .05, .05]
-w_transition[2, :] = [0.8, -.1, .05, -.2, .05]
-w_transition[3, :] = [0.8, -.1, .05, .05, -.2]
-w_transition[4, :] = [0, .1, -.1, -.1, .1]
-w_transition[5, :] = [0, .1, -.1, .1, -.1]
-w_transition[6, :] = [0, .1, .1, -.1, -.1]
-w_transition[7, :] = [0, .1, -.1, -.1, -.1]
+w_transition[0, :] = [-1.5, -.1, .3, .3, .3]
+w_transition[1, :] = [-.5, -.1, -.3, .3, .3]
+w_transition[2, :] = [-.5, -.1, .3, -.3, .3]
+w_transition[3, :] = [-.5, -.1, .3, .3, -.3]
+w_transition[4, :] = [0.0, .1, -.3, -.3, .3]
+w_transition[5, :] = [0.0, .1, -.3, .3, -.3]
+w_transition[6, :] = [0.0, .1, .3, -.3, -.3]
+w_transition[7, :] = [0.0, .1, -.3, -.3, -.3]
 
 w_observation = np.ndarray((8, 5))
 w_observation[0, :] = [-.7, -.1, .1, .1, .1]

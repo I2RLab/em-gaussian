@@ -74,7 +74,7 @@ def io_index_func(i_index, y_data):
 input_sequence = i_index_func(data_input)
 
 # pi_trained, A_trained, O_trained, A_ijk, O_jlk = EM.baum_welch(EM.output_seq, EM.pi, 7, EM.input_seq, EM.w_transition, EM.w_observation)
-pi_trained, A_trained, O_trained, A_ijk, O_jl = EM.baum_welch(EM.output_seq, EM.pi, 2, EM.input_seq, EM.w_transition, EM.w_observation)
+pi_trained, A_trained, O_trained, A_ijk, O_jl = EM.baum_welch(EM.output_seq, EM.pi, 7, EM.input_seq, EM.w_transition, EM.w_observation)
 
 # transition joint probability P(u_n, s_n-1, s_n)
 # A_iju = dict()
@@ -130,8 +130,8 @@ for t in range(len(data_input)):
     # print(np.sum(A_iju[input_sequence[t]] * np.transpose(belief[t]),0) * O_jy[input_sequence[t], output_sequence[t]])
     # print(input_sequence[t], io_sequence[t])
     # belief_temp = np.multiply(np.sum(A_ijk[input_sequence[t]] * np.transpose(belief[t]), 0), O_jlk[io_sequence[t][0], io_sequence[t][1]])
-    belief_temp = np.multiply(np.sum(A_ijk[input_sequence[t]] * np.transpose(belief[t]), 1), O_jl[data_output[t]])
-    # belief_temp = np.multiply(np.sum(A_ijk[input_sequence[t]] * belief[t], 0) , O_jlk[io_sequence[t][0], io_sequence[t][1]])
+    belief_temp = np.multiply(np.sum(A_ijk[input_sequence[t]] * belief[t], 1), O_jl[data_output[t]])
+    # belief_temp = np.multiply(np.sum(A_ijk[input_sequence[t]] * belief[t], 0), O_jl[data_output[t]])
     belief_temp /= np.sum(belief_temp)
     belief[t+1] = np.copy(belief_temp)
     
@@ -160,7 +160,7 @@ num_elements = len(xpos)
 dx = np.ones(1)
 dy = np.ones(1)
 
-colors = plt.cm.jet(np.asanyarray(dz).flatten() / float(np.asanyarray(dz).max()))
+colors = plt.cm.jet((np.asanyarray(dz).flatten() + .2) / (float(np.asanyarray(dz).max()) + .1) )
 
 ax1.bar3d(xpos, ypos, zpos, dx, dy, dz, color=colors)
 plt.show()
