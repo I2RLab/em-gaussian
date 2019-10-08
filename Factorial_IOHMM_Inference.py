@@ -74,7 +74,7 @@ def io_index_func(i_index, y_data):
 input_sequence = i_index_func(data_input)
 
 # pi_trained, A_trained, O_trained, A_ijk, O_jlk = EM.baum_welch(EM.output_seq, EM.pi, 7, EM.input_seq, EM.w_transition, EM.w_observation)
-pi_trained, A_trained, O_trained, A_ijk, O_jl = EM.baum_welch(EM.output_seq, EM.pi, 7, EM.input_seq, EM.w_transition, EM.w_observation)
+pi_trained, A_trained, O_trained, A_ijk, O_jl = EM.baum_welch(EM.output_seq, EM.pi, 6, EM.input_seq, EM.w_transition, EM.w_observation)
 
 # transition joint probability P(u_n, s_n-1, s_n)
 # A_iju = dict()
@@ -151,7 +151,7 @@ dz = []
 for t in range(len(data_input)):
     for s in range(state_num):
         xpos.append(t)
-        ypos.append(s)
+        ypos.append(s+1)
         zpos.append(0)
         dz.append(belief[t, s])
 
@@ -160,7 +160,7 @@ num_elements = len(xpos)
 dx = np.ones(1)
 dy = np.ones(1)
 
-colors = plt.cm.jet((np.asanyarray(dz).flatten() + .2) / (float(np.asanyarray(dz).max()) + .1) )
+colors = plt.cm.jet((np.asanyarray(dz).flatten() + .2) / (float(np.asanyarray(dz).max()) + .25))
 
 ax1.bar3d(xpos, ypos, zpos, dx, dy, dz, color=colors)
 plt.show()
