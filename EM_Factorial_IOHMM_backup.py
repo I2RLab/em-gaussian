@@ -1,15 +1,12 @@
 
 import numpy as np
-import matplotlib.pyplot as plt
-import collections as col
-import xlsxwriter
 import xlrd
 
 np.set_printoptions(linewidth=600)
 np.set_printoptions(precision=2, edgeitems=25)
 
 
-workbook = xlrd.open_workbook('IO_sample10.xlsx')
+workbook = xlrd.open_workbook('IO_sample11.xlsx')
 worksheet = workbook.sheet_by_index(0)
 
 state_scale = 2
@@ -135,19 +132,11 @@ def mlogit_transition(w, u):
             e_matrix = np.concatenate((z_matrix, np.transpose(c)))
             E_matrix.append(np.transpose(e_matrix))
 
-        except:
+        except NameError:
             pass
 
     a_ijt = np.ones((state_total, state_total)) / state_total
-    # a_ijt = np.array([[.24, .15, .15, .15, .1, .1, .1, .01],
-    #                   [.2, .24, .1, .1, .15, .15, .05, .01],
-    #                   [.2, .1, .24, .1, .15, .05, .15, .01],
-    #                   [.2, .1, .1, .24, .05, .15, .15, .01],
-    #                   [.06, .15, .15, .05, .34, .1, .1, .05],
-    #                   [.06, .15, .05, .15, .1, .34, .1, .05],
-    #                   [.06, .05, .15, .15, .1, .1, .34, .05],
-    #                   [.01, .1, .1, .1, .15, .15, .15, .24]])
-    
+
     for t in range(len(E_matrix)):
         a_ij = np.empty((1, state_total))
 
@@ -171,6 +160,7 @@ def mlogit_transition(w, u):
 
     return A_ijt
 
+
 def mlogit_observation(w, output, input):
     z_matrix = np.concatenate((np.ones((1, state_total)), state_vec))
     a = np.ones((state_total, 3))
@@ -193,14 +183,7 @@ def mlogit_observation(w, output, input):
         for iw, w_m in enumerate(w):
             beta = list()
             for ix, x in enumerate(E_matrix[t]):
-                # print('w_m')
-                # print(w_m)
-                # print('x')
-                # print(x)
-                # print(np.matmul(w_m, x))
-                # print(np.exp(np.matmul(w_m, x)))
                 beta.append(np.exp(np.matmul(w_m, x)))  # w_l = [w_lb, w_ls, w_l1, w_l2, w_l3] & x = [1, S(t), u1, u2, u3]
-                # print()
 
             den = 1 + sum(beta[0:-1])
             beta /= den
@@ -289,8 +272,7 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
         # M-step here, calculating the frequency of starting state, transitions and (state, obs) pairs
         pi1 += alpha[0, :] * beta[0, :] / za
         pi = pi1 / np.sum(pi1)  # normalise pi1
-    
-    
+
         for k in range(0, obs_length):
             O1[k] += alpha[k, :] * beta[k, :] / za
     
@@ -298,8 +280,7 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
             for j in range(S):
                 for i in range(S):
                     A1[k - 1, i, j] = alpha[k - 1, i] * A[k, i, j] * O[k, j] * beta[k, j] / za
-    
-    
+
         for k, ti in enumerate(input_lambda.values()):
             H = np.zeros_like(A[0]) + 10 ** -300
             if len(ti) > 0:
@@ -330,7 +311,6 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
             if len(output_lambda[to]) > 0:
                 for t, ut in enumerate(output_lambda[to]):
                     O_New[ut] = w_jl[t1]
-    
     
         # uncomment to compute O_jlk instead
         # w_ilk = np.zeros((input_tot, output_num, state_total)) + 10 ** -300
@@ -365,7 +345,6 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
 
     O_jl = dict()
 
-    
     for l, to in enumerate(output_lambda):
         if len(output_lambda[to]) > 0:
             O_jl[l] = O[output_lambda[to][0]]
@@ -373,7 +352,6 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
             O_jl[l] = np.zeros_like(O[0])
     
     # O_jlk = dict()
-    #
     # for k, ti in enumerate(input_lambda):
     #     for l, to in enumerate(output_lambda):
     #         if len(io_lambda[ti, to]) > 0:
@@ -389,7 +367,5 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
 if __name__ == "__main__":
     
     pi_trained, A_trained, O_trained, A_ijk, O_jl = baum_welch(output_seq, pi, 7, input_seq, w_transition, w_observation)
-
-
-# plt.plot(np.transpose(A_trained[-1]),'*')
-# plt.show()
+    # plt.plot(np.transpose(A_trained[-1]),'*')
+    # plt.show()
