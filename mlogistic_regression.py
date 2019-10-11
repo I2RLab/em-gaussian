@@ -1,5 +1,7 @@
 import numpy as np
 import xlrd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 np.set_printoptions(linewidth=600)
 np.set_printoptions(precision=3, edgeitems=25)
@@ -80,7 +82,33 @@ def mlogit_transition(w, u):
     return A_ijt
 
 
+transition_probability = mlogit_transition(weights_matrix, inputs_matrix)
 
+# PLOT RESULTS #
 
+# for i in range(len(transition_probability)):
+for i in range(3):
+    fig = plt.figure(i)
+    ax1 = fig.add_subplot(111, projection='3d')
 
-mlogit_transition(weights_matrix, inputs_matrix)
+    xpos = []
+    ypos = []
+    zpos = []
+    dz = []
+
+    for s0 in range(state_total):
+        for s1 in range(state_total):
+            xpos.append(s0 + 1)
+            ypos.append(s1 + 1)
+            zpos.append(0)
+            dz.append(transition_probability[i, s0, s1])
+
+    num_elements = len(xpos)
+    dx = np.ones(1)
+    dy = np.ones(1)
+
+    colors = plt.cm.jet((np.asanyarray(dz).flatten()) / (float(np.asanyarray(dz).max())))
+
+    ax1.bar3d(xpos, ypos, zpos, dx, dy, dz, color=colors)
+
+plt.show()
