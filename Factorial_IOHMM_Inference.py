@@ -7,7 +7,7 @@ import numpy as np
 import xlrd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import  EM_Factorial_IOHMM_backup as EM
+import EM_Factorial_IOHMM_backup as EM
 
 np.set_printoptions(linewidth=520)
 np.set_printoptions(precision=3, edgeitems=15)
