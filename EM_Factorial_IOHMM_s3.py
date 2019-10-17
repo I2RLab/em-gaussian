@@ -1,5 +1,6 @@
 import numpy as np
 import xlrd
+import mlogistic_regression
 
 np.set_printoptions(linewidth=600)
 np.set_printoptions(precision=2, edgeitems=25)
@@ -77,124 +78,6 @@ io_lambda = dict()
 for i, ti in enumerate(input_lambda):
     for o, to in enumerate(output_lambda):
         io_lambda[ti, to] = list(set(input_lambda[ti]).intersection(output_lambda[to]))
-
-print('io_lambda')
-print(io_lambda)
-#####################################################################
-# plot input sequence
-# plt.subplots(1, 1, sharex='all', sharey='all')
-# plt.subplot(211)
-#
-# for i, u_t in enumerate(np.transpose(input_seq)):
-#     plt.plot(time_seq, u_t)
-#     plt.grid(color='b', axis='y')
-
-# plt.subplot(212)
-# plt.plot(time_seq, output_seq, '.')
-
-# plt.show()
-#####################################################################
-
-# w_transition = [w_b, w_s, w_x1, w_x2, w_x3]
-w_transition = np.ndarray((8, 5))
-w_transition[0, :] = [-1.5, -.1, .3, .3, .3]
-w_transition[1, :] = [-.5, -.1, -.3, .3, .3]
-w_transition[2, :] = [-.5, -.1, .3, -.3, .3]
-w_transition[3, :] = [-.5, -.1, .3, .3, -.3]
-w_transition[4, :] = [0.0, .1, -.3, -.3, .3]
-w_transition[5, :] = [0.0, .1, -.3, .3, -.3]
-w_transition[6, :] = [0.0, .1, .3, -.3, -.3]
-w_transition[7, :] = [0.0, .1, -.3, -.3, -.3]
-
-w_observation = np.ndarray((8, 5))
-w_observation[0, :] = [-.7, -.1, .1, .1, .1]
-w_observation[1, :] = [0.0, -.1, -.1, .1, .1]
-w_observation[2, :] = [0.0, -.1, .1, -.1, .1]
-w_observation[3, :] = [0.0, -.1, .1, .1, -.1]
-w_observation[4, :] = [-.2, 0.1, -.1, -.1, .1]
-w_observation[5, :] = [-.2, 0.1, -.1, .1, -.1]
-w_observation[6, :] = [-.2, 0.1, .1, -.1, -.1]
-w_observation[7, :] = [-.2, 0.1, -.1, -.1, -.1]
-
-
-def mlogit_transition(w, u):
-    x_matrix = np.ones((1, state_total))
-    y_matrix = state_vec
-    z_matrix = np.concatenate((x_matrix, y_matrix))
-    a = np.ones((state_total, agent_num))
-    E_matrix = []
-
-    for t, u_t in enumerate(u):
-        try:
-            c = np.multiply(a, u_t)
-            e_matrix = np.concatenate((z_matrix, np.transpose(c)))
-            E_matrix.append(np.transpose(e_matrix))
-
-        except NameError:
-            pass
-
-    a_ijt = np.ones((state_total, state_total)) / state_total
-
-    for t in range(len(E_matrix)):
-        a_ij = np.empty((1, state_total))
-
-        for ix, x in enumerate(E_matrix[t]):
-            beta = list()
-            for iw, w_m in enumerate(w):
-                beta.append(np.exp(np.matmul(w_m, x)))
-
-            den = 1 + sum(beta[0:-1])
-            beta /= den
-            beta[-1] = 1. / den
-
-            a_ij = np.concatenate((a_ij, np.array(beta).reshape(1, state_total)))
-
-        a_ij = a_ij[1::]
-
-        a_ijt = np.concatenate((a_ijt, a_ij))
-
-    A_ijt = a_ijt.reshape((int(len(a_ijt) / state_total), state_total, state_total))
-    A_ijt = A_ijt[1::]
-
-    return A_ijt
-
-
-def mlogit_observation(w, output, input):
-    z_matrix = np.concatenate((np.ones((1, state_total)), state_vec))
-    a = np.ones((state_total, 3))
-    E_matrix = []
-
-    for t, u_t in enumerate(input):
-        try:
-            b = np.multiply(a, input[t])
-            e_matrix = np.concatenate((z_matrix, np.transpose(b)))
-            E_matrix.append(np.transpose(e_matrix))
-
-        except:
-            pass
-
-    b_jt = np.ones((1, state_total))
-
-    for t in range(len(E_matrix)):
-        b_ij = np.empty((1, state_total))
-
-        for iw, w_m in enumerate(w):
-            beta = list()
-            for ix, x in enumerate(E_matrix[t]):
-                beta.append(np.exp(np.matmul(w_m, x)))  # w_l = [w_lb, w_ls, w_l1, w_l2, w_l3] & x = [1, S(t), u1, u2, u3]
-
-            den = 1 + sum(beta[0:-1])
-            beta /= den
-            beta[-1] = 1. / den
-
-            b_ij = np.concatenate((b_ij, np.array(beta).reshape(1, state_total)))
-        b_ij = b_ij[1::]
-        b_ij = np.transpose(b_ij)
-        b_jt = np.concatenate((b_jt, b_ij[[int(output[t][0]) - 1]]))
-
-    b_jt = b_jt[1::]
-
-    return b_jt
 
 
 def forward(params):
