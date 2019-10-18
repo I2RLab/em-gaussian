@@ -1,20 +1,21 @@
 import numpy as np
 import xlrd
-import mlogistic_regression
+# import mlogistic_regression
+import categorical_distribution as cd
 
 np.set_printoptions(linewidth=600)
-np.set_printoptions(precision=2, edgeitems=25)
+np.set_printoptions(precision=2, edgeitems=15)
 
 workbook = xlrd.open_workbook('IO_sample11.xlsx')
 worksheet = workbook.sheet_by_index(0)
 
-state_scale = 2
+state_scale = 3
 
 agent_num = 3
 
 input_num = 3
 
-output_num = 8
+output_num = 4
 
 state_total = state_scale ** agent_num
 
@@ -80,12 +81,32 @@ for i, ti in enumerate(input_lambda):
         io_lambda[ti, to] = list(set(input_lambda[ti]).intersection(output_lambda[to]))
 
 
+def input_probs_seq(a_ijk):
+    a_t = np.zeros((len(input_seq), state_total, state_total))
+    for i in range(state_total):
+        for lambda_index, t  in enumerate(input_lambda[i]):
+            a_t[t] = a_ijk[i]
+
+    # print('a_t')
+    # print(a_t)
+    return a_t
+
+
+def output_probs_seq(o_jl):
+    o_t = np.zeros((len(input_seq), state_total))
+    for i in range(output_num):
+        for lambda_index, t in enumerate(output_lambda[i+1]):
+            o_t[t] = o_jl[i]
+
+    return o_t
+
+
 def forward(params):
     pi, A, O = params
     N = time_length
     S = pi.shape[0]
 
-    alpha = np.zeros((N, S))
+    alpha = np.zeros((N, S)) + 10 ** -300
     # base case
     for s in range(S):
         alpha[0, :] = pi * O[0]
@@ -108,7 +129,7 @@ def backward(params):
     N = time_length
     S = pi.shape[0]
 
-    beta = np.zeros((N, S))
+    beta = np.zeros((N, S)) + 10 ** -300
 
     # base case
     beta[N - 1, :] = 1
@@ -122,11 +143,17 @@ def backward(params):
     return beta, max(np.sum(pi * O[0] * beta[0, :]), 10 ** -300)
 
 
-def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
-    A = mlogit_transition(w_transition, input_seq)
-    O = mlogit_observation(w_obs, output_seq, input_seq)
-    print('A init\n', A)
-    print('O init\n', O)
+def baum_welch(output_seq, pi, iterations, input_seq):
+    a_ijk = cd.a_ijk
+    o_jl = cd.o_ls
+    # print('a_ijk\n', a_ijk)
+    # print('o_ijl\n', o_jl)
+
+    A = input_probs_seq(a_ijk)
+    O = output_probs_seq(o_jl)
+
+    # print('A init\n', A)
+    # print('O init\n', O)
 
     pi, A, O = np.copy(pi), np.copy(A), np.copy(O)  # take copies, as we modify them
     S = pi.shape[0]
@@ -144,9 +171,9 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
         alpha, za = forward((pi, A, O))
         beta, zb = backward((pi, A, O))
         # print('alpha\n', alpha)
-        print('za\n', za)
+        # print('za\n', za)
         # print('beta\n', beta)
-        print('zb\n', zb)
+        # print('zb\n', zb)
 
         assert abs(za - zb) < 1e-2, "it's badness 10000 if the marginals don't agree"
 
@@ -246,6 +273,6 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
 
 
 if __name__ == "__main__":
-    pi_trained, A_trained, O_trained, A_ijk, O_jl = baum_welch(output_seq, pi, 7, input_seq, w_transition, w_observation)
+    pi_trained, A_trained, O_trained, A_ijk, O_jl = baum_welch(output_seq, pi, 7, input_seq)
     # plt.plot(np.transpose(A_trained[-1]),'*')
     # plt.show()

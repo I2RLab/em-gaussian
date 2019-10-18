@@ -14,15 +14,14 @@ states = np.ndarray((27, 3))
 for i in range(3):
     states[:, i] = worksheet.col_values(i)
 
-print('states')
-print(states)
+# print('states')
+# print(states)
 
 prob_ws = np.ones((27, 27))
 
 ws = np.array([[0.50, 0.35, 0.15],
                [0.35, 0.45, 0.20],
                [0.25, 0.35, 0.40]])
-
 
 for s1 in range(27):
 	for s2 in range(27):
@@ -31,8 +30,8 @@ for s1 in range(27):
 			prob_ij = prob_ij * ws[int(states[s1, i]) - 1, int(states[s2, i]) - 1]
 		prob_ws[s1, s2] = prob_ij
 
-print('prob_ws')
-print(prob_ws)
+# print('prob_ws')
+# print(prob_ws)
 
 prob_wx = np.ones((27, 27))
 
@@ -47,9 +46,8 @@ for x in range(27):
 			prob_jk = prob_jk * wx[int(states[x, i]) - 1, int(states[s, i]) - 1]
 		prob_wx[x, s] = prob_jk
 
-print('prob_wx')
-print(prob_wx)
-
+# print('prob_wx')
+# print(prob_wx)
 
 a_ijk = np.ones((27, 27, 27))
 
@@ -58,6 +56,21 @@ for k in range(27):
 		for s2 in range(27):
 			a_ijk[k, s1, s2] = prob_ws[s1, s2] * prob_wx[k, s2]
 
+workbook_observation_probs = xlrd.open_workbook('mlogistic_weights_0.xlsx')
+worksheet_observation_probs = workbook_observation_probs.sheet_by_index(1)
+
+o_ls = np.zeros((4, 27))
+
+for i in range(4, 8):
+	o_ls[i - 4, :] = worksheet_observation_probs.col_values(i)
+
+# o_ls = np.transpose(o_ls)
+
+# print('o_ls')
+# print(o_ls)
+
+
+'''
 # PLOT RESULTS #
 fig1 = plt.figure(1)
 fig2 = plt.figure(2)
@@ -71,13 +84,13 @@ dz1 = []
 dz2 = []
 
 for s1 in range(1, 27):
-    for s2 in range(1, 27):
-        xpos.append(s1)
-        ypos.append(s2)
-        zpos.append(0)
-        dz1.append(prob_ws[s1, s2])
-        dz2.append(prob_wx[s1, s2])
-	    
+	for s2 in range(1, 27):
+		xpos.append(s1)
+		ypos.append(s2)
+		zpos.append(0)
+		dz1.append(prob_ws[s1, s2])
+		dz2.append(prob_wx[s1, s2])
+
 num_elements = len(xpos)
 dx = np.ones(1)
 dy = np.ones(1)
@@ -89,3 +102,4 @@ ax1.bar3d(xpos, ypos, zpos, dx, dy, dz1, color=colors1)
 ax2.bar3d(xpos, ypos, zpos, dx, dy, dz2, color=colors2)
 
 plt.show()
+'''
