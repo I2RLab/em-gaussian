@@ -6,21 +6,28 @@
 import numpy as np
 import xlrd
 import matplotlib.pyplot as plt
+# matplotlib.use("qt4agg")
 from mpl_toolkits.mplot3d import Axes3D
 import EM_Factorial_IOHMM_backup as EM
+import EM_S7 as EM
+from mayavi.mlab import *
+
+
+# barchart(np.random.random((3, 3)))
+# show()
 
 np.set_printoptions(linewidth=520)
 np.set_printoptions(precision=3, edgeitems=15)
 
 # constants
-input_num = 3
-output_num = 8
+input_num = 5
+output_num = 4
 agent_num = 3
-state_num = 8
+state_num = 125
 input_tot = agent_num ** input_num
 
 # input sequence
-workbook = xlrd.open_workbook('IO_test1.xlsx')
+workbook = xlrd.open_workbook('IO_s5.xlsx')
 worksheet = workbook.sheet_by_index(0)
 
 data_read = list()
@@ -66,7 +73,7 @@ def io_index_func(i_index, y_data):
 input_sequence = i_index_func(data_input)
 
 # pi_trained, A_trained, O_trained, A_ijk, O_jlk = EM.baum_welch(EM.output_seq, EM.pi, 7, EM.input_seq, EM.w_transition, EM.w_observation)
-pi_trained, A_trained, O_trained, A_ijk, O_jl = EM.baum_welch(EM.output_seq, EM.pi, 6, EM.input_seq, EM.w_transition, EM.w_observation)
+pi_trained, A_trained, O_trained, A_ijk, O_jl = EM.baum_welch(EM.output_seq, EM.pi, 8, EM.input_seq, EM.w_transition, EM.w_observation)
 
 io_sequence = io_index_func(input_sequence, data_output)
 
@@ -95,15 +102,15 @@ print('belief')
 print(belief)
 
 # PLOT RESULTS #
-fig = plt.figure()
-ax1 = fig.add_subplot(111, projection='3d')
-
+# fig = plt.figure()
+# ax1 = fig.add_subplot(111, projection='3d')
+#
 xpos = []
 ypos = []
 zpos = []
 dz = []
 
-for t in range(len(data_input)):
+for t in range(1, len(data_input)):
     for s in range(state_num):
         xpos.append(t)
         ypos.append(s+1)
@@ -114,9 +121,17 @@ num_elements = len(xpos)
 dx = np.ones(1)
 dy = np.ones(1)
 
-colors = plt.cm.jet((np.asanyarray(dz).flatten() + .2) / (float(np.asanyarray(dz).max()) + .25))
+# colors = plt.cm.jet((np.asanyarray(dz).flatten() + .2) / (float(np.asanyarray(dz).max()) + .25))
+#
+# ax1.bar3d(xpos, ypos, zpos, dx, dy, dz, color=colors)
+# plt.show()
 
-ax1.bar3d(xpos, ypos, zpos, dx, dy, dz, color=colors)
-plt.show()
+
+# for angle in range(0, 360):
+#     ax1.view_init(30, angle)
+#     plt.draw()
+#     plt.pause(.001)
 
 
+barchart(belief)
+show()
