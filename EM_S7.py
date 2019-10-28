@@ -189,11 +189,8 @@ def baum_welch(output_seq, pi, iterations, input_seq):
     A = a_ijt
     O = o_jt
 
-
-
-
-    print('A init\n', A)
-    print('O init\n', O)
+    # print('A init\n', A)
+    # print('O init\n', O)
 
     pi, A, O = np.copy(pi), np.copy(A), np.copy(O)  # take copies, as we modify them
     S = pi.shape[0]

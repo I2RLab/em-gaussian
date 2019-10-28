@@ -27,7 +27,7 @@ state_num = 125
 input_tot = agent_num ** input_num
 
 # input sequence
-workbook = xlrd.open_workbook('IO_s5.xlsx')
+workbook = xlrd.open_workbook('IO_s5_test1.xlsx')
 worksheet = workbook.sheet_by_index(0)
 
 data_read = list()
@@ -95,16 +95,10 @@ for t in range(len(data_input)):
     belief_temp = np.multiply(np.sum(A_ijk[input_sequence[t]] * belief[t], 1), O_jl[data_output[t]])
     belief_temp /= np.sum(belief_temp)
     belief[t+1] = np.copy(belief_temp)
-    # print('belief_temp')
-    # print(belief_temp)
 
 print('belief')
 print(belief)
 
-# PLOT RESULTS #
-# fig = plt.figure()
-# ax1 = fig.add_subplot(111, projection='3d')
-#
 xpos = []
 ypos = []
 zpos = []
@@ -121,17 +115,5 @@ num_elements = len(xpos)
 dx = np.ones(1)
 dy = np.ones(1)
 
-# colors = plt.cm.jet((np.asanyarray(dz).flatten() + .2) / (float(np.asanyarray(dz).max()) + .25))
-#
-# ax1.bar3d(xpos, ypos, zpos, dx, dy, dz, color=colors)
-# plt.show()
-
-
-# for angle in range(0, 360):
-#     ax1.view_init(30, angle)
-#     plt.draw()
-#     plt.pause(.001)
-
-
-barchart(belief)
+barchart(belief[1:])
 show()
