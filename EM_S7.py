@@ -1,5 +1,18 @@
 import numpy as np
 import xlrd
+import sys
+
+sys.path.insert(0, '../Categorical_Boltzmann_Machines')
+
+import CRBM
+
+prob_transition = CRBM.CRBM('transition')
+prob_emission = CRBM.CRBM('emission')
+
+a_matrix = prob_transition.total_transition_probs()
+o_matrix = prob_emission._o_jk()
+
+prob_emission = CRBM.CRBM('emission')
 
 np.set_printoptions(linewidth=600)
 np.set_printoptions(precision=2, edgeitems=25)
@@ -78,8 +91,8 @@ for i, ti in enumerate(input_lambda):
     for o, to in enumerate(output_lambda):
         io_lambda[ti, to] = list(set(input_lambda[ti]).intersection(output_lambda[to]))
 
-print('io_lambda')
-print(io_lambda)
+# print('io_lambda')
+# print(io_lambda)
 #####################################################################
 # plot input sequence
 # plt.subplots(1, 1, sharex='all', sharey='all')
@@ -95,116 +108,31 @@ print(io_lambda)
 # plt.show()
 #####################################################################
 
-# w_transition = [w_b, w_s, w_x1, w_x2, w_x3]
-w_transition = np.ndarray((8, 5))
-w_transition[0, :] = [-1.5, -.1, .3, .3, .3]
-w_transition[1, :] = [-.5, -.1, -.3, .3, .3]
-w_transition[2, :] = [-.5, -.1, .3, -.3, .3]
-w_transition[3, :] = [-.5, -.1, .3, .3, -.3]
-w_transition[4, :] = [0.0, .1, -.3, -.3, .3]
-w_transition[5, :] = [0.0, .1, -.3, .3, -.3]
-w_transition[6, :] = [0.0, .1, .3, -.3, -.3]
-w_transition[7, :] = [0.0, .1, -.3, -.3, -.3]
+print('input_lambda')
+print(input_lambda)
 
-# w_observation = np.ndarray((8, 5))
-# w_observation[0, :] = [-.7, -.1, .1, .1, .1]
-# w_observation[1, :] = [0.0, -.1, -.1, .1, .1]
-# w_observation[2, :] = [0.0, -.1, .1, -.1, .1]
-# w_observation[3, :] = [0.0, -.1, .1, .1, -.1]
-# w_observation[4, :] = [-.2, 0.1, -.1, -.1, .1]
-# w_observation[5, :] = [-.2, 0.1, -.1, .1, -.1]
-# w_observation[6, :] = [-.2, 0.1, .1, -.1, -.1]
-# w_observation[7, :] = [-.2, 0.1, -.1, -.1, -.1]
+def tranition_probability_sequence(a_ijk, input_lambda):
+    a_ijt = np.zeros((time_length, state_total, state_total))
+    for id, input_id in enumerate(input_lambda):
+        for ti, input_time in enumerate(input_lambda[input_id]):
+            a_ijt[input_time] = a_ijk[id]
 
-w_observation = np.ndarray((8, 5))
-w_observation[0, :] = [-.7, -0.2, 0, 0, 0]
-w_observation[1, :] = [0.0, -0.2, 0, 0, 0]
-w_observation[2, :] = [0.0, -0.2, 0, 0, 0]
-w_observation[3, :] = [0.0, -0.2, 0, 0, 0]
-w_observation[4, :] = [-0.2, 0.2, 0, 0, 0]
-w_observation[5, :] = [-0.2, 0.2, 0, 0, 0]
-w_observation[6, :] = [-0.2, 0.2, 0, 0, 0]
-w_observation[7, :] = [-0.2, 0.2, 0, 0, 0]
+    return a_ijt
 
 
-def mlogit_transition(w, u):
-    x_matrix = np.ones((1, state_total))
-    y_matrix = state_vec
-    z_matrix = np.concatenate((x_matrix, y_matrix))
-    a = np.ones((state_total, agent_num))
-    E_matrix = []
-
-    for t, u_t in enumerate(u):
-        try:
-            c = np.multiply(a, u_t)
-            e_matrix = np.concatenate((z_matrix, np.transpose(c)))
-            E_matrix.append(np.transpose(e_matrix))
-
-        except NameError:
-            pass
-
-    a_ijt = np.ones((state_total, state_total)) / state_total
-
-    for t in range(len(E_matrix)):
-        a_ij = np.empty((1, state_total))
-
-        for ix, x in enumerate(E_matrix[t]):
-            beta = list()
-            for iw, w_m in enumerate(w):
-                beta.append(np.exp(np.matmul(w_m, x)))
-
-            den = 1 + sum(beta[0:-1])
-            beta /= den
-            beta[-1] = 1. / den
-
-            a_ij = np.concatenate((a_ij, np.array(beta).reshape(1, state_total)))
-
-        a_ij = a_ij[1::]
-
-        a_ijt = np.concatenate((a_ijt, a_ij))
-
-    A_ijt = a_ijt.reshape((int(len(a_ijt) / state_total), state_total, state_total))
-    A_ijt = A_ijt[1::]
-
-    return A_ijt
+a_ijt = tranition_probability_sequence(a_matrix, input_lambda)
 
 
-def mlogit_observation(w, output, input):
-    z_matrix = np.concatenate((np.ones((1, state_total)), state_vec))
-    a = np.ones((state_total, 3))
-    E_matrix = []
+def emission_probability_sequence(o_jl, output_lambda):
+    o_jt = np.zeros((time_length, state_total))
 
-    for t, u_t in enumerate(input):
-        try:
-            b = np.multiply(a, input[t])
-            e_matrix = np.concatenate((z_matrix, np.transpose(b)))
-            E_matrix.append(np.transpose(e_matrix))
+    for id, output_id in enumerate(output_lambda):
+        for ti, output_time in enumerate(output_lambda[output_id]):
+            o_jt[output_time] = o_jl[id]
 
-        except:
-            pass
+    return o_jt
 
-    b_jt = np.ones((1, state_total))
-
-    for t in range(len(E_matrix)):
-        b_ij = np.empty((1, state_total))
-
-        for iw, w_m in enumerate(w):
-            beta = list()
-            for ix, x in enumerate(E_matrix[t]):
-                beta.append(np.exp(np.matmul(w_m, x)))  # w_l = [w_lb, w_ls, w_l1, w_l2, w_l3] & x = [1, S(t), u1, u2, u3]
-
-            den = 1 + sum(beta[0:-1])
-            beta /= den
-            beta[-1] = 1. / den
-
-            b_ij = np.concatenate((b_ij, np.array(beta).reshape(1, state_total)))
-        b_ij = b_ij[1::]
-        b_ij = np.transpose(b_ij)
-        b_jt = np.concatenate((b_jt, b_ij[[int(output[t][0]) - 1]]))
-
-    b_jt = b_jt[1::]
-
-    return b_jt
+o_jt = emission_probability_sequence(o_matrix, output_lambda)
 
 
 def forward(params):
@@ -249,15 +177,21 @@ def backward(params):
     return beta, max(np.sum(pi * O[0] * beta[0, :]), 10 ** -300)
 
 
-def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
+def baum_welch(output_seq, pi, iterations, input_seq):
     # A = mlogit_transition(w_transition, input_seq)
     # A = np.ones((time_length, state_total, state_total)) / state_total
-    A = np.random.random_sample((time_length, state_total, state_total))
-    for t in range(time_length):
-        sum_At = np.sum(A[t], 1)
-        A[t] = np.transpose(np.transpose(A[t]) / np.sum(A[t], 1))
+    # A = np.random.random_sample((time_length, state_total, state_total))
+    # for t in range(time_length):
+    #     sum_At = np.sum(A[t], 1)
+    #     A[t] = np.transpose(np.transpose(A[t]) / np.sum(A[t], 1))
     # O = mlogit_observation(w_obs, output_seq, input_seq)
-    O = np.random.random_sample((time_length, state_total))
+    # O = np.random.random_sample((time_length, state_total))
+    A = a_ijt
+    O = o_jt
+
+
+
+
     print('A init\n', A)
     print('O init\n', O)
 
@@ -379,6 +313,6 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
 
 
 if __name__ == "__main__":
-    pi_trained, A_trained, O_trained, A_ijk, O_jl = baum_welch(output_seq, pi, 7, input_seq, w_transition, w_observation)
+    pi_trained, A_trained, O_trained, A_ijk, O_jl = baum_welch(output_seq, pi, 7, input_seq)
     # plt.plot(np.transpose(A_trained[-1]),'*')
     # plt.show()
