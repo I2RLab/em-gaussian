@@ -91,8 +91,6 @@ for i, ti in enumerate(input_lambda):
     for o, to in enumerate(output_lambda):
         io_lambda[ti, to] = list(set(input_lambda[ti]).intersection(output_lambda[to]))
 
-# print('io_lambda')
-# print(io_lambda)
 #####################################################################
 # plot input sequence
 # plt.subplots(1, 1, sharex='all', sharey='all')
@@ -110,6 +108,7 @@ for i, ti in enumerate(input_lambda):
 
 print('input_lambda')
 print(input_lambda)
+
 
 def tranition_probability_sequence(a_ijk, input_lambda):
     a_ijt = np.zeros((time_length, state_total, state_total))
@@ -131,6 +130,7 @@ def emission_probability_sequence(o_jl, output_lambda):
             o_jt[output_time] = o_jl[id]
 
     return o_jt
+
 
 o_jt = emission_probability_sequence(o_matrix, output_lambda)
 
@@ -178,14 +178,6 @@ def backward(params):
 
 
 def baum_welch(output_seq, pi, iterations, input_seq):
-    # A = mlogit_transition(w_transition, input_seq)
-    # A = np.ones((time_length, state_total, state_total)) / state_total
-    # A = np.random.random_sample((time_length, state_total, state_total))
-    # for t in range(time_length):
-    #     sum_At = np.sum(A[t], 1)
-    #     A[t] = np.transpose(np.transpose(A[t]) / np.sum(A[t], 1))
-    # O = mlogit_observation(w_obs, output_seq, input_seq)
-    # O = np.random.random_sample((time_length, state_total))
     A = a_ijt
     O = o_jt
 
@@ -257,28 +249,9 @@ def baum_welch(output_seq, pi, iterations, input_seq):
                 for t, ut in enumerate(output_lambda[to]):
                     O_New[ut] = w_jl[t1]
 
-        # uncomment to compute O_jlk instead
-        # w_ilk = np.zeros((input_total, output_num, state_total)) + 10 ** -300
-
-        # for k, ti in enumerate(input_lambda):
-        #     for l, to in enumerate(output_lambda):
-        #         if len(io_lambda[ti, to]) > 0:
-        #             w_ilk_temp = np.zeros((1, state_total))
-        #             for i, ts in enumerate(io_lambda[ti, to]):
-        #                 w_ilk_temp += O1[ts]
-        #             w_ilk[ti, to - 1, :] = w_ilk_temp
-        #
-        # for k, ti in enumerate(input_lambda):
-        #     if np.sum(w_ilk[ti]) > 0:
-        #         w_ilk[ti] /= np.sum(w_ilk[ti], 0)
-        #         for l, to in enumerate(output_lambda):
-        #             if len(io_lambda[ti, to]) > 0:
-        #                 for kl, ts in enumerate(io_lambda[ti, to]):
-        #                     O_New[ts] = w_ilk[ti, to-1]
-
         A, O = A1_New, O_New
-        print('A=\n', A, '\n')
-        print('O=\n', O, '\n')
+        # print('A=\n', A, '\n')
+        # print('O=\n', O, '\n')
 
     A_ijk = dict()
 
@@ -295,14 +268,6 @@ def baum_welch(output_seq, pi, iterations, input_seq):
             O_jl[l] = O[output_lambda[to][0]]
         else:
             O_jl[l] = np.zeros_like(O[0])
-
-    # O_jlk = dict()
-    # for k, ti in enumerate(input_lambda):
-    #     for l, to in enumerate(output_lambda):
-    #         if len(io_lambda[ti, to]) > 0:
-    #             O_jlk[k, l] = O[io_lambda[ti, to][0]]
-    #         else:
-    #             O_jlk[k, l] = np.zeros_like(O[0])
 
     print('A=\n', A, '\n')
     print('O=\n', O, '\n')

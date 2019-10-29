@@ -5,16 +5,10 @@
 
 import numpy as np
 import xlrd
-import matplotlib.pyplot as plt
-# matplotlib.use("qt4agg")
-from mpl_toolkits.mplot3d import Axes3D
 import EM_Factorial_IOHMM_backup as EM
-import EM_S7 as EM
+import EM_S5 as EM
 from mayavi.mlab import *
 
-
-# barchart(np.random.random((3, 3)))
-# show()
 
 np.set_printoptions(linewidth=520)
 np.set_printoptions(precision=3, edgeitems=15)
@@ -55,8 +49,8 @@ def i_index_func(data_i):
     for i_index, (i1, i2, i3) in enumerate(data_i):
         input_index.append(u_dict[i1, i2, i3])
 
-    print('input index:')
-    print(input_index)
+    # print('input index:')
+    # print(input_index)
     return input_index
 
 
@@ -66,14 +60,12 @@ def io_index_func(i_index, y_data):
     for i, io_id in enumerate(zip(i_index, y_data)):
         io_index[i] = list(io_id)
     
-    # print('io_index')
-    # print(io_index)
     return io_index
 
 input_sequence = i_index_func(data_input)
 
 # pi_trained, A_trained, O_trained, A_ijk, O_jlk = EM.baum_welch(EM.output_seq, EM.pi, 7, EM.input_seq, EM.w_transition, EM.w_observation)
-pi_trained, A_trained, O_trained, A_ijk, O_jl = EM.baum_welch(EM.output_seq, EM.pi, 5, EM.input_seq)
+pi_trained, A_trained, O_trained, A_ijk, O_jl = EM.baum_welch(EM.output_seq, EM.pi, 7, EM.input_seq)
 
 io_sequence = io_index_func(input_sequence, data_output)
 
@@ -88,10 +80,10 @@ belief = np.zeros((len(data_input) + 1, state_num))
 belief[0] = bel0
 
 for t in range(len(data_input)):
-    print('A_ijk[input_sequence[{}]]'.format(t))
-    print(A_ijk[input_sequence[t]])
-    print('O_jl[{}]'.format(data_output[t]))
-    print(O_jl[data_output[t]])
+    # print('A_ijk[input_sequence[{}]]'.format(t))
+    # print(A_ijk[input_sequence[t]])
+    # print('O_jl[{}]'.format(data_output[t]))
+    # print(O_jl[data_output[t]])
     belief_temp = np.multiply(np.sum(A_ijk[input_sequence[t]] * belief[t], 1), O_jl[data_output[t]])
     belief_temp /= np.sum(belief_temp)
     belief[t+1] = np.copy(belief_temp)
@@ -115,5 +107,5 @@ num_elements = len(xpos)
 dx = np.ones(1)
 dy = np.ones(1)
 
-barchart(belief[1:])
+barchart(belief[1:] *10 )
 show()
