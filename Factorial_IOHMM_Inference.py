@@ -65,7 +65,7 @@ def io_index_func(i_index, y_data):
 input_sequence = i_index_func(data_input)
 
 # pi_trained, A_trained, O_trained, A_ijk, O_jlk = EM.baum_welch(EM.output_seq, EM.pi, 7, EM.input_seq, EM.w_transition, EM.w_observation)
-pi_trained, A_trained, O_trained, A_ijk, O_jl = EM.baum_welch(EM.output_seq, EM.pi, 7, EM.input_seq)
+pi_trained, A_trained, O_trained, A_ijk, O_jl = EM.baum_welch(EM.output_seq, EM.pi, 6, EM.input_seq)
 
 io_sequence = io_index_func(input_sequence, data_output)
 

@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8db38a9f-2780-4c07-86ca-ead842fef6de" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/em-gaussian.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/em-gaussian.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EM_S7.py" beforeDir="false" afterPath="$PROJECT_DIR$/EM_S5.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" beforeDir="false" afterPath="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IO_s5_test1.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/IO_s5_test1.xlsx" afterDir="false" />
     </list>
@@ -40,11 +37,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/EM_S5.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="254" selection-start-line="254" selection-end-line="254" />
+            <state relative-caret-position="3879">
+              <caret line="252" column="32" lean-forward="true" selection-start-line="252" selection-start-column="32" selection-end-line="252" selection-end-column="32" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -52,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="395">
-              <caret line="86" column="33" selection-start-line="86" selection-start-column="33" selection-end-line="86" selection-end-column="33" />
+            <state relative-caret-position="117">
+              <caret line="67" column="85" selection-start-line="67" selection-start-column="85" selection-end-line="67" selection-end-column="85" />
               <folding>
                 <element signature="e#135#153#0" expanded="true" />
               </folding>
@@ -125,16 +122,16 @@
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_10.py" />
         <option value="$PROJECT_DIR$/../Categorical_Boltzmann_Machines/CRBM.py" />
         <option value="$PROJECT_DIR$/EM_S7.py" />
-        <option value="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" />
         <option value="$PROJECT_DIR$/EM_S5.py" />
+        <option value="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="57" />
-    <option name="y" value="25" />
-    <option name="width" value="1863" />
-    <option name="height" value="1055" />
+    <option name="x" value="535" />
+    <option name="y" value="60" />
+    <option name="width" value="1397" />
+    <option name="height" value="789" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -348,8 +345,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="57" y="25" width="1863" height="1055" extended-state="7" />
-    <editor active="true" />
+    <frame x="57" y="25" width="1863" height="1055" extended-state="6" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48918918" visible="true" weight="0.17554347" />
       <window_info id="Structure" order="1" sideWeight="0.5108108" side_tool="true" weight="0.19904964" />
@@ -821,22 +817,22 @@ for i in range(len(B)):
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py">
+    <entry file="file://$PROJECT_DIR$/EM_S5.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="86" column="33" selection-start-line="86" selection-start-column="33" selection-end-line="86" selection-end-column="33" />
+        <state relative-caret-position="3879">
+          <caret line="252" column="32" lean-forward="true" selection-start-line="252" selection-start-column="32" selection-end-line="252" selection-end-column="32" />
           <folding>
-            <element signature="e#135#153#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/EM_S5.py">
+    <entry file="file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="254" selection-start-line="254" selection-end-line="254" />
+        <state relative-caret-position="117">
+          <caret line="67" column="85" selection-start-line="67" selection-start-column="85" selection-end-line="67" selection-end-column="85" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#135#153#0" expanded="true" />
           </folding>
         </state>
       </provider>
