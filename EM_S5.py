@@ -5,6 +5,7 @@ import sys
 sys.path.insert(0, '../Categorical_Boltzmann_Machines')
 
 import CRBM
+import training_dataset_generator as tdg
 
 prob_transition = CRBM.CRBM('transition')
 prob_emission = CRBM.CRBM('emission')
@@ -15,7 +16,11 @@ o_matrix = prob_emission._o_jk()
 prob_emission = CRBM.CRBM('emission')
 
 np.set_printoptions(linewidth=600)
-np.set_printoptions(precision=2, edgeitems=25)
+np.set_printoptions(precision=4, edgeitems=25)
+
+
+TD_class = tdg.Training_data()
+[input_seq, output_seq] = TD_class.io_sequence_generator()
 
 workbook = xlrd.open_workbook('IO_s5.xlsx')
 worksheet = workbook.sheet_by_index(0)
@@ -24,7 +29,7 @@ state_scale = 5
 
 agent_num = 3
 
-input_num = 5
+input_num = 10
 
 output_num = 4
 
@@ -46,14 +51,18 @@ data_input = np.transpose(np.array(data_sample_i))
 data_output = np.transpose(np.array(worksheet.col_values(4))).reshape((len(worksheet.col_values(4)), 1))
 
 # sampled inputs
-input_seq = data_input
+# input_seq = data_input
+
+
+
+# random output seq
+# output_seq = data_output
+output_lambda = dict()  # output_lambda(t) = 1 when the t'th output is l
+
+
 
 time_seq = np.arange(len(input_seq))  # time sequence
 time_length = len(time_seq)
-
-# random output seq
-output_seq = data_output
-output_lambda = dict()  # output_lambda(t) = 1 when the t'th output is l
 
 for i in range(1, output_num + 1):
     output_lambda[i] = np.where(output_seq == i)[0]
@@ -208,7 +217,7 @@ def baum_welch(output_seq, pi, iterations, input_seq):
 
         # M-step here, calculating the frequency of starting state, transitions and (state, obs) pairs
         pi1 += alpha[0, :] * beta[0, :] / za
-        pi = pi1 / np.sum(pi1)  # normalise pi1
+        pi = pi1 / max(np.sum(pi1), 10 ** -300)  # normalise pi1
 
         for k in range(0, obs_length):
             O1[k] += alpha[k, :] * beta[k, :] / za
@@ -242,7 +251,7 @@ def baum_welch(output_seq, pi, iterations, input_seq):
             else:
                 w_jl[t1] = np.zeros_like(O[0]) + 10 ** -250
 
-        w_jl /= np.sum(w_jl, 0)
+        w_jl /= np.sum(w_jl, 0) + 10 ** -301
 
         for t1, to in enumerate(output_lambda):
             if len(output_lambda[to]) > 0:
@@ -275,6 +284,6 @@ def baum_welch(output_seq, pi, iterations, input_seq):
 
 
 if __name__ == "__main__":
-    pi_trained, A_trained, O_trained, A_ijk, O_jl = baum_welch(output_seq, pi, 7, input_seq)
+    pi_trained, A_trained, O_trained, A_ijk, O_jl = baum_welch(output_seq, pi, 5, input_seq)
     # plt.plot(np.transpose(A_trained[-1]),'*')
     # plt.show()
