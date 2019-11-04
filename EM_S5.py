@@ -19,7 +19,7 @@ np.set_printoptions(linewidth=600)
 np.set_printoptions(precision=4, edgeitems=25)
 
 
-TD_class = tdg.Training_data()
+TD_class = tdg.TrainingData()
 [input_seq, output_seq] = TD_class.io_sequence_generator()
 
 workbook = xlrd.open_workbook('IO_s5.xlsx')
@@ -58,8 +58,6 @@ data_output = np.transpose(np.array(worksheet.col_values(4))).reshape((len(works
 # random output seq
 # output_seq = data_output
 output_lambda = dict()  # output_lambda(t) = 1 when the t'th output is l
-
-
 
 time_seq = np.arange(len(input_seq))  # time sequence
 time_length = len(time_seq)
@@ -190,8 +188,8 @@ def baum_welch(output_seq, pi, iterations, input_seq):
     A = a_ijt
     O = o_jt
 
-    # print('A init\n', A)
-    # print('O init\n', O)
+    print('A init\n', A)
+    print('O init\n', O)
 
     pi, A, O = np.copy(pi), np.copy(A), np.copy(O)  # take copies, as we modify them
     S = pi.shape[0]
@@ -208,16 +206,16 @@ def baum_welch(output_seq, pi, iterations, input_seq):
         # compute forward-backward matrices
         alpha, za = forward((pi, A, O))
         beta, zb = backward((pi, A, O))
-        # print('alpha\n', alpha)
+        print('alpha\n', alpha)
         print('za\n', za)
-        # print('beta\n', beta)
+        print('beta\n', beta)
         print('zb\n', zb)
 
         assert abs(za - zb) < 1e-2, "it's badness 10000 if the marginals don't agree"
 
         # M-step here, calculating the frequency of starting state, transitions and (state, obs) pairs
         pi1 += alpha[0, :] * beta[0, :] / za
-        pi = pi1 / max(np.sum(pi1), 10 ** -300)  # normalise pi1
+        pi = pi1 / max(np.sum(pi1), 10 ** -300)  # normalise pi_new
 
         for k in range(0, obs_length):
             O1[k] += alpha[k, :] * beta[k, :] / za

@@ -281,7 +281,7 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
     
         # M-step here, calculating the frequency of starting state, transitions and (state, obs) pairs
         pi1 += alpha[0, :] * beta[0, :] / za
-        pi = pi1 / np.sum(pi1)  # normalise pi1
+        pi = pi1 / np.sum(pi1)  # normalise pi_new
 
         for k in range(0, obs_length):
             O1[k] += alpha[k, :] * beta[k, :] / za

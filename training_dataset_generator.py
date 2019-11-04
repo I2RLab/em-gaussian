@@ -1,6 +1,7 @@
 import numpy as np
 
-class Training_data:
+
+class TrainingData:
     def __init__(self):
         self.input_output_dict = dict()
         self.input_num_units = 11
@@ -34,6 +35,6 @@ class Training_data:
 
 if __name__ == '__main__':
 
-    TD = Training_data()
+    TD = TrainingData()
     [i,o] = TD.io_sequence_generator()
     print(i,'\n', o)

@@ -80,7 +80,7 @@ def baum_welch(training, pi, A, O, iterations):
                     for s2 in range(S):
                         A1[s1, s2] += alpha[i - 1, s1] * A[s1, s2] * O[s1, s2, observations[i]] * beta[i, s2] / za
 
-        # normalise pi1, A1, O1
+        # normalise pi_new, A1, O1
         pi = pi1 / np.sum(pi1)
         for s in range(S):
             A[s, :] = A1[s, :] / np.sum(A1[s, :])

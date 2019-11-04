@@ -284,7 +284,7 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_emission_i
                 for j in range(S):
                     A1[k - 1, j, i] = alpha[k - 1, j] * A[k, j, i] * O[k, i] * beta[k, i] / za
 
-        # normalise pi1
+        # normalise pi_new
         pi = pi1 / np.sum(pi1)
 
         for k, u in enumerate(sigma_u.values()):
