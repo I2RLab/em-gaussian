@@ -262,7 +262,7 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_emission_i
         H1 = np.zeros_like(A)
         O1 = np.zeros((len(O), S))
 
-        # for i in range(time_length):
+        # for i in range(N):
         # compute forward-backward matrices
         alpha, za = forward((pi, A, O))
         beta, zb = backward((pi, A, O))

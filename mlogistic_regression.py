@@ -95,24 +95,24 @@ transition_probability = mlogit_transition(weights_transition_matrix, inputs_mat
 #     fig = plt.figure(i)
 #     ax1 = fig.add_subplot(111, projection='3d')
 #
-#     xpos = []
-#     ypos = []
-#     zpos = []
+#     x_pos = []
+#     y_pos = []
+#     z_pos = []
 #     dz = []
 #
 #     for s0 in range(state_total):
 #         for s1 in range(state_total):
-#             xpos.append(s0 + 1)
-#             ypos.append(s1 + 1)
-#             zpos.append(0)
+#             x_pos.append(s0 + 1)
+#             y_pos.append(s1 + 1)
+#             z_pos.append(0)
 #             dz.append(transition_probability[i, s0, s1])
 #
-#     num_elements = len(xpos)
+#     num_elements = len(x_pos)
 #     dx = np.ones(1)
 #     dy = np.ones(1)
 #
 #     colors = plt.cm.jet((np.asanyarray(dz).flatten()) / (float(np.asanyarray(dz).max())))
 #
-#     ax1.bar3d(xpos, ypos, zpos, dx, dy, dz, color=colors)
+#     ax1.bar3d(x_pos, y_pos, z_pos, dx, dy, dz, color=colors)
 
 # plt.show()

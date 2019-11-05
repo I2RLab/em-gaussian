@@ -77,29 +77,29 @@ fig2 = plt.figure(2)
 ax1 = fig1.add_subplot(111, projection='3d')
 ax2 = fig2.add_subplot(111, projection='3d')
 
-xpos = []
-ypos = []
-zpos = []
+x_pos = []
+y_pos = []
+z_pos = []
 dz1 = []
 dz2 = []
 
 for s1 in range(1, 27):
 	for s2 in range(1, 27):
-		xpos.append(s1)
-		ypos.append(s2)
-		zpos.append(0)
+		x_pos.append(s1)
+		y_pos.append(s2)
+		z_pos.append(0)
 		dz1.append(prob_ws[s1, s2])
 		dz2.append(prob_wx[s1, s2])
 
-num_elements = len(xpos)
+num_elements = len(x_pos)
 dx = np.ones(1)
 dy = np.ones(1)
 
 colors1 = plt.cm.jet((np.asanyarray(dz1).flatten()) / (float(np.asanyarray(dz1).max())))
 colors2 = plt.cm.jet((np.asanyarray(dz2).flatten()) / (float(np.asanyarray(dz2).max())))
 
-ax1.bar3d(xpos, ypos, zpos, dx, dy, dz1, color=colors1)
-ax2.bar3d(xpos, ypos, zpos, dx, dy, dz2, color=colors2)
+ax1.bar3d(x_pos, y_pos, z_pos, dx, dy, dz1, color=colors1)
+ax2.bar3d(x_pos, y_pos, z_pos, dx, dy, dz2, color=colors2)
 
 plt.show()
 '''
