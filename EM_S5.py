@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0, '../Categorical_Boltzmann_Machines')
 
 import CRBM
-import training_dataset_generator as tdg
+import Training_Dataset_Generator as tdg
 
 prob_transition = CRBM.CRBM('transition')
 prob_emission = CRBM.CRBM('emission')

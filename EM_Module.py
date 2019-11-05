@@ -2,12 +2,12 @@ import numpy as np
 import xlrd
 import sys
 import CRBM
-import training_dataset_generator as tdg
+import Training_Dataset_Generator as tdg
 
 sys.path.insert(0, '../Categorical_Boltzmann_Machines')
 
 np.set_printoptions(linewidth=600)
-np.set_printoptions(precision=4, edgeitems=25)
+np.set_printoptions(precision=3, edgeitems=25)
 
 prob_transition = CRBM.CRBM('transition')
 prob_emission = CRBM.CRBM('emission')
@@ -104,6 +104,9 @@ class EM:
         self.beta = np.zeros((self.N, self.S))
         self.zb = 0
 
+        self.A_ijk = dict()
+        self.O_jl = dict()
+
     def tranition_probability_sequence(self, a_ijk):
         a_ijt = np.zeros((self.time_length, self.state_total, self.state_total))
         for id, input_id in enumerate(self.input_lambda):
@@ -157,7 +160,7 @@ class EM:
     def baum_welch(self):
         self.A, self.O = np.copy(self.A_init), np.copy(self.O_init)  # take copies, as we modify them
         self.S = self.pi.shape[0]
-        self.obs_length = int(len(self.A))
+        self.observation_length = int(len(self.A))
 
         # do several steps of EM hill climbing
         for it in range(self.iterations):
@@ -165,29 +168,31 @@ class EM:
             self.pi_new = np.zeros_like(self.pi)
             self.A1 = np.zeros_like(self.A)
             self.A1_New = np.zeros_like(self.A)
-            self.O1 = np.zeros((self.obs_length, self.S))
-
+            self.O1 = np.zeros((self.observation_length, self.S))
+            self.O_New = np.zeros_like(self.O)
+            self.w_jl = np.zeros((self.output_num, self.state_total)) + 10 ** -250
+            
             # compute forward-backward matrices
-            self.za = self.forward()
-            self.zb = self.backward()
+            za = self.forward()
+            zb = self.backward()
             print('alpha\n', self.alpha)
-            print('za\n', self.za)
+            print('za\n', za)
             print('beta\n', self.beta)
-            print('zb\n', self.zb)
+            print('zb\n', zb)
 
             assert abs(self.za - self.zb) < 1e-2, "it's badness 10000 if the marginals don't agree"
 
             # M-step here, calculating the frequency of starting state, transitions and (state, obs) pairs
-            self.pi_new += self.alpha[0, :] * self.beta[0, :] / self.za
+            self.pi_new += self.alpha[0, :] * self.beta[0, :] / za
             self.pi = self.pi_new / max(np.sum(self.pi_new), 10 ** -300)  # normalise pi_new
 
-            for k in range(0, self.obs_length):
-                self.O1[k] += self.alpha[k, :] * self.beta[k, :] / self.za
+            for k in range(0, self.observation_length):
+                self.O1[k] += self.alpha[k, :] * self.beta[k, :] / za
 
-            for k in range(1, self.obs_length):
+            for k in range(1, self.observation_length):
                 for j in range(self.S):
                     for i in range(self.S):
-                        self.A1[k - 1, i, j] = self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j] * self.beta[k, j] / self.za
+                        self.A1[k - 1, i, j] = self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j] * self.beta[k, j] / za
 
             for k, ti in enumerate(self.input_lambda.values()):
                 self.H = np.zeros_like(self.A[0]) + 10 ** -300
@@ -199,9 +204,6 @@ class EM:
 
                     for ki, t in enumerate(ti):
                         self.A1_New[t] = self.H_temp
-
-            self.O_New = np.zeros_like(self.O)
-            self.w_jl = np.zeros((self.output_num, self.state_total)) + 10 ** -250
 
             for t1, to in enumerate(self.output_lambda):
                 if len(self.output_lambda[to]) > 0:
@@ -221,18 +223,15 @@ class EM:
                         self.O_New[ut] = self.w_jl[t1]
 
             self.A, self.O = self.A1_New, self.O_New
-            # print('A=\n', A, '\n')
-            # print('O=\n', O, '\n')
-
-        self.A_ijk = dict()
+            
+            # print('updated A=\n', self.A, '\n')
+            # print('updated O=\n', self.O, '\n')
 
         for k, ti in enumerate(self.input_lambda.values()):
             if len(ti) > 0:
                 self.A_ijk[k] = self.A[ti[0]]
             else:
                 self.A_ijk[k] = np.zeros_like(self.A[0])
-
-        self.O_jl = dict()
 
         for l, to in enumerate(self.output_lambda):
             if len(self.output_lambda[to]) > 0:
@@ -249,3 +248,5 @@ class EM:
 if __name__ == "__main__":
     em = EM(5, input_seq, output_seq)
     pi_trained, A_trained, O_trained, A_ijk, O_jl = em.baum_welch()
+    
+    
