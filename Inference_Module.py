@@ -10,9 +10,8 @@ import Training_Dataset_Generator as tdg
 import EM_Module
 from mayavi.mlab import *
 import time
-import xlsxwriter
-import pandas as pd
-
+from scipy import *
+import matplotlib.pyplot as plt
 
 print(time.clock())
 
@@ -33,6 +32,20 @@ TD_class = tdg.TrainingData()
 training_total_len = len(input_seq_all)
 # training_total_len = 80
 
+####################################
+# xi, yi = mgrid[1:training_total_len:1, 1:41:10]
+# barchart(xi, yi, np.concatenate((input_seq_all[1:], output_seq_all[1:] * 2), axis=1), lateral_scale=5.0)
+# show()
+# print()
+###################################
+# fig, axs = plt.subplots(2)
+# fig.suptitle('Input/Output Sequences')
+# axs[0].plot(input_seq_all,cmap='gray')
+# axs[1].plot(output_seq_all)
+# plt.show()
+# print()
+
+
 pi_trained_list, A_trained_list, O_trained_list, A_ijk_list, O_jl_list = list(), list(), list(), list(), list()
 
 session_len = 250
@@ -49,9 +62,19 @@ for i_set in range(training_total_len // session_len + 1):
     input_seq = np.copy(input_seq_all[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
     output_seq = np.copy(output_seq_all[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
 
-    em = EM_Module.EM(10, input_seq, output_seq, a_matrix, o_matrix)
+    if i_set == 0:
+        A_matrix = a_matrix
+        O_matrix = o_matrix
+    else:
+        A_matrix = A_ijk_list[-1]
+        O_matrix = O_jl_list[-1]
+
+    em = EM_Module.EM(7, input_seq, output_seq, A_matrix, O_matrix)
 
     pi_trained, A_trained, O_trained, A_ijk, O_jl = em.baum_welch()
+
+    print('New A_ijk =\n {}\n'.format(A_ijk))
+    print('New O_jl =\n {}\n'.format(O_jl))
 
     pi_trained_list.append(pi_trained)
     A_trained_list.append(A_trained)
@@ -62,32 +85,34 @@ for i_set in range(training_total_len // session_len + 1):
     total_ouput = em.output_num
     del em
 
-A_average = np.zeros((1000, 125, 125))
+# A_average = np.zeros((1000, 125, 125))
 
-for k in range(total_input):
-    nonzero_num = 0
-    for i_set in range(len(A_ijk_list)):
-        if np.sum(A_ijk_list[i_set][k]) > 0:
-            A_average[k, :, :] += A_ijk_list[i_set][k]
-            nonzero_num += 1
-    if nonzero_num != 0:
-        A_average[k] /= nonzero_num
-    else:
-        A_average[k] = A_init[k]
+# for k in range(total_input):
+#     nonzero_num = 0
+#     for i_set in range(len(A_ijk_list)):
+#         if np.sum(A_ijk_list[i_set][k]) > 0:
+#             A_average[k, :, :] += A_ijk_list[i_set][k]
+#             nonzero_num += 1
+#     if nonzero_num != 0:
+#         A_average[k] /= nonzero_num
+#     else:
+#         A_average[k] = A_init[k]
+#
+# O_average = np.zeros((4, 125))
+#
+# for l in range(4):
+#     nonzero_num = 0
+#     for o_set in range(len(O_jl_list)):
+#         if np.sum(O_jl_list[o_set][l]) > 0:
+#             O_average[l, :] += O_jl_list[o_set][l]
+#             nonzero_num += 1
+#     if nonzero_num != 0:
+#         O_average[l] /= nonzero_num
+#     else:
+#         O_average[l] = O_init[l]
 
-O_average = np.zeros((4, 125))
-
-for l in range(4):
-    nonzero_num = 0
-    for o_set in range(len(O_jl_list)):
-        if np.sum(O_jl_list[o_set][l]) > 0:
-            O_average[l, :] += O_jl_list[o_set][l]
-            nonzero_num += 1
-    if nonzero_num != 0:
-        O_average[l] /= nonzero_num
-    else:
-        O_average[l] = O_init[l]
-
+A_average = A_ijk
+O_average = O_jl
 
 # A_save = A_average.reshape(125000, 125)
 # df_A = pd.DataFrame(A_save)
@@ -108,8 +133,8 @@ state_num = 125
 input_tot = agent_num ** input_num
 
 # i/o sequence
-data_input = input_seq_all[0:80]
-data_output = output_seq_all[0:80]
+data_input = input_seq_all
+data_output = output_seq_all
 
 test_session_len = len(data_input)
 u_dict = dict()
@@ -140,7 +165,7 @@ belief = np.zeros((len(data_input) + 1, state_num))
 belief[0] = bel0
 
 for t in range(len(data_input)):
-    belief_temp = np.multiply(np.sum(A_average[input_sequence[t]] * belief[t], 1), O_average[data_output[t] - 1])
+    belief_temp = np.multiply(np.sum(A_average[input_sequence[t]] * belief[t], 1), O_average[int(data_output[t] - 1)])
     belief_temp /= np.sum(belief_temp)
     belief[t + 1] = np.copy(belief_temp)
 
@@ -163,10 +188,11 @@ num_elements = len(x_pos)
 dx = np.ones(1)
 dy = np.ones(1)
 
-barchart(belief[1:] * 10)
+barchart(belief[1:])
+xlabel('Time')
+ylabel('Trust')
+zlabel('Belief')
 
 print(time.clock())
 
 show()
-
-input('waiting ....')

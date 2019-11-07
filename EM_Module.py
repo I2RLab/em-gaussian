@@ -10,6 +10,9 @@ np.set_printoptions(precision=4, edgeitems=5)
 
 class EM:
     def __init__(self, iterations, input_seq, output_seq, a_matrix, o_matrix):
+        self.a_matrix = a_matrix
+        self.o_matrix = o_matrix
+
         self.iterations = iterations
 
         self.state_scale = 5
@@ -191,13 +194,16 @@ class EM:
             if len(ti) > 0:
                 self.A_ijk[k] = self.A[ti[0]]
             else:
-                self.A_ijk[k] = np.zeros_like(self.A[0])
+                # self.A_ijk[k] = np.zeros_like(self.A[0])
+                self.A_ijk[k] = self.a_matrix[k]
 
         for l, to in enumerate(self.output_lambda):
             if len(self.output_lambda[to]) > 0:
                 self.O_jl[l] = self.O[self.output_lambda[to][0]]
             else:
-                self.O_jl[l] = np.zeros_like(self.O[0])
+                # self.O_jl[l] = np.zeros_like(self.O[0])
+                # self.O_jl[l] = self.O_init[to]
+                self.O_jl[l] = self.o_matrix[l]
 
         # print('A=\n', self.A, '\n')
         # print('O=\n', self.O, '\n')
@@ -236,7 +242,7 @@ if __name__ == "__main__":
         pi_trained, A_trained, O_trained, A_ijk, O_jl = em.baum_welch()
 
         # print('A_ijk\n', A_ijk)
-        print('O_jl\n', O_jl)
+        # print('O_jl\n', O_jl)
 
         pi_trained_list.append(pi_trained)
         A_trained_list.append(A_trained)

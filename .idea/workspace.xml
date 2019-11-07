@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/EM_Module.py" line="247" />
+    <bookmark url="file://$PROJECT_DIR$/EM_Module.py" line="253" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8db38a9f-2780-4c07-86ca-ead842fef6de" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Inference_Module.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/em-gaussian.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/em-gaussian.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Baum_Welch.py" beforeDir="false" afterPath="$PROJECT_DIR$/Baum_Welch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Baum_Welch_Factorial_IOHMM.py" beforeDir="false" afterPath="$PROJECT_DIR$/Baum_Welch_Factorial_IOHMM.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EM_Factorial_IOHMM.py" beforeDir="false" afterPath="$PROJECT_DIR$/EM_Factorial_IOHMM.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EM_Module.py" beforeDir="false" afterPath="$PROJECT_DIR$/EM_Module.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" beforeDir="false" afterPath="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/categorical_distribution.py" beforeDir="false" afterPath="$PROJECT_DIR$/categorical_distribution.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mlogistic_regression.py" beforeDir="false" afterPath="$PROJECT_DIR$/mlogistic_regression.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Inference_Module.py" beforeDir="false" afterPath="$PROJECT_DIR$/Inference_Module.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Training_Dataset_Generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Training_Dataset_Generator.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,37 +18,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/categorical_distribution.py">
+        <entry file="file://$PROJECT_DIR$/Training_Dataset_Generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1581">
-              <caret line="93" column="25" selection-start-line="93" selection-start-column="25" selection-end-line="93" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2002">
-              <caret line="4" selection-start-line="4" selection-end-line="5" selection-end-column="46" />
-              <folding>
-                <element signature="e#1#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/EM_S5.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="840">
-              <caret line="211" column="25" selection-start-line="211" selection-start-column="25" selection-end-line="211" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="663">
+              <caret line="39" column="20" selection-start-line="39" selection-start-column="20" selection-end-line="39" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -64,8 +29,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/EM_Module.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="517">
-              <caret line="221" selection-start-line="221" selection-end-line="221" />
+            <state relative-caret-position="492">
+              <caret line="221" column="56" selection-start-line="221" selection-start-column="56" selection-end-line="221" selection-end-column="56" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -76,8 +41,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Inference_Module.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" selection-start-line="26" selection-end-line="26" />
+            <state relative-caret-position="296">
+              <caret line="169" column="10" selection-start-line="169" selection-start-column="4" selection-end-line="169" selection-end-column="10" />
               <folding>
                 <element signature="e#135#153#0" expanded="true" />
               </folding>
@@ -86,13 +51,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py">
+        <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_11.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="840">
-              <caret line="106" selection-start-line="15" selection-end-line="106" />
+            <state relative-caret-position="102">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
               <folding>
-                <element signature="e#135#153#0" expanded="true" />
+                <element signature="e#0#25#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file:///usr/local/lib/python3.6/dist-packages/mayavi/tools/helper_functions.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="730">
+              <caret line="1160" selection-start-line="1160" selection-end-line="1160" />
             </state>
           </provider>
         </entry>
@@ -163,11 +137,13 @@
         <option value="$PROJECT_DIR$/EM_S5.py" />
         <option value="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" />
         <option value="$PROJECT_DIR$/EM_Module.py" />
+        <option value="$PROJECT_DIR$/Training_Dataset_Generator.py" />
         <option value="$PROJECT_DIR$/Inference_Module.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_11.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="535" />
     <option name="y" value="60" />
     <option name="width" value="1397" />
@@ -190,6 +166,11 @@
               <item name="em-gaussian" type="b2602c69:ProjectViewProjectNode" />
               <item name="em-gaussian" type="47feb1d3:ProjectViewModuleNode" />
               <item name="em-gaussian" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="em-gaussian" type="b2602c69:ProjectViewProjectNode" />
+              <item name="em-gaussian" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="Categorical_Boltzmann_Machines" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -231,7 +212,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Inference_Module">
+  <component name="RunManager" selected="Python.scratch_11">
     <configuration name="EM_Module" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="em-gaussian" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -274,27 +255,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Factorial_IOHMM_Inference" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="em-gaussian" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Factorial_IOHMM_Inference.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="Inference_Module" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="em-gaussian" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -308,6 +268,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Inference_Module.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="scratch_11" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="em-gaussian" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_11.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -338,19 +319,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.Factorial_IOHMM_Inference" />
       <item itemvalue="Python.EM_S5" />
       <item itemvalue="Python.training_dataset_generator" />
       <item itemvalue="Python.EM_Module" />
       <item itemvalue="Python.Inference_Module" />
+      <item itemvalue="Python.scratch_11" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.scratch_11" />
         <item itemvalue="Python.Inference_Module" />
         <item itemvalue="Python.EM_Module" />
         <item itemvalue="Python.EM_S5" />
         <item itemvalue="Python.training_dataset_generator" />
-        <item itemvalue="Python.Factorial_IOHMM_Inference" />
       </list>
     </recent_temporary>
   </component>
@@ -386,13 +367,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="57" y="25" width="1863" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48918918" visible="true" weight="0.17554347" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48918918" visible="true" weight="0.17554347" />
       <window_info id="Structure" order="1" sideWeight="0.5108108" side_tool="true" weight="0.19904964" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.4993671" weight="0.32829374" />
-      <window_info anchor="bottom" x="1920" y="30" width="1920" height="1050" id="Run" order="2" sideWeight="0.49967128" type="WINDOWED" weight="0.18466523" />
+      <window_info active="true" anchor="bottom" x="1920" y="30" width="1920" height="1050" id="Run" order="2" sideWeight="0.49967128" type="WINDOWED" visible="true" weight="0.18466523" />
       <window_info anchor="bottom" auto_hide="true" x="1920" y="30" width="1920" height="1050" id="Debug" order="3" type="WINDOWED" visible="true" weight="0.31641468" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -473,14 +455,9 @@
           <option name="timeStamp" value="159" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/EM_Module.py</url>
-          <line>221</line>
-          <option name="timeStamp" value="169" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Inference_Module.py</url>
-          <line>26</line>
-          <option name="timeStamp" value="170" />
+          <line>45</line>
+          <option name="timeStamp" value="176" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -546,94 +523,58 @@ for i in range(len(B)):
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>np.max(A_average[992])</expression-string>
+        <expression-string>O_average[int(data_output[t] - 1)]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.max(A_average[993])</expression-string>
+        <expression-string>int(data_output[0] - 1)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.max(A_average[994])</expression-string>
+        <expression-string>int(data_output[1] - 1)</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.max(A_average[995])</expression-string>
+        <expression-string>[data_output[t] - 1]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.max(A_average[996])</expression-string>
+        <expression-string>[data_output[t] - 1][0]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.max(A_average[997])</expression-string>
+        <expression-string>data_output[t] - 1[0]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.max(A_average[998])</expression-string>
+        <expression-string>data_output[t] - 1</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.max(A_average[999])</expression-string>
+        <expression-string>O_average[0]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>np.max(A_average[1000])</expression-string>
+        <expression-string>O_average</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>O_average[data_output[t] - 1]</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/F_iohmm.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/simple.dot">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DBN_Multi_Agent.dot">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="20" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DBN.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DBN1.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file:///usr/local/lib/python3.6/dist-packages/pygraphviz/agraph.py" />
-    <entry file="file://$PROJECT_DIR$/Inference_MulitAgentSystem_Simulation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1870">
-          <caret line="113" column="3" selection-end-line="224" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/IOHMM_graphviz.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="9" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
-          <folding>
-            <element signature="e#47#85#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DBN_Multi_Agent_Unrolled.dot">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
@@ -646,10 +587,10 @@ for i in range(len(B)):
     </entry>
     <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2018.3/python_stubs/-955666699/builtins.py" />
     <entry file="file://$PROJECT_DIR$/mlogit_weights_sample.ods">
-      <provider selected="true" editor-type-id="csv-text-editor" />
       <provider editor-type-id="csv-table-editor">
         <state showInfoPanel="true" fixedHeaders="false" rowLines="3" />
       </provider>
+      <provider selected="true" editor-type-id="csv-text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/mlogit_weights_observation.ods">
       <provider selected="true" editor-type-id="text-editor" />
@@ -694,30 +635,11 @@ for i in range(len(B)):
       </provider>
     </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_10.py" />
-    <entry file="file://$PROJECT_DIR$/../Categorical_Boltzmann_Machines/CRBM.py" />
-    <entry file="file:///usr/local/lib/python3.6/dist-packages/numpy/core/multiarray.py" />
     <entry file="file:///usr/local/lib/python3.6/dist-packages/numpy/core/fromnumeric.py" />
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="414">
           <caret line="1734" selection-start-line="1734" selection-end-line="1734" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Training_Dataset_Generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="37" column="23" lean-forward="true" selection-start-line="37" selection-start-column="23" selection-end-line="37" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2002">
-          <caret line="4" selection-start-line="4" selection-end-line="5" selection-end-column="46" />
-          <folding>
-            <element signature="e#1#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -752,16 +674,6 @@ for i in range(len(B)):
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/EM_S5.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="840">
-          <caret line="211" column="25" selection-start-line="211" selection-start-column="25" selection-end-line="211" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/-1247971763/time.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="434">
@@ -769,38 +681,8 @@ for i in range(len(B)):
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/categorical_distribution.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1581">
-          <caret line="93" column="25" selection-start-line="93" selection-start-column="25" selection-end-line="93" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="840">
-          <caret line="106" selection-start-line="15" selection-end-line="106" />
-          <folding>
-            <element signature="e#135#153#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/snapshot.png">
       <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/EM_Module.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="517">
-          <caret line="221" selection-start-line="221" selection-end-line="221" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file:///usr/local/lib/python3.6/dist-packages/xlwt/Worksheet.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -851,10 +733,138 @@ for i in range(len(B)):
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/EM_Factorial_IOHMM_backup.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="4" selection-start-line="4" selection-end-line="5" selection-end-column="46" />
+          <folding>
+            <element signature="e#1#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/EM_S5.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="840">
+          <caret line="211" column="25" selection-start-line="211" selection-start-column="25" selection-end-line="211" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/categorical_distribution.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="840">
+          <caret line="93" column="25" selection-start-line="93" selection-start-column="25" selection-end-line="93" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.6/dist-packages/mayavi/tools/sources.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="958" selection-start-line="958" selection-end-line="958" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.6/dist-packages/numpy/lib/index_tricks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="151" selection-start-line="151" selection-end-line="151" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.6/dist-packages/traits/trait_handlers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="235" selection-start-line="235" selection-end-line="235" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.6/dist-packages/numpy/core/multiarray.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="135" column="4" selection-start-line="135" selection-start-column="4" selection-end-line="135" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.6/dist-packages/matplotlib/figure.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="92" selection-start-line="92" selection-end-line="92" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.6/dist-packages/statsmodels/tsa/vector_ar/irf.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="94" column="8" selection-start-line="94" selection-start-column="8" selection-end-line="94" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.6/dist-packages/matplotlib/artist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="214">
+          <caret line="906" column="29" lean-forward="true" selection-start-line="906" selection-start-column="29" selection-end-line="906" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factorial_IOHMM_Inference.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1224">
+          <caret line="72" column="16" lean-forward="true" selection-start-line="72" selection-start-column="16" selection-end-line="72" selection-end-column="16" />
+          <folding>
+            <element signature="e#135#153#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Categorical_Boltzmann_Machines/CRBM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1387" />
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.6/dist-packages/mayavi/tools/helper_functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="730">
+          <caret line="1160" selection-start-line="1160" selection-end-line="1160" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_11.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/EM_Module.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="492">
+          <caret line="221" column="56" selection-start-line="221" selection-start-column="56" selection-end-line="221" selection-end-column="56" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Training_Dataset_Generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="663">
+          <caret line="39" column="20" selection-start-line="39" selection-start-column="20" selection-end-line="39" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Inference_Module.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" selection-start-line="26" selection-end-line="26" />
+        <state relative-caret-position="296">
+          <caret line="169" column="10" selection-start-line="169" selection-start-column="4" selection-end-line="169" selection-end-column="10" />
           <folding>
             <element signature="e#135#153#0" expanded="true" />
           </folding>
