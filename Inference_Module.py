@@ -6,7 +6,8 @@
 import numpy as np
 import sys
 import CRBM
-import Training_Dataset_Generator as tdg
+import Training_Dataset_Generator as trainingdata
+import Test_Dataset_Generator as testdata
 import EM_Module
 from mayavi.mlab import *
 import time
@@ -26,22 +27,22 @@ prob_emission = CRBM.CRBM('emission')
 a_matrix = prob_transition.total_transition_probs()
 o_matrix = prob_emission._o_jk()
 
-TD_class = tdg.TrainingData()
-[input_seq_all, output_seq_all] = TD_class.io_sequence_generator()
+TrainingD = trainingdata.TrainingData()
+[training_input_seq, training_output_seq] = TrainingD.io_sequence_generator()
 
-training_total_len = len(input_seq_all)
+TestD = testdata.TrainingData()
+[test_input_seq, test_output_seq] = TestD.io_sequence_generator()
+
+
+training_total_len = len(training_input_seq)
 # training_total_len = 80
 
-####################################
-# xi, yi = mgrid[1:training_total_len:1, 1:41:10]
-# barchart(xi, yi, np.concatenate((input_seq_all[1:], output_seq_all[1:] * 2), axis=1), lateral_scale=5.0)
-# show()
-# print()
+
 ###################################
 # fig, axs = plt.subplots(2)
 # fig.suptitle('Input/Output Sequences')
-# axs[0].plot(input_seq_all,cmap='gray')
-# axs[1].plot(output_seq_all)
+# axs[0].plot(training_input_seq,cmap='gray')
+# axs[1].plot(training_output_seq)
 # plt.show()
 # print()
 
@@ -50,7 +51,7 @@ pi_trained_list, A_trained_list, O_trained_list, A_ijk_list, O_jl_list = list(),
 
 session_len = 250
 
-em_init = EM_Module.EM(1, input_seq_all, output_seq_all, a_matrix, o_matrix)
+em_init = EM_Module.EM(1, training_input_seq, training_output_seq, a_matrix, o_matrix)
 A_init = em_init.A_init
 O_init = em_init.O_init
 
@@ -59,8 +60,8 @@ del em_init
 
 for i_set in range(training_total_len // session_len + 1):
     print(i_set * session_len, min(i_set * session_len + session_len, training_total_len))
-    input_seq = np.copy(input_seq_all[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
-    output_seq = np.copy(output_seq_all[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
+    input_seq = np.copy(training_input_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
+    output_seq = np.copy(training_output_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
 
     if i_set == 0:
         A_matrix = a_matrix
@@ -69,7 +70,7 @@ for i_set in range(training_total_len // session_len + 1):
         A_matrix = A_ijk_list[-1]
         O_matrix = O_jl_list[-1]
 
-    em = EM_Module.EM(7, input_seq, output_seq, A_matrix, O_matrix)
+    em = EM_Module.EM(5, input_seq, output_seq, A_matrix, O_matrix)
 
     pi_trained, A_trained, O_trained, A_ijk, O_jl = em.baum_welch()
 
@@ -85,46 +86,10 @@ for i_set in range(training_total_len // session_len + 1):
     total_ouput = em.output_num
     del em
 
-# A_average = np.zeros((1000, 125, 125))
-
-# for k in range(total_input):
-#     nonzero_num = 0
-#     for i_set in range(len(A_ijk_list)):
-#         if np.sum(A_ijk_list[i_set][k]) > 0:
-#             A_average[k, :, :] += A_ijk_list[i_set][k]
-#             nonzero_num += 1
-#     if nonzero_num != 0:
-#         A_average[k] /= nonzero_num
-#     else:
-#         A_average[k] = A_init[k]
-#
-# O_average = np.zeros((4, 125))
-#
-# for l in range(4):
-#     nonzero_num = 0
-#     for o_set in range(len(O_jl_list)):
-#         if np.sum(O_jl_list[o_set][l]) > 0:
-#             O_average[l, :] += O_jl_list[o_set][l]
-#             nonzero_num += 1
-#     if nonzero_num != 0:
-#         O_average[l] /= nonzero_num
-#     else:
-#         O_average[l] = O_init[l]
 
 A_average = A_ijk
 O_average = O_jl
 
-# A_save = A_average.reshape(125000, 125)
-# df_A = pd.DataFrame(A_save)
-# filepath_A = 'learned_A_mat.xlsx'
-# df_A.to_excel(filepath_A, index=False)
-#
-# O_save = O_average
-# df_O = pd.DataFrame(O_save)
-# filepath_O = 'learned_O_mat.xlsx'
-# df_O.to_excel(filepath_O, index=False)
-
-##############################
 # constants
 input_num = 10
 output_num = 4
@@ -133,8 +98,8 @@ state_num = 125
 input_tot = agent_num ** input_num
 
 # i/o sequence
-data_input = input_seq_all
-data_output = output_seq_all
+data_input = test_input_seq
+data_output = test_output_seq
 
 test_session_len = len(data_input)
 u_dict = dict()
@@ -182,7 +147,7 @@ for t in range(1, len(data_input)):
         x_pos.append(t)
         y_pos.append(s + 1)
         z_pos.append(0)
-        dz.append(belief[t, s])
+        dz.append(belief[t, s] * 10)
 
 num_elements = len(x_pos)
 dx = np.ones(1)
