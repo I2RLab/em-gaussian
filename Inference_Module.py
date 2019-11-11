@@ -19,7 +19,7 @@ print(time.clock())
 sys.path.insert(0, '../Categorical_Boltzmann_Machines')
 
 np.set_printoptions(linewidth=700)
-np.set_printoptions(precision=4, edgeitems=5)
+np.set_printoptions(precision=4, edgeitems=80)
 
 prob_transition = CRBM.CRBM('transition')
 prob_emission = CRBM.CRBM('emission')
@@ -70,12 +70,12 @@ for i_set in range(training_total_len // session_len + 1):
         A_matrix = A_ijk_list[-1]
         O_matrix = O_jl_list[-1]
 
-    em = EM_Module.EM(5, input_seq, output_seq, A_matrix, O_matrix)
+    em = EM_Module.EM(10, input_seq, output_seq, A_matrix, O_matrix)
 
     pi_trained, A_trained, O_trained, A_ijk, O_jl = em.baum_welch()
 
-    print('New A_ijk =\n {}\n'.format(A_ijk))
-    print('New O_jl =\n {}\n'.format(O_jl))
+    # print('New A_ijk =\n {}\n'.format(A_ijk))
+    # print('New O_jl =\n {}\n'.format(O_jl))
 
     pi_trained_list.append(pi_trained)
     A_trained_list.append(A_trained)
@@ -147,7 +147,7 @@ for t in range(1, len(data_input)):
         x_pos.append(t)
         y_pos.append(s + 1)
         z_pos.append(0)
-        dz.append(belief[t, s] * 10)
+        dz.append(belief[t, s])
 
 num_elements = len(x_pos)
 dx = np.ones(1)
