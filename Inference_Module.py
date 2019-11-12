@@ -63,14 +63,16 @@ for i_set in range(training_total_len // session_len + 1):
     input_seq = np.copy(training_input_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
     output_seq = np.copy(training_output_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
 
-    if i_set == 0:
-        A_matrix = a_matrix
-        O_matrix = o_matrix
-    else:
-        A_matrix = A_ijk_list[-1]
-        O_matrix = O_jl_list[-1]
+    # if i_set == 0:
+    #     A_matrix = a_matrix
+    #     O_matrix = o_matrix
+    # else:
+    #     A_matrix = A_ijk_list[-1]
+    #     O_matrix = O_jl_list[-1]
 
-    em = EM_Module.EM(10, input_seq, output_seq, A_matrix, O_matrix)
+    # em = EM_Module.EM(10, input_seq, output_seq, A_matrix, O_matrix)
+
+    em = EM_Module.EM(10, input_seq, output_seq, a_matrix, o_matrix)
 
     pi_trained, A_trained, O_trained, A_ijk, O_jl = em.baum_welch()
 
@@ -87,8 +89,30 @@ for i_set in range(training_total_len // session_len + 1):
     del em
 
 
-A_average = A_ijk
-O_average = O_jl
+# A_average = A_ijk
+# O_average = O_jl
+
+A_average = np.zeros((1000, 125, 125))
+O_average = np.zeros((4, 125))
+
+for k in range(1000):
+    A_avg_tmp = np.zeros((125, 125))
+    i_count = 0
+    for i in range(len(A_ijk_list)):
+        if np.sum(A_ijk_list[i][k]) > 0:
+            A_avg_tmp += A_ijk_list[i][k]
+            i_count += 1
+    A_average[k] = A_avg_tmp/i_count
+
+for j in range(4):
+    O_avg_temp = np.zeros((125,))
+    o_count = 0
+    for i in range(len(O_jl_list)):
+        if np.sum(O_jl_list[i][j]) > 0:
+            O_avg_temp += O_jl_list[i][j]
+            o_count += 1
+    O_average[j] = O_avg_temp/o_count
+
 
 # constants
 input_num = 10
@@ -161,3 +185,4 @@ zlabel('Belief')
 print(time.clock())
 
 show()
+print()

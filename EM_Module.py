@@ -194,16 +194,16 @@ class EM:
             if len(ti) > 0:
                 self.A_ijk[k] = self.A[ti[0]]
             else:
-                # self.A_ijk[k] = np.zeros_like(self.A[0])
-                self.A_ijk[k] = self.a_matrix[k]
+                self.A_ijk[k] = np.zeros_like(self.A[0])
+                # self.A_ijk[k] = self.a_matrix[k]
 
         for l, to in enumerate(self.output_lambda):
             if len(self.output_lambda[to]) > 0:
                 self.O_jl[l] = self.O[self.output_lambda[to][0]]
             else:
-                # self.O_jl[l] = np.zeros_like(self.O[0])
+                self.O_jl[l] = np.zeros_like(self.O[0])
                 # self.O_jl[l] = self.O_init[to]
-                self.O_jl[l] = self.o_matrix[l]
+                # self.O_jl[l] = self.o_matrix[l]
 
         # print('A=\n', self.A, '\n')
         # print('O=\n', self.O, '\n')
