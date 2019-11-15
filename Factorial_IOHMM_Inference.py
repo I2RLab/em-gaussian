@@ -70,7 +70,7 @@ pi_trained, A_trained, O_trained, A_ijk, O_jl = EM.baum_welch(EM.output_seq, EM.
 
 # y = np.ones((len(data_input),))  # y = {1,2,3,4}
 
-# initial belief
+# initial belief_filtered
 bel0 = np.ones((state_num,))
 
 belief = np.zeros((len(data_input) + 1, state_num))
@@ -82,7 +82,7 @@ for t in range(len(data_input)):
     belief_temp /= np.sum(belief_temp)
     belief[t+1] = np.copy(belief_temp)
 
-print('belief')
+print('belief_filtered')
 print(belief)
 
 x_pos = []

@@ -63,16 +63,7 @@ for i_set in range(training_total_len // session_len + 1):
     input_seq = np.copy(training_input_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
     output_seq = np.copy(training_output_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
 
-    # if i_set == 0:
-    #     A_matrix = a_matrix
-    #     O_matrix = o_matrix
-    # else:
-    #     A_matrix = A_ijk_list[-1]
-    #     O_matrix = O_jl_list[-1]
-
-    # em = EM_Module.EM(10, input_seq, output_seq, A_matrix, O_matrix)
-
-    em = EM_Module.EM(10, input_seq, output_seq, a_matrix, o_matrix)
+    em = EM_Module.EM(2, input_seq, output_seq, a_matrix, o_matrix)
 
     pi_trained, A_trained, O_trained, A_ijk, O_jl = em.baum_welch()
 
@@ -84,13 +75,8 @@ for i_set in range(training_total_len // session_len + 1):
     O_trained_list.append(O_trained)
     A_ijk_list.append(A_ijk)
     O_jl_list.append(O_jl)
-    total_input = em.input_tot
-    total_ouput = em.output_num
     del em
 
-
-# A_average = A_ijk
-# O_average = O_jl
 
 A_average = np.zeros((1000, 125, 125))
 O_average = np.zeros((4, 125))
@@ -113,6 +99,10 @@ for j in range(4):
             o_count += 1
     O_average[j] = O_avg_temp/o_count
 
+
+# A_average = np.ones((1000, 125, 125)) * 0.008
+# A_average = np.random.random((1000, 125, 125))
+# O_average = np.ones((4, 125)) * 0.008
 
 # constants
 input_num = 10
@@ -146,38 +136,51 @@ def i_index_func(data_i):
 
 input_sequence = i_index_func(data_input)
 
-# initial belief
+# initial belief_filtered
 bel0 = np.ones((state_num,))
 
-belief = np.zeros((len(data_input) + 1, state_num))
+belief_filtered = np.zeros((len(data_input) + 1, state_num))
+belief_filtered[0] = bel0
 
-belief[0] = bel0
+belief_smoothed = np.zeros((len(data_input), state_num))
+belief_smoothed[-1] = np.ones((state_num,)) * 0.008
 
+prob_yl = np.zeros((len(data_input) + 1,))
+
+belief_bar_history = np.zeros((len(data_input), state_num))  # bel_bar_j --> sum(bel_bar_ij) over 'i' --> previous time step
+
+# compute filtered belief
 for t in range(len(data_input)):
-    belief_temp = np.multiply(np.sum(A_average[input_sequence[t]] * belief[t], 1), O_average[int(data_output[t] - 1)])
-    belief_temp /= np.sum(belief_temp)
-    belief[t + 1] = np.copy(belief_temp)
+    belief_bar_ij = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_average[int(data_output[t] - 1)])
+    belief_bar_history[t] = np.copy(belief_bar_ij)
+    prob_yl_bar = belief_bar_ij * O_average[int(data_output[t]) - 1]
+    belief_den_temp = np.copy(np.sum(belief_bar_ij))
+    belief_bar_ij /= belief_den_temp
+    prob_yl[t + 1] = np.sum(prob_yl_bar) / belief_den_temp
+    belief_filtered[t + 1] = np.copy(belief_bar_ij)
 
-print('belief')
-print(belief)
 
-x_pos = []
-y_pos = []
-z_pos = []
-dz = []
+print('belief_filtered')
+print(belief_filtered)
 
-for t in range(1, len(data_input)):
-    for s in range(state_num):
-        x_pos.append(t)
-        y_pos.append(s + 1)
-        z_pos.append(0)
-        dz.append(belief[t, s])
+print('Prob yt')
+print(prob_yl)
 
-num_elements = len(x_pos)
-dx = np.ones(1)
-dy = np.ones(1)
+# compute smoothed belief
+for t in reversed(range(1, len(data_input))):
+    print('t', t)
+    bel_s_temp = np.multiply(np.multiply(A_average[input_sequence[t]], belief_filtered[t]), O_average[int(data_output[t] - 1)]) / belief_bar_history[t]
+    bel_s_temp *= belief_smoothed[t]
+    belief_smoothed[t - 1] = np.sum(bel_s_temp, 1)
 
-barchart(belief[1:])
+print('smoothed belief')
+print(belief_smoothed)
+print('\n\n\n')
+
+
+# plot filtered belief
+# barchart(belief_filtered[1:])
+barchart(belief_smoothed)
 xlabel('Time')
 ylabel('Trust')
 zlabel('Belief')
@@ -185,4 +188,5 @@ zlabel('Belief')
 print(time.clock())
 
 show()
+
 print()

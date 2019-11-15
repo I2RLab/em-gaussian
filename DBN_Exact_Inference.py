@@ -107,8 +107,8 @@ if __name__ == "__main__":
 			for tr0 in range(0, trust_vector.__len__()):
 				bel.append(BeliefTk.belief_bar(trust_vector[tr0], trust_vector[tr1], p_k[k-1], p_k[k], i_k[k], e_k[k], c_k[k], f_k[k]) * belief_tk[k - 1][tr0])
 			
-			# beltt.append(sum(bel) * 1. / B) # beltt is the belief for each time step.
-			beltt.append(sum(bel)) # beltt is the belief for each time step.
+			# beltt.append(sum(bel) * 1. / B) # beltt is the belief_filtered for each time step.
+			beltt.append(sum(bel)) # beltt is the belief_filtered for each time step.
 			belief_t0t1.append(bel)
 		
 		belief_sum = sum(beltt)
@@ -116,7 +116,7 @@ if __name__ == "__main__":
 		for i in range(0, len(beltt)):
 			beltt[i] = beltt[i] / belief_sum
 			
-		belief_tk.append(beltt) # belief_tf is the belief history for time=1:K, K training-session discrete steps.
+		belief_tk.append(beltt) # belief_tf is the belief_filtered history for time=1:K, K training-session discrete steps.
 	
 	# fig = plt.figure()
 	# ax = Axes3D(fig)
