@@ -63,7 +63,7 @@ for i_set in range(training_total_len // session_len + 1):
     input_seq = np.copy(training_input_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
     output_seq = np.copy(training_output_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
 
-    em = EM_Module.EM(2, input_seq, output_seq, a_matrix, o_matrix)
+    em = EM_Module.EM(10, input_seq, output_seq, a_matrix, o_matrix)
 
     pi_trained, A_trained, O_trained, A_ijk, O_jl = em.baum_welch()
 
@@ -179,8 +179,8 @@ print('\n\n\n')
 
 
 # plot filtered belief
-# barchart(belief_filtered[1:])
-barchart(belief_smoothed)
+barchart(belief_filtered[1:])
+# barchart(belief_smoothed)
 xlabel('Time')
 ylabel('Trust')
 zlabel('Belief')
