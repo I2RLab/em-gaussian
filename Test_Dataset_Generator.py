@@ -37,7 +37,7 @@ class TrainingData:
         plt.plot(self.output_training)
         plt.ylabel('Mode')
         plt.xlabel('time')
-        ax2.set_yticks(np.arange(1,5,1))
+        ax2.set_yticks(np.arange(1, 5, 1))
         plt.grid()
         plt.savefig('test_data_plot.png')
         plt.show()
