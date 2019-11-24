@@ -1,12 +1,13 @@
 import numpy as np
 import sys
 import CRBM
-import Training_Dataset_Generator as tdg
+import Training_Dataset_Generator as trainingData
+import pickle
 
 sys.path.insert(0, '../Categorical_Boltzmann_Machines')
 
 np.set_printoptions(linewidth=700)
-np.set_printoptions(precision=4, edgeitems=5)
+np.set_printoptions(precision=4, edgeitems=80)
 
 class EM:
     def __init__(self, iterations, input_seq, output_seq, a_matrix, o_matrix):
@@ -195,15 +196,12 @@ class EM:
                 self.A_ijk[k] = self.A[ti[0]]
             else:
                 self.A_ijk[k] = np.zeros_like(self.A[0])
-                # self.A_ijk[k] = self.a_matrix[k]
 
         for l, to in enumerate(self.output_lambda):
             if len(self.output_lambda[to]) > 0:
                 self.O_jl[l] = self.O[self.output_lambda[to][0]]
             else:
                 self.O_jl[l] = np.zeros_like(self.O[0])
-                # self.O_jl[l] = self.O_init[to]
-                # self.O_jl[l] = self.o_matrix[l]
 
         # print('A=\n', self.A, '\n')
         # print('O=\n', self.O, '\n')
@@ -218,31 +216,28 @@ if __name__ == "__main__":
     a_matrix = prob_transition.total_transition_probs()
     o_matrix = prob_emission._o_jk()
 
-    TD_class = tdg.TrainingData()
-    [input_seq_all, output_seq_all] = TD_class.io_sequence_generator()
-    print('input')
-    print(input_seq_all[0:80])
-    print('output')
-    print(output_seq_all[0:80])
-
-    training_total_len = len(input_seq_all)
-    # training_total_len = 80
-
+    TrainingD = trainingData.TrainingData()
+    [training_input_seq, training_output_seq] = TrainingD.io_sequence_generator()
+    training_total_len = len(training_input_seq)
+    print('total length', training_total_len)
     pi_trained_list, A_trained_list, O_trained_list, A_ijk_list, O_jl_list = list(), list(), list(), list(), list()
 
     session_len = 250
 
+    # em_init = EM(1, training_input_seq, training_output_seq, a_matrix, o_matrix)
+    # A_init = em_init.A_init
+    # O_init = em_init.O_init
+    # del em_init
+
     for i_set in range(training_total_len // session_len + 1):
         print(i_set * session_len, min(i_set * session_len + session_len, training_total_len))
-        input_seq = np.copy(input_seq_all[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
-        output_seq = np.copy(output_seq_all[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
 
-        em = EM(3)
+        input_seq = np.copy(training_input_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
+        output_seq = np.copy(training_output_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
+
+        em = EM(10, input_seq, output_seq, a_matrix, o_matrix)
 
         pi_trained, A_trained, O_trained, A_ijk, O_jl = em.baum_welch()
-
-        # print('A_ijk\n', A_ijk)
-        # print('O_jl\n', O_jl)
 
         pi_trained_list.append(pi_trained)
         A_trained_list.append(A_trained)
@@ -252,5 +247,51 @@ if __name__ == "__main__":
 
         del em
 
+    A_average = np.zeros((1000, 125, 125))
+    O_average = np.zeros((4, 125))
 
+    for k in range(1000):
+        A_avg_tmp = np.zeros((125, 125))
+        i_count = 0
+        for i in range(len(A_ijk_list)):
+            if np.sum(A_ijk_list[i][k]) > 0:
+                A_avg_tmp += A_ijk_list[i][k]
+                i_count += 1
+        A_average[k] = A_avg_tmp / i_count
 
+    for j in range(4):
+        O_avg_temp = np.zeros((125,))
+        o_count = 0
+        for i in range(len(O_jl_list)):
+            if np.sum(O_jl_list[i][j]) > 0:
+                O_avg_temp += O_jl_list[i][j]
+                o_count += 1
+        O_average[j] = O_avg_temp / o_count
+
+    A_average = np.zeros((1000, 125, 125))
+    O_average = np.zeros((4, 125))
+
+    for k in range(1000):
+        A_avg_tmp = np.zeros((125, 125))
+        i_count = 0
+        for i in range(len(A_ijk_list)):
+            if np.sum(A_ijk_list[i][k]) > 0:
+                A_avg_tmp += A_ijk_list[i][k]
+                i_count += 1
+        A_average[k] = A_avg_tmp / i_count
+
+    for j in range(4):
+        O_avg_temp = np.zeros((125,))
+        o_count = 0
+        for i in range(len(O_jl_list)):
+            if np.sum(O_jl_list[i][j]) > 0:
+                O_avg_temp += O_jl_list[i][j]
+                o_count += 1
+        O_average[j] = O_avg_temp / o_count
+
+    # Save the learned data
+    with open('A_average_EM.pickle', 'wb') as f_a:
+        pickle.dump(A_average, f_a)
+
+    with open('O_average_EM.pickle', 'wb') as f_o:
+        pickle.dump(O_average, f_o)
