@@ -99,10 +99,11 @@ print(time.clock())
 print(time.clock())
 '''
 
-with open('A_average_EM.pickle', 'rb') as f_a:
+# with open('A_average_EM.pickle', 'rb') as f_a:
+with open('A_average_training_data_2.pickle', 'rb') as f_a:
     A_average = pickle.load(f_a)
 #
-with open('O_average_EM.pickle', 'rb') as f_o:
+with open('O_average_training_data_2.pickle', 'rb') as f_o:
     O_average = pickle.load(f_o)
 
 print('O_average')
