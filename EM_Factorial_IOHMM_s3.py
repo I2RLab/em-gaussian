@@ -237,7 +237,7 @@ def baum_welch(output_seq, pi, iterations, input_seq):
         #         for l, to in enumerate(output_lambda):
         #             if len(io_lambda[ti, to]) > 0:
         #                 for kl, ts in enumerate(io_lambda[ti, to]):
-        #                     O_New[ts] = w_ilk[ti, to-1]
+        #                     O_new[ts] = w_ilk[ti, to-1]
 
         A, O = A1_New, O_New
         # print('A=\n', A, '\n')

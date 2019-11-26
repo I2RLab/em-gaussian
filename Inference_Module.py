@@ -48,10 +48,10 @@ session_len = 250
 # del em_init
 
 '''
-for i_set in range(training_total_len // session_len + 1):
-    print(i_set * session_len, min(i_set * session_len + session_len, training_total_len))
-    input_seq = np.copy(training_input_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
-    output_seq = np.copy(training_output_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
+for chunk_i in range(training_total_len // session_len + 1):
+    print(chunk_i * session_len, min(chunk_i * session_len + session_len, training_total_len))
+    input_seq = np.copy(training_input_seq[chunk_i * session_len: min(chunk_i * session_len + session_len, training_total_len)])
+    output_seq = np.copy(training_output_seq[chunk_i * session_len: min(chunk_i * session_len + session_len, training_total_len)])
 
     em = EM_Module.EM(1, input_seq, output_seq, a_matrix, o_matrix)
 
@@ -153,20 +153,18 @@ belief_smoothed = np.zeros((len(data_input), state_num))
 belief_smoothed[-1] = np.ones((state_num,)) * 0.008
 
 # prob_yl = np.zeros((len(data_input), 4))
-prob_yl = np.zeros((len(data_input),4))
+prob_yl = np.zeros((len(data_input), 4))
 
 belief_bar_history = np.zeros((len(data_input), state_num))   # bel_bar_j --> sum(bel_bar_ij) over 'i' --> previous time step
 
-# print(np.max(O_average, 1))
-# print(np.where(O_average[0]==np.max(O_average,1)[0])[0])
 
-O_subjective = np.zeros_like(O_average) #+ 0.01
+O_subjective = np.zeros_like(O_average)
 O_subjective[1] = O_average[1]
 O_subjective[2] = O_average[2]
 O_subjective[3] = O_average[3]
 
 for i in range(4):
-    print(np.where(O_average[i]==np.max(O_average, 1)[i])[0])
+    print(np.where(O_average[i] == np.max(O_average, 1)[i])[0])
     O_subjective[i, np.where(O_average[i] == np.max(O_average, 1)[i])[0]] = 1
 
 
@@ -201,8 +199,18 @@ for t in range(len(data_input)):
 
 print('Prob(yl)_prediction:\n')
 print(prob_yl)
+print()
 
-print('bel filtered no yl')
+matched_output_num = 0
+
+for i in range(len(prob_yl)):
+    if (np.where(prob_yl[i] == np.max(prob_yl[i]))[0][0] + 1) == data_output[i][0]:
+        matched_output_num += 1
+
+print('output prediction accuracy is %{}\n'.format(matched_output_num/len(prob_yl)*100))
+
+
+print('belief filtered no output')
 print(belief_filtered_no_yl)
 
 '''

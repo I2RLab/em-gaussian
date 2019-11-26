@@ -3,16 +3,20 @@ import sys
 import CRBM
 import Training_Dataset_Generator as trainingData
 import pickle
+import time
 
 sys.path.insert(0, '../Categorical_Boltzmann_Machines')
 
 np.set_printoptions(linewidth=700)
 np.set_printoptions(precision=4, edgeitems=80)
+print('start', time.clock())
+
 
 class EM:
-    def __init__(self, iterations, input_seq, output_seq, a_matrix, o_matrix):
+    def __init__(self, iterations, input_seq, output_seq, output_f_seq, a_matrix, o_matrix, o_f_matrix, time_step):
         self.a_matrix = a_matrix
         self.o_matrix = o_matrix
+        self.o_f_matrix = o_f_matrix
 
         self.iterations = iterations
 
@@ -24,6 +28,8 @@ class EM:
 
         self.output_num = 4
 
+        self.output_f_num = 125
+
         self.state_total = self.state_scale ** self.agent_num
 
         self.input_tot = self.input_num ** self.agent_num
@@ -34,12 +40,29 @@ class EM:
 
         self.output_lambda = dict()
 
+        self.output_f_lambda = dict()
+
         self.N = len(input_seq)
+
+        self.N_f = len(time_step)
 
         self.S = self.pi.shape[0]
 
+        self.time_step = time_step
+
         for i in range(1, self.output_num + 1):
             self.output_lambda[i] = np.where(output_seq == i)[0]
+
+        # print('output f seq {}'.format(output_f_seq))
+        self.feedback_length_current = 0
+
+        for i in range(1, self.output_f_num + 1):
+            self.output_f_lambda[i] = np.where(output_f_seq == i)[0]
+            if len(np.where(output_f_seq == i)[0]) > 0:
+                self.feedback_length_current += 1
+        print('output lambda: {}'.format(self.output_f_lambda))
+
+        # print('output f lambda {}'.format(self.output_f_lambda))
 
         self.input_k = dict()
 
@@ -64,16 +87,20 @@ class EM:
 
         self.A_init = self.transition_probability_sequence(a_matrix)
         self.O_init = self.emission_probability_sequence(o_matrix)
+        self.O_f_init = self.emission_f_probability_sequence(o_f_matrix)
 
         # print('A init\n', self.A_init)
         # print('O init\n', self.O_init)
+        print('O_f init\n', self.O_f_init)
 
-        self.A, self.O = np.copy(self.A_init), np.copy(self.O_init)  # take copies, as we modify them
+        self.A, self.O, self.O_f = np.copy(self.A_init), np.copy(self.O_init), np.copy(self.O_f_init)  # take copies, as we modify them
 
         self.alpha, self.beta = np.zeros((self.N, self.S)), np.zeros((self.N, self.S))  # initialize alpha and beta
+        self.alpha_f, self.beta_f = np.zeros((self.N_f, self.S)), np.zeros((self.N_f, self.S))  # initialize alpha and beta
 
         self.A_ijk = dict()
         self.O_jl = dict()
+        self.O_jf = dict()
 
     def transition_probability_sequence(self, a_ijk):
         a_ijt = np.zeros((self.N, self.state_total, self.state_total))
@@ -92,6 +119,14 @@ class EM:
 
         return o_jt
 
+    def emission_f_probability_sequence(self, o_jf):
+        o_jft = np.zeros((self.feedback_length_current, self.state_total))
+        for id, output_id in enumerate(self.output_f_lambda):
+            for ti, output_time in enumerate(self.output_f_lambda[output_id]):
+                o_jft[output_time] = o_jf[id]
+
+        return o_jft
+
     def forward(self):
         self.alpha = np.zeros((self.N, self.S))
 
@@ -103,10 +138,10 @@ class EM:
         for k in range(1, self.N):
             for j in range(self.S):
                 for i in range(self.S):
-                    if np.isnan(self.alpha[k - 1, i]) or np.isnan(self.A[k, i, j]) or np.isnan(self.O[k, j]):
-                        pass
-                    else:
-                        self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j]
+                    # if np.isnan(self.alpha[k - 1, i]) or np.isnan(self.A[k, i, j]) or np.isnan(self.O[k, j]):
+                    #     pass
+                    # else:
+                    self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j]
 
         return max(np.sum(self.alpha[self.N - 1, :]), 10 ** -300)
 
@@ -124,6 +159,41 @@ class EM:
 
         return max(np.sum(self.pi * self.O[0] * self.beta[0, :]), 10 ** -300)
 
+    def forward_feedback(self):
+        self.alpha_f = np.zeros((self.feedback_length_current, self.S))
+
+        # base case
+        for s in range(self.S):
+            self.alpha_f[0, :] = self.pi * self.O_f[0] * self.O[0]
+
+        # recursive case
+        for k_f in range(1, self.feedback_length_current):
+            k = self.time_step[k_f]
+            for j in range(self.S):
+                for i in range(self.S):
+                    # if np.isnan(self.alpha_f[k_f - 1, i]) or np.isnan(self.A[k, i, j]) or np.isnan(self.O_f[k_f, j]):
+                    #     pass
+                    # else:
+                    # print('kf,f, j, i {} {} {} {}'.format(k_f, k, j, i))
+                    self.alpha_f[k_f, j] += self.alpha_f[k_f - 1, i] * self.A[k % 250, i, j] * self.O[k % 250, j] * self.O_f[k_f, j]
+        # print('z_f={}'.format(max(np.sum(self.alpha_f[self.feedback_length_current - 1, :]), 10 ** -300)))
+        return max(np.sum(self.alpha_f[self.feedback_length_current - 1, :]), 10 ** -300)
+
+    def backward_feedback(self):
+        self.beta_f = np.zeros((self.feedback_length_current, self.S))
+
+        # base case
+        self.beta_f[self.feedback_length_current - 1, :] = 1
+
+        # recursive case
+        for k_f in range(self.feedback_length_current - 2, -1, -1):
+            k = self.time_step[k_f]
+            for i in range(self.S):
+                for j in range(self.S):
+                    self.beta_f[k_f, i] += self.beta_f[k_f + 1, j] * self.A[k % 250 + 1, i, j] * self.O[k % 250 + 1, j] * self.O_f[k_f + 1, j]
+
+        return max(np.sum(self.pi * self.O[0] * self.beta_f[0, :]), 10 ** -300)
+
     def baum_welch(self):
         # do several steps of EM hill climbing
         for it in range(self.iterations):
@@ -132,17 +202,27 @@ class EM:
             self.h_ijt = np.zeros_like(self.A)
             self.a_ijt_new = np.zeros_like(self.A)
             self.O1 = np.zeros((self.N, self.S))
-            self.O_New = np.zeros_like(self.O)
+            self.O_new = np.zeros_like(self.O)
+            self.O1_f = np.zeros((self.feedback_length_current, self.S))
+            self.O_f_new = np.zeros_like(self.O1_f)
             self.w_jl = np.zeros((self.output_num, self.state_total)) + 10 ** -250
-            
+            self.w_jf = np.zeros((self.output_f_num, self.state_total)) + 10 ** -250
+
             # compute forward-backward matrices and return the normalizing factors za & zb
             za = self.forward()
             zb = self.backward()
+
+            if self.feedback_length_current > 0:
+                za_f = self.forward_feedback()
+                zb_f = self.backward_feedback()
 
             # print('alpha\n', self.alpha)
             # print('za\n', za)
             # print('beta\n', self.beta)
             # print('zb\n', zb)
+            # print('alpha_F\n', self.alpha_f)
+            # print('beta_f\n', self.beta_f)
+
 
             assert abs(za - zb) < 1e-2, "it's badness 10000 if the marginals don't agree"
 
@@ -152,6 +232,11 @@ class EM:
 
             for k in range(0, self.N):
                 self.O1[k] += self.alpha[k, :] * self.beta[k, :] / za
+
+            if self.feedback_length_current > 0:
+                for k_f in range(0, self.feedback_length_current):
+                    k = self.time_step[k_f]
+                    self.O1_f[k_f] += self.alpha_f[k_f, :] * self.beta_f[k_f, :] / za_f
 
             for k in range(1, self.N):
                 for j in range(self.S):
@@ -179,14 +264,37 @@ class EM:
                 else:
                     self.w_jl[t1] = np.zeros_like(self.O[0]) + 10 ** -250
 
-            self. w_jl /= np.sum(self.w_jl, 0) + 10 ** -301
+            self.w_jl /= np.sum(self.w_jl, 0) + 10 ** -301
 
             for t1, to in enumerate(self.output_lambda):
                 if len(self.output_lambda[to]) > 0:
                     for t, ut in enumerate(self.output_lambda[to]):
-                        self.O_New[ut] = self.w_jl[t1]
+                        self.O_new[ut] = self.w_jl[t1]
 
-            self.A, self.O = self.a_ijt_new, self.O_New
+            # O_f re-estimation
+            if self.feedback_length_current > 0:
+                for t1, to in enumerate(self.output_f_lambda):
+                    if len(self.output_f_lambda[to]) > 0:
+                        self.O1_f_temp = np.zeros((1, self.state_total))
+                        for t, ut in enumerate(self.output_f_lambda[to]):
+                            self.O1_f_temp += self.O1_f[ut]
+
+                        self.w_jf[t1] = self.O1_f_temp
+                    else:
+                        self.w_jf[t1] = np.zeros_like(self.O_f[0]) + 10 ** -250
+
+                self.w_jf /= np.sum(self.w_jf, 0) + 10 ** -300
+
+                for t1, to in enumerate(self.output_f_lambda):
+                    if len(self.output_f_lambda[to]) > 0:
+                        for t, ut in enumerate(self.output_f_lambda[to]):
+                            print('t {} ut {}'.format(t, ut))
+                            self.O_f_new[ut] = self.w_jf[t1]
+            else:
+                self.O_f_new = np.zeros((self.N_f, 125))
+
+
+            self.A, self.O, self.O_f = self.a_ijt_new, self.O_new, self.O_f_new
             
             # print('updated A=\n', self.A, '\n')
             # print('updated O=\n', self.O, '\n')
@@ -203,41 +311,62 @@ class EM:
             else:
                 self.O_jl[l] = np.zeros_like(self.O[0])
 
+        for l, to in enumerate(self.output_f_lambda):
+            if len(self.output_f_lambda[to]) > 0:
+                self.O_jf[l] = self.O_f[self.output_f_lambda[to][0]]
+            else:
+                self.O_jf[l] = np.zeros_like(self.O_f[0])
+
         # print('A=\n', self.A, '\n')
         # print('O=\n', self.O, '\n')
+        print('this chunk learned O_jf=\n', self.O_jf, '\n')
 
-        return self.pi, self.A, self.O, self.A_ijk, self.O_jl
+        return self.pi, self.A, self.O, self.A_ijk, self.O_jl, self.O_jf
 
 
 if __name__ == "__main__":
     prob_transition = CRBM.CRBM('transition')
     prob_emission = CRBM.CRBM('emission')
+    prob_emission_f = CRBM.CRBM('emission_f')
 
     a_matrix = prob_transition.total_transition_probs()
     o_matrix = prob_emission._o_jk()
+    o_f_matrix = prob_emission_f._o_jf()
 
     TrainingD = trainingData.TrainingData()
     [training_input_seq, training_output_seq] = TrainingD.io_sequence_generator()
     training_total_len = len(training_input_seq)
-    print('total length', training_total_len)
-    pi_trained_list, A_trained_list, O_trained_list, A_ijk_list, O_jl_list = list(), list(), list(), list(), list()
+
+    # feedback sequence sample
+    # training_output_f_seq = np.arange(1, 6)
+    training_output_f_seq = np.array([97, 98, 99, 125, 100, 50, 20, 22, 24, 26])
+    out_f_time_stamp = np.array([1, 3, 4, 10, 20, 30, 45, 55, 100, 300])
+
+    # print('feedback length {} \n'.format(len(training_output_f_seq)))
+    # print('total length {} \n'.format(training_total_len))
+
+    pi_trained_list, A_trained_list, O_trained_list, A_ijk_list, O_jl_list, O_jf_list = list(), list(), list(), list(), list(), list()
 
     session_len = 250
 
-    # em_init = EM(1, training_input_seq, training_output_seq, a_matrix, o_matrix)
-    # A_init = em_init.A_init
-    # O_init = em_init.O_init
-    # del em_init
+    for chunk_i in range(training_total_len // session_len + 1):
+        print('chunk begining', time.clock())
+        print(chunk_i * session_len, min(chunk_i * session_len + session_len, training_total_len))
 
-    for i_set in range(training_total_len // session_len + 1):
-        print(i_set * session_len, min(i_set * session_len + session_len, training_total_len))
+        input_seq = np.copy(training_input_seq[chunk_i * session_len: min(chunk_i * session_len + session_len, training_total_len)])
+        output_seq = np.copy(training_output_seq[chunk_i * session_len: min(chunk_i * session_len + session_len, training_total_len)])
 
-        input_seq = np.copy(training_input_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
-        output_seq = np.copy(training_output_seq[i_set * session_len: min(i_set * session_len + session_len, training_total_len)])
+        a = np.where(out_f_time_stamp > chunk_i * session_len)[0]
+        b = np.where(out_f_time_stamp <= chunk_i * session_len + session_len)[0]
 
-        em = EM(12, input_seq, output_seq, a_matrix, o_matrix)
+        output_f_index = [value for value in a if value in b]
+        output_f_seq = np.copy([training_output_f_seq[k_f] for k_f in output_f_index])
 
-        pi_trained, A_trained, O_trained, A_ijk, O_jl = em.baum_welch()
+        print('output_f_seq', output_f_seq)
+
+        em = EM(2, input_seq, output_seq, output_f_seq, a_matrix, o_matrix, o_f_matrix, out_f_time_stamp)
+
+        pi_trained, A_trained, O_trained, A_ijk, O_jl, O_jf = em.baum_welch()
 
         pi_trained_list.append(pi_trained)
         A_trained_list.append(A_trained)
@@ -246,6 +375,8 @@ if __name__ == "__main__":
         O_jl_list.append(O_jl)
 
         del em
+
+        print('chunk finish', time.clock())
 
     A_average = np.zeros((1000, 125, 125))
     O_average = np.zeros((4, 125))
@@ -295,3 +426,6 @@ if __name__ == "__main__":
 
     with open('O_average_training_data_2.pickle', 'wb') as f_o:
         pickle.dump(O_average, f_o)
+
+    print('finish', time.clock())
+
