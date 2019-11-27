@@ -9,6 +9,9 @@ class TrainingData:
         self.input_training = []
         self.output_training = []
 
+
+    print(int('440', 5))
+
     def io_sequence_generator(self):
         self.input_training = np.array([[10, 10, 10], [10, 10, 10], [10, 10, 10], [10, 10, 10], [5., 10, 10], [5., 10, 10], [10, 10, 10], [10, 10, 10],
                                         [10, 10, 7.], [10, 10, 6.], [10, 10, 4.], [10, 10, 4.], [10, 10, 1.], [10, 10, 1.], [10, 10, 1.], [10, 10, 1.],
@@ -23,6 +26,13 @@ class TrainingData:
                                          [3], [3], [3], [3], [3], [3], [3], [3],
                                          [1], [1], [1], [2], [2], [2], [3], [3],
                                          [1], [1], [1], [1], [1], [1], [1], [1]])
+
+        self.output_f_training = np.array([[124], [124], [124], [124], [24], [24], [121], [123],
+                                           [120], [120], [120], [120], [120], [120], [120], [120],
+                                           [24], [24], [24], [24], [24], [24], [24], [24],
+                                           [104], [104], [104], [104], [104], [104], [104], [104],
+                                           [124], [124], [124], [24], [24], [24], [104], [104],
+                                           [124], [124], [124], [124], [124], [124], [124], [124]])
         '''
         ax1 = plt.subplot(211)
         plt.plot(self.input_training[:, 0], "X")
@@ -44,7 +54,7 @@ class TrainingData:
         plt.show()
         '''
 
-        return np.array(self.input_training), np.array(self.output_training)
+        return np.array(self.input_training), np.array(self.output_training), self.output_f_training
 
 
 if __name__ == '__main__':

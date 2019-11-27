@@ -22,20 +22,20 @@ class TrainingData:
                             self.input_output_dict[t, i1, i2, i3] = i_r[0] + 2
                             self.input_training.append([i1, i2, i3])
                             self.input_training.append([i1, i2, i3])
-                            self.input_training.append([i1, i2, i3])
-                            self.output_training.append([i_r[0] + 2])
+                            # self.input_training.append([i1, i2, i3])
+                            # self.output_training.append([i_r[0] + 2])
                             self.output_training.append([i_r[0] + 2])
                             self.output_training.append([i_r[0] + 2])
                         else:
                             self.input_output_dict[t, i1, i2, i3] = 1
                             self.input_training.append([i1, i2, i3])
                             self.input_training.append([i1, i2, i3])
-                            self.input_training.append([i1, i2, i3])
-                            self.input_training.append([i1, i2, i3])
-                            self.input_training.append([i1, i2, i3])
-                            self.output_training.append([1])
-                            self.output_training.append([1])
-                            self.output_training.append([1])
+                            # self.input_training.append([i1, i2, i3])
+                            # self.input_training.append([i1, i2, i3])
+                            # self.input_training.append([i1, i2, i3])
+                            # self.output_training.append([1])
+                            # self.output_training.append([1])
+                            # self.output_training.append([1])
                             self.output_training.append([1])
                             self.output_training.append([1])
 

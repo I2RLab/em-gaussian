@@ -20,7 +20,7 @@ print('start', time.clock())
 sys.path.insert(0, '../Categorical_Boltzmann_Machines')
 
 np.set_printoptions(linewidth=700)
-np.set_printoptions(precision=4, edgeitems=10)
+np.set_printoptions(precision=3, edgeitems=5)
 
 prob_transition = CRBM.CRBM('transition')
 prob_emission = CRBM.CRBM('emission')
@@ -32,20 +32,14 @@ TrainingD = trainingData.TrainingData()
 [training_input_seq, training_output_seq] = TrainingD.io_sequence_generator()
 
 TestD = testdata.TrainingData()
-[test_input_seq, test_output_seq] = TestD.io_sequence_generator()
+[test_input_seq, test_output_seq, test_output_f_seq] = TestD.io_sequence_generator()
 
 training_total_len = len(training_input_seq)
 # training_total_len = 80
 
-pi_trained_list, A_trained_list, O_trained_list, A_ijk_list, O_jl_list = list(), list(), list(), list(), list()
-
-session_len = 250
-
-# em_init = EM_Module.EM(1, training_input_seq, training_output_seq, a_matrix, o_matrix)
-# A_init = em_init.A_init
-# O_init = em_init.O_init
+# pi_trained_list, A_trained_list, O_trained_list, A_ijk_list, O_jl_list = list(), list(), list(), list(), list()
 #
-# del em_init
+# session_len = 250
 
 '''
 for chunk_i in range(training_total_len // session_len + 1):
@@ -106,8 +100,19 @@ with open('A_average_training_data_2.pickle', 'rb') as f_a:
 with open('O_average_training_data_2.pickle', 'rb') as f_o:
     O_average = pickle.load(f_o)
 
-print('O_average')
-print(O_average)
+with open('O_f_average_training_data_3.pickle', 'rb') as f_of:
+    O_f_average = pickle.load(f_of)
+#
+# print('O_f_average')
+# print(O_f_average)
+
+barchart(O_f_average)
+show()
+# O_f_average = np.random.random_sample((125,125))
+
+prob_emission_f = CRBM.CRBM('emission_f')
+O_f_average = prob_emission_f._o_jf()
+
 
 # constants
 input_num = 10
@@ -119,6 +124,7 @@ input_tot = agent_num ** input_num
 # i/o sequence
 data_input = test_input_seq
 data_output = test_output_seq
+data_output_f = test_output_f_seq
 
 test_session_len = len(data_input)
 u_dict = dict()
@@ -147,10 +153,10 @@ belief_filtered = np.zeros((len(data_input) + 1, state_num))
 belief_filtered[0] = bel0
 
 belief_filtered_no_yl = np.zeros((len(data_input) + 1, state_num))
-belief_filtered_no_yl[0] = 1
+belief_filtered_no_yl[0] = 1/125
 
-belief_smoothed = np.zeros((len(data_input), state_num))
-belief_smoothed[-1] = np.ones((state_num,)) * 0.008
+# belief_smoothed = np.zeros((len(data_input), state_num))
+# belief_smoothed[-1] = np.ones((state_num,)) * 0.008
 
 # prob_yl = np.zeros((len(data_input), 4))
 prob_yl = np.zeros((len(data_input), 4))
@@ -159,21 +165,17 @@ belief_bar_history = np.zeros((len(data_input), state_num))   # bel_bar_j --> su
 
 
 O_subjective = np.zeros_like(O_average)
-O_subjective[1] = O_average[1]
-O_subjective[2] = O_average[2]
-O_subjective[3] = O_average[3]
 
+# O_subjective[1] = O_average[1]
+# O_subjective[2] = O_average[2]
+# O_subjective[3] = O_average[3]
+#
 for i in range(4):
     print(np.where(O_average[i] == np.max(O_average, 1)[i])[0])
     O_subjective[i, np.where(O_average[i] == np.max(O_average, 1)[i])[0]] = 1
 
+# O_subjective[0, 2] = .1
 
-# O_subjective[0,124] = 1
-# O_subjective[0,123] = 1
-# O_subjective[0,119] = 1
-
-# print('O_subjective')
-# print(O_subjective)
 
 # compute filtered belief
 for t in range(len(data_input)):
@@ -185,7 +187,8 @@ for t in range(len(data_input)):
 
     # belief_bar_ij_no_yl = np.sum(np.multiply(A_average[input_sequence[t]], belief_filtered_no_yl[t]), 1)
     # belief_bar_ij_no_yl = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_subjective[int(data_output[t] - 1)])
-    belief_bar_ij_no_yl = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_average[int(data_output[t] - 1)])
+    # belief_bar_ij_no_yl = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_average[int(data_output[t] - 1)])
+    belief_bar_ij_no_yl = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_f_average[int(data_output_f[t])])
 
     for k in range(4):
         prob_yl[t, k] = np.sum(np.multiply(belief_bar_ij_no_yl, O_average[k])) / np.sum(belief_bar_ij_no_yl)
@@ -199,12 +202,15 @@ for t in range(len(data_input)):
 
 print('Prob(yl)_prediction:\n')
 print(prob_yl)
-print()
+
 
 matched_output_num = 0
 
 for i in range(len(prob_yl)):
+    print('prob output', np.where(prob_yl[i] == np.max(prob_yl[i]))[0][0] + 1)
+    print('data ', data_output[i][0])
     if (np.where(prob_yl[i] == np.max(prob_yl[i]))[0][0] + 1) == data_output[i][0]:
+
         matched_output_num += 1
 
 print('output prediction accuracy is %{}\n'.format(matched_output_num/len(prob_yl)*100))
@@ -228,10 +234,10 @@ print('\n\n\n')
 
 # plot filtered belief
 figure(1)
-barchart(belief_filtered[1:])
+# barchart(belief_filtered[1:])
 # barchart(O_average)
 # barchart(belief_smoothed)
-# barchart(belief_filtered_no_yl[1:])
+barchart(belief_filtered_no_yl[1:])
 xlabel('Time')
 ylabel('Trust')
 zlabel('Belief')
