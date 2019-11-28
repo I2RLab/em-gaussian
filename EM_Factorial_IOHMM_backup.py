@@ -330,7 +330,7 @@ def baum_welch(output_seq, pi, iterations, input_seq, w_transition, w_obs):
         #         if len(io_lambda[ti, to]) > 0:
         #             w_ilk_temp = np.zeros((1, state_total))
         #             for i, ts in enumerate(io_lambda[ti, to]):
-        #                 w_ilk_temp += O1[ts]
+        #                 w_ilk_temp += g_jlt[ts]
         #             w_ilk[ti, to - 1, :] = w_ilk_temp
         #
         # for k, ti in enumerate(input_lambda):

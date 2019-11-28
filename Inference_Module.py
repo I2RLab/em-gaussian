@@ -94,24 +94,23 @@ print(time.clock())
 '''
 
 # with open('A_average_EM.pickle', 'rb') as f_a:
-with open('A_average_training_data_2.pickle', 'rb') as f_a:
+with open('A_average_training_data_5.pickle', 'rb') as f_a:
     A_average = pickle.load(f_a)
 #
-with open('O_average_training_data_2.pickle', 'rb') as f_o:
+with open('O_average_training_data_5.pickle', 'rb') as f_o:
     O_average = pickle.load(f_o)
 
-with open('O_f_average_training_data_3.pickle', 'rb') as f_of:
+with open('O_f_average_training_data_5.pickle', 'rb') as f_of:
     O_f_average = pickle.load(f_of)
+
+print('O_f_average')
+print(O_f_average)
 #
-# print('O_f_average')
-# print(O_f_average)
+# prob_emission_f = CRBM.CRBM('emission_f')
+# O_f_average = prob_emission_f._o_jf()
 
 barchart(O_f_average)
 show()
-# O_f_average = np.random.random_sample((125,125))
-
-prob_emission_f = CRBM.CRBM('emission_f')
-O_f_average = prob_emission_f._o_jf()
 
 
 # constants
@@ -180,15 +179,16 @@ for i in range(4):
 # compute filtered belief
 for t in range(len(data_input)):
     belief_bar_ij = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_average[int(data_output[t] - 1)])
+    # belief_bar_ij = np.multiply(np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_average[int(data_output[t] - 1)]), O_f_average[int(data_output_f[t])])
     # belief_bar_history[t] = np.copy(belief_bar_ij)
-    belief_den_temp = np.copy(np.sum(belief_bar_ij))
-    belief_bar_ij /= belief_den_temp
+    belief_bar_ij /= np.sum(belief_bar_ij)
     belief_filtered[t + 1] = np.copy(belief_bar_ij)
 
     # belief_bar_ij_no_yl = np.sum(np.multiply(A_average[input_sequence[t]], belief_filtered_no_yl[t]), 1)
     # belief_bar_ij_no_yl = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_subjective[int(data_output[t] - 1)])
     # belief_bar_ij_no_yl = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_average[int(data_output[t] - 1)])
-    belief_bar_ij_no_yl = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_f_average[int(data_output_f[t])])
+    # belief_bar_ij_no_yl = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_f_average[int(data_output_f[t])])
+    belief_bar_ij_no_yl = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered_no_yl[t], 1), O_f_average[int(data_output_f[t])])
 
     for k in range(4):
         prob_yl[t, k] = np.sum(np.multiply(belief_bar_ij_no_yl, O_average[k])) / np.sum(belief_bar_ij_no_yl)
@@ -234,10 +234,10 @@ print('\n\n\n')
 
 # plot filtered belief
 figure(1)
-# barchart(belief_filtered[1:])
+barchart(belief_filtered[1:])
 # barchart(O_average)
 # barchart(belief_smoothed)
-barchart(belief_filtered_no_yl[1:])
+# barchart(belief_filtered_no_yl[1:])
 xlabel('Time')
 ylabel('Trust')
 zlabel('Belief')

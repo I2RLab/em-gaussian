@@ -18,7 +18,7 @@ class TrainingData:
                     indexes = [(i, x) for i, x in enumerate(u) if x == min(u)]
 
                     for i_r in indexes:
-                        if i_r[1] < 7:
+                        if i_r[1] < 8:
                             self.input_output_dict[t, i1, i2, i3] = i_r[0] + 2
                             self.input_training.append([i1, i2, i3])
                             self.input_training.append([i1, i2, i3])
@@ -30,12 +30,12 @@ class TrainingData:
                             self.input_output_dict[t, i1, i2, i3] = 1
                             self.input_training.append([i1, i2, i3])
                             self.input_training.append([i1, i2, i3])
-                            # self.input_training.append([i1, i2, i3])
+                            self.input_training.append([i1, i2, i3])
                             # self.input_training.append([i1, i2, i3])
                             # self.input_training.append([i1, i2, i3])
                             # self.output_training.append([1])
                             # self.output_training.append([1])
-                            # self.output_training.append([1])
+                            self.output_training.append([1])
                             self.output_training.append([1])
                             self.output_training.append([1])
 
