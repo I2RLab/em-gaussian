@@ -5,8 +5,10 @@ class TrainingData:
     def __init__(self):
         self.input_output_dict = dict()
         self.input_num_units = 11
-        self.input_training = []
-        self.output_training = []
+        self.input_training = list()
+        self.output_training = list()
+        self.output_f_training = list()
+        self.feebacklist = [0, 124, 24, 104, 120]
 
     def io_sequence_generator(self):
         t = 0
@@ -20,24 +22,36 @@ class TrainingData:
                     for i_r in indexes:
                         if i_r[1] < 8:
                             self.input_output_dict[t, i1, i2, i3] = i_r[0] + 2
+
                             self.input_training.append([i1, i2, i3])
+                            self.output_training.append([i_r[0] + 2])
+                            self.output_f_training.append([self.feebacklist[i_r[0] + 2]])
+
                             self.input_training.append([i1, i2, i3])
-                            # self.input_training.append([i1, i2, i3])
+                            self.output_training.append([i_r[0] + 2])
+                            self.output_f_training.append([self.feebacklist[i_r[0] + 2]])
+
                             # self.output_training.append([i_r[0] + 2])
-                            self.output_training.append([i_r[0] + 2])
-                            self.output_training.append([i_r[0] + 2])
+                            # self.input_training.append([i1, i2, i3])
+                            # self.output_f_training.append([self.feebacklist[i_r[0] + 2]])
                         else:
                             self.input_output_dict[t, i1, i2, i3] = 1
+
                             self.input_training.append([i1, i2, i3])
+                            self.output_training.append([1])
+                            self.output_f_training.append([124])
+
                             self.input_training.append([i1, i2, i3])
+                            self.output_training.append([1])
+                            self.output_f_training.append([124])
+
                             self.input_training.append([i1, i2, i3])
-                            # self.input_training.append([i1, i2, i3])
-                            # self.input_training.append([i1, i2, i3])
-                            # self.output_training.append([1])
-                            # self.output_training.append([1])
                             self.output_training.append([1])
+                            self.output_f_training.append([124])
+
+                            self.input_training.append([i1, i2, i3])
                             self.output_training.append([1])
-                            self.output_training.append([1])
+                            self.output_f_training.append([124])
 
                         t += 1
         '''
@@ -62,7 +76,7 @@ class TrainingData:
         plt.show()
         '''
 
-        return np.array(self.input_training), np.array(self.output_training)
+        return np.array(self.input_training), np.array(self.output_training), np.array(self.output_f_training)
 
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ from mayavi.mlab import *
 sys.path.insert(0, '../Categorical_Boltzmann_Machines')
 
 np.set_printoptions(linewidth=700)
-np.set_printoptions(precision=4, edgeitems=80)
+np.set_printoptions(precision=3, edgeitems=50)
 print('start', time.clock())
 
 
@@ -48,29 +48,27 @@ class EM:
         self.output_f_lambda = dict()
 
         self.N = len(input_seq)
-        print('N input seq = {}'.format(self.N))
+        # print('N input seq = {}'.format(self.N))
 
         self.N_f = len(timestamp_feedback)
 
         self.S = self.pi.shape[0]
 
         self.timestamp_feedback = timestamp_feedback
-        print('timestamp feedback', self.timestamp_feedback)
-        print('timestamp feedback len', len(self.timestamp_feedback))
 
         for i in range(1, self.output_num + 1):
             self.output_lambda[i] = np.where(output_seq == i)[0]
 
-        # print('output f seq {}'.format(output_f_seq))
+        print('output f seq {}'.format(output_f_seq))
+
         self.feedback_length = len(output_f_seq)
-        print('feedback length', self.feedback_length)
 
         for i in range(1, self.output_f_num + 1):
             self.output_f_lambda[i] = np.where(output_f_seq == i)[0]
             # if len(np.where(output_f_seq == i)[0]) > 0:
             #     self.feedback_length += 1
 
-        # print('output_f lambda: {}'.format(self.output_f_lambda))
+        print('output_f lambda: {}'.format(self.output_f_lambda))
 
         self.input_k = dict()
 
@@ -148,12 +146,12 @@ class EM:
         for k in range(1, self.N):
             for j in range(self.S):
                 for i in range(self.S):
-                    self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j]
-                    # if np.where(self.timestamp_feedback == k)[0].size == 0:
-                    #     self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j]
-                    # else:
-                    #     k_f = np.where(self.timestamp_feedback == k)[0][0]
-                    #     self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j] * self.O_f[k_f - 1, j]
+                    # self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j]
+                    if np.where(self.timestamp_feedback == k)[0].size == 0:
+                        self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j]
+                    else:
+                        k_f = np.where(self.timestamp_feedback == k)[0][0]
+                        self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j] * self.O_f[k_f - 1, j]
 
 
         return max(np.sum(self.alpha[self.N - 1, :]), 10 ** -300)
@@ -169,12 +167,12 @@ class EM:
             # print('k {}'.format(k))
             for i in range(self.S):
                 for j in range(self.S):
-                    self.beta[k, i] += self.beta[k + 1, j] * self.A[k + 1, i, j] * self.O[k + 1, j]
-                    # if np.where(self.timestamp_feedback == k)[0].size == 0:
-                    #     self.beta[k, i] += self.beta[k + 1, j] * self.A[k + 1, i, j] * self.O[k + 1, j]
-                    # else:
-                    #     k_f = np.where(self.timestamp_feedback == k)[0][0]
-                    #     self.beta[k, i] += self.beta[k + 1, j] * self.A[k + 1, i, j] * self.O[k + 1, j] * self.O_f[k_f - 1, j]
+                    # self.beta[k, i] += self.beta[k + 1, j] * self.A[k + 1, i, j] * self.O[k + 1, j]
+                    if np.where(self.timestamp_feedback == k)[0].size == 0:
+                        self.beta[k, i] += self.beta[k + 1, j] * self.A[k + 1, i, j] * self.O[k + 1, j]
+                    else:
+                        k_f = np.where(self.timestamp_feedback == k)[0][0]
+                        self.beta[k, i] += self.beta[k + 1, j] * self.A[k + 1, i, j] * self.O[k + 1, j] * self.O_f[k_f - 1, j]
 
         return max(np.sum(self.pi * self.O[0] * self.beta[0, :]), 10 ** -300)
 
@@ -206,7 +204,7 @@ class EM:
             k = self.timestamp_feedback[self.output_f_index[k_f]]
             for i in range(self.S):
                 for j in range(self.S):
-                    self.beta_f[k_f, i] += self.beta_f[k_f + 1, j] * self.A[int((k+1 % 250), i, j] * self.O[int(k+1 % 250) , j] * self.O_f[k_f + 1, j]
+                    self.beta_f[k_f, i] += self.beta_f[k_f + 1, j] * self.A[int(k % 250 + 1), i, j] * self.O[int(k % 250 + 1), j] * self.O_f[k_f + 1, j]
                     # self.beta_f[k_f, i] += self.beta_f[k_f + 1, j] * self.A[int(k % 250) + 1, i, j] * self.O_f[k_f + 1, j]
 
         return max(np.sum(self.pi * self.O[0] * self.beta_f[0, :]), 10 ** -300)
@@ -251,7 +249,6 @@ class EM:
 
             if self.feedback_length > 0:
                 for k_f in range(self.feedback_length):
-                    k = self.timestamp_feedback[self.output_f_index[k_f]]
                     self.g_jft[k_f] += self.alpha_f[k_f, :] * self.beta_f[k_f, :] / za_f
 
             for k in range(1, self.N):
@@ -282,7 +279,7 @@ class EM:
                 else:
                     self.w_jl[t1] = np.zeros_like(self.O[0]) + 10 ** -250
 
-            self.w_jl /= np.sum(self.w_jl, 0) + 10 ** -301
+            self.w_jl /= np.sum(self.w_jl, 0) + 10 ** -300
 
             for t1, to in enumerate(self.output_lambda):
                 if len(self.output_lambda[to]) > 0:
@@ -329,15 +326,14 @@ class EM:
 
         for l, to in enumerate(self.output_f_lambda):
             if len(self.output_f_lambda[to]) > 0:
-                print('l', l, 'lambda to', self.output_f_lambda[to][0])
                 self.O_jf[l] = self.O_f[self.output_f_lambda[to][0]]
             else:
-                # self.O_jf[l] = np.zeros_like(self.O_f[0])
-                self.O_jf[l] = o_f_matrix[l-1]
+                self.O_jf[l] = np.zeros_like(self.O_f[0])
+                # self.O_jf[l] = o_f_matrix[l-1]
 
-        print('O_jf')
-        print(self.O_jf)
-        print()
+        # print('O_jf')
+        # print(self.O_jf)
+        # print()
 
         return self.pi, self.A, self.O, self.A_ijk, self.O_jl, self.O_jf
 
@@ -353,43 +349,44 @@ if __name__ == "__main__":
 
     # Training Data Import
     TrainingD = trainingData.TrainingData()
-    [training_input_seq, training_output_seq] = TrainingD.io_sequence_generator()
+    [training_input_seq, training_output_seq, feedback_seq_all] = TrainingD.io_sequence_generator()
     training_total_len = len(training_input_seq)
 
     def to(s, b):
-        """
-        Converts given number s, from base b to base 10
-        s -- string representation of number
-        b -- base of given number
-        """
-        assert (1 < b < 37)
         return int(s, b)
 
-    feedback_seq = list()
+    # feedback_seq_all = list()
 
     for i, input_value in enumerate(training_input_seq):
         input_string = str(int((input_value[0]-0.1)/2))+str(int((input_value[1]-0.1)/2))+str(int((input_value[2]-0.1)/2))
-        value_base_10 = to(input_string, 5)
-        feedback_seq.append(value_base_10)
-    # print('feedback seq {}'.format(feedback_seq))
+        # input_string = str(int((input_value[2]-0.1)/2))+str(int((input_value[1]-0.1)/2))+str(int((input_value[0]-0.1)/2))
 
-    # feedback sequence sample
-    feedback_tperiod = 20
+        # value_base_10 = to(input_string, 5)
+        value_base_10 = int(input_string, 5)
+
+        # feedback_seq_all.append(124-value_base_10)
+
+        # print(i, input_value, input_string, value_base_10)
+
+    feedback_tperiod = 10
+
     training_output_f_seq = np.zeros((int(len(training_input_seq)//feedback_tperiod)+1,))
 
     output_f_time_stamp = np.zeros_like(training_output_f_seq)   # feedback time stamps
 
     for i in np.arange(0, len(training_input_seq), feedback_tperiod):
-        training_output_f_seq[int(i / feedback_tperiod)] = int(feedback_seq[i])
+        print(i, int(i/feedback_tperiod))
+        training_output_f_seq[int(i / feedback_tperiod)] = int(feedback_seq_all[i])
         output_f_time_stamp[int(i / feedback_tperiod)] = int(i)  # Every 10 time-steps the feedback is received.
 
-    # print('training_output_f_seq', training_output_f_seq)
-    # print('output_f_time_stamp', output_f_time_stamp)
+    print('feedback sequence', training_output_f_seq)
+    print('feedback time stamp', output_f_time_stamp)
+    print('total training length --------> {}'.format(training_total_len))
 
     pi_trained_list, A_trained_list, O_trained_list, A_ijk_list, O_jl_list, O_jf_list = list(), list(), list(), list(), list(), list()
 
     session_len = 250
-    print('total training length --------> {}'.format(training_total_len))
+
     for chunk_i in range(training_total_len // session_len + 1):
         print('chunk begining', time.clock())
         print(chunk_i * session_len, min(chunk_i * session_len + session_len, training_total_len))
@@ -397,16 +394,25 @@ if __name__ == "__main__":
         input_seq = np.copy(training_input_seq[chunk_i * session_len: min(chunk_i * session_len + session_len, training_total_len)])
         output_seq = np.copy(training_output_seq[chunk_i * session_len: min(chunk_i * session_len + session_len, training_total_len)])
 
-        a = np.where(output_f_time_stamp > chunk_i * session_len)[0]
-        b = np.where(output_f_time_stamp <= chunk_i * session_len + session_len)[0]
+        a = np.where(output_f_time_stamp >= chunk_i * session_len)[0]
+        b = np.where(output_f_time_stamp < chunk_i * session_len + session_len)[0]
 
         output_f_index = [value for value in a if value in b]
         output_f_seq = np.copy([int(training_output_f_seq[k_f]) for k_f in output_f_index])
 
-        print('output f index: {}'.format(output_f_index))
-        print('output_f_seq', output_f_seq)
+        # print('output f index: {}'.format(output_f_index))
+        # print('output_f_seq', output_f_seq)
+        '''
+        for k in range(len(input_seq)):
+            if np.where(output_f_time_stamp == k)[0].size == 0:
+                print('u {} y {}'.format(input_seq[k], output_seq[k]))
+            else:
+                k_f = np.where(output_f_time_stamp == k)[0][0]
+                print(k, k_f)
+                print('u {} y {} y_f {}'.format(input_seq[k], output_seq[k], output_f_seq[k_f]))
+        '''
 
-        em = EM(4, input_seq, output_seq, output_f_seq, a_matrix, o_matrix, o_f_matrix, output_f_time_stamp, output_f_index)
+        em = EM(3, input_seq, output_seq, output_f_seq, a_matrix, o_matrix, o_f_matrix, output_f_time_stamp, output_f_index)
 
         pi_trained, A_trained, O_trained, A_ijk, O_jl, O_jf = em.baum_welch()
 
@@ -420,27 +426,6 @@ if __name__ == "__main__":
         del em
 
         print('chunk finish', time.clock())
-
-    # A_average = np.zeros((1000, 125, 125))
-    # O_average = np.zeros((4, 125))
-    #
-    # for k in range(1000):
-    #     A_avg_tmp = np.zeros((125, 125))
-    #     i_count = 0
-    #     for i in range(len(A_ijk_list)):
-    #         if np.sum(A_ijk_list[i][k]) > 0:
-    #             A_avg_tmp += A_ijk_list[i][k]
-    #             i_count += 1
-    #     A_average[k] = A_avg_tmp / i_count
-    #
-    # for j in range(4):
-    #     O_avg_temp = np.zeros((125,))
-    #     o_count = 0
-    #     for i in range(len(O_jl_list)):
-    #         if np.sum(O_jl_list[i][j]) > 0:
-    #             O_avg_temp += O_jl_list[i][j]
-    #             o_count += 1
-    #     O_average[j] = O_avg_temp / o_count
 
     A_average = np.zeros((1000, 125, 125))
     O_average = np.zeros((4, 125))
@@ -470,21 +455,22 @@ if __name__ == "__main__":
         o_f_count = 0
 
         for i in range(len(O_jf_list)):
-            # print('j {} i {} '.format(j, i))
             if np.sum(O_jf_list[i][j]) > 0:
                 O_f_avg_temp += O_jf_list[i][j] * (i + 1)
                 o_f_count += i + 1
 
         if o_f_count > 0:
             O_f_average[j] = O_f_avg_temp / o_f_count
+        else:
+            O_f_average[j] = o_f_matrix[j]
 
     # Save the learned data
-    with open('A_average_training_data_5.pickle', 'wb') as f_a:
+    with open('A_avg_it5_f10_R.pickle', 'wb') as f_a:
         pickle.dump(A_average, f_a)
 
-    with open('O_average_training_data_5.pickle', 'wb') as f_o:
+    with open('O_avg_it5_f10_R.pickle', 'wb') as f_o:
         pickle.dump(O_average, f_o)
 
-    with open('O_f_average_training_data_5.pickle', 'wb') as f_of:
+    with open('O_f_avg_it5_f10_R.pickle', 'wb') as f_of:
         pickle.dump(O_f_average, f_of)
 

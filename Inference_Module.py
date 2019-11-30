@@ -28,18 +28,9 @@ prob_emission = CRBM.CRBM('emission')
 a_matrix = prob_transition.total_transition_probs()
 o_matrix = prob_emission._o_jk()
 
-TrainingD = trainingData.TrainingData()
-[training_input_seq, training_output_seq] = TrainingD.io_sequence_generator()
-
 TestD = testdata.TrainingData()
 [test_input_seq, test_output_seq, test_output_f_seq] = TestD.io_sequence_generator()
 
-training_total_len = len(training_input_seq)
-# training_total_len = 80
-
-# pi_trained_list, A_trained_list, O_trained_list, A_ijk_list, O_jl_list = list(), list(), list(), list(), list()
-#
-# session_len = 250
 
 '''
 for chunk_i in range(training_total_len // session_len + 1):
@@ -93,25 +84,27 @@ print(time.clock())
 print(time.clock())
 '''
 
-# with open('A_average_EM.pickle', 'rb') as f_a:
-with open('A_average_training_data_5.pickle', 'rb') as f_a:
+with open('A_avg_it5_f10_R.pickle', 'rb') as f_a:
     A_average = pickle.load(f_a)
 #
-with open('O_average_training_data_5.pickle', 'rb') as f_o:
+with open('O_avg_it5_f10_R.pickle', 'rb') as f_o:
     O_average = pickle.load(f_o)
 
-with open('O_f_average_training_data_5.pickle', 'rb') as f_of:
+with open('O_f_avg_it5_f10_R.pickle', 'rb') as f_of:
     O_f_average = pickle.load(f_of)
 
-print('O_f_average')
-print(O_f_average)
+# for f, pf in enumerate(O_f_average):
+#     print(pf,'\n')
+
+# print('O_f_average')
+# print(O_f_average)
 #
 # prob_emission_f = CRBM.CRBM('emission_f')
 # O_f_average = prob_emission_f._o_jf()
 
+# barchart([O_f_average[24], O_f_average[104], O_f_average[120], O_f_average[124]])
 barchart(O_f_average)
 show()
-
 
 # constants
 input_num = 10
@@ -143,6 +136,7 @@ def i_index_func(data_i):
 
     return input_index
 
+
 input_sequence = i_index_func(data_input)
 
 # initial belief_filtered
@@ -154,32 +148,27 @@ belief_filtered[0] = bel0
 belief_filtered_no_yl = np.zeros((len(data_input) + 1, state_num))
 belief_filtered_no_yl[0] = 1/125
 
+prob_yl = np.zeros((len(data_input), 4))
+
 # belief_smoothed = np.zeros((len(data_input), state_num))
 # belief_smoothed[-1] = np.ones((state_num,)) * 0.008
 
 # prob_yl = np.zeros((len(data_input), 4))
-prob_yl = np.zeros((len(data_input), 4))
 
-belief_bar_history = np.zeros((len(data_input), state_num))   # bel_bar_j --> sum(bel_bar_ij) over 'i' --> previous time step
+# belief_bar_history = np.zeros((len(data_input), state_num))   # bel_bar_j --> sum(bel_bar_ij) over 'i' --> previous time step
 
-
+'''
 O_subjective = np.zeros_like(O_average)
 
-# O_subjective[1] = O_average[1]
-# O_subjective[2] = O_average[2]
-# O_subjective[3] = O_average[3]
-#
 for i in range(4):
     print(np.where(O_average[i] == np.max(O_average, 1)[i])[0])
     O_subjective[i, np.where(O_average[i] == np.max(O_average, 1)[i])[0]] = 1
-
-# O_subjective[0, 2] = .1
-
+'''
 
 # compute filtered belief
 for t in range(len(data_input)):
-    belief_bar_ij = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_average[int(data_output[t] - 1)])
-    # belief_bar_ij = np.multiply(np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_average[int(data_output[t] - 1)]), O_f_average[int(data_output_f[t])])
+    # belief_bar_ij = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_average[int(data_output[t] - 1)])
+    belief_bar_ij = np.multiply(np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered[t], 1), O_average[int(data_output[t] - 1)]), O_f_average[int(data_output_f[t])])
     # belief_bar_history[t] = np.copy(belief_bar_ij)
     belief_bar_ij /= np.sum(belief_bar_ij)
     belief_filtered[t + 1] = np.copy(belief_bar_ij)
@@ -194,8 +183,6 @@ for t in range(len(data_input)):
         prob_yl[t, k] = np.sum(np.multiply(belief_bar_ij_no_yl, O_average[k])) / np.sum(belief_bar_ij_no_yl)
 
     belief_filtered_no_yl[t + 1] = belief_bar_ij_no_yl / np.sum(belief_bar_ij_no_yl)
-    # prob_yl_bar = belief_bar_ij_no_yl * O_average[int(data_output[t]) - 1]
-    # prob_yl[t + 1] = np.sum(prob_yl_bar) / np.sum(belief_bar_ij_no_yl)
 
 # print('belief_filtered')
 # print(belief_filtered)
