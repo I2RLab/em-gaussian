@@ -20,7 +20,7 @@ class TrainingData:
                     indexes = [(i, x) for i, x in enumerate(u) if x == min(u)]
 
                     for i_r in indexes:
-                        if i_r[1] < 8:
+                        if i_r[1] < 7:
                             self.input_output_dict[t, i1, i2, i3] = i_r[0] + 2
 
                             self.input_training.append([i1, i2, i3])

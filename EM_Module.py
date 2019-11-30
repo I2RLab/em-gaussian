@@ -63,7 +63,7 @@ class EM:
 
         self.feedback_length = len(output_f_seq)
 
-        for i in range(1, self.output_f_num + 1):
+        for i in range(self.output_f_num):
             self.output_f_lambda[i] = np.where(output_f_seq == i)[0]
             # if len(np.where(output_f_seq == i)[0]) > 0:
             #     self.feedback_length += 1
@@ -329,7 +329,6 @@ class EM:
                 self.O_jf[l] = self.O_f[self.output_f_lambda[to][0]]
             else:
                 self.O_jf[l] = np.zeros_like(self.O_f[0])
-                # self.O_jf[l] = o_f_matrix[l-1]
 
         # print('O_jf')
         # print(self.O_jf)
@@ -375,7 +374,7 @@ if __name__ == "__main__":
     output_f_time_stamp = np.zeros_like(training_output_f_seq)   # feedback time stamps
 
     for i in np.arange(0, len(training_input_seq), feedback_tperiod):
-        print(i, int(i/feedback_tperiod))
+        # print(i, int(i/feedback_tperiod))
         training_output_f_seq[int(i / feedback_tperiod)] = int(feedback_seq_all[i])
         output_f_time_stamp[int(i / feedback_tperiod)] = int(i)  # Every 10 time-steps the feedback is received.
 
@@ -412,7 +411,7 @@ if __name__ == "__main__":
                 print('u {} y {} y_f {}'.format(input_seq[k], output_seq[k], output_f_seq[k_f]))
         '''
 
-        em = EM(3, input_seq, output_seq, output_f_seq, a_matrix, o_matrix, o_f_matrix, output_f_time_stamp, output_f_index)
+        em = EM(10, input_seq, output_seq, output_f_seq, a_matrix, o_matrix, o_f_matrix, output_f_time_stamp, output_f_index)
 
         pi_trained, A_trained, O_trained, A_ijk, O_jl, O_jf = em.baum_welch()
 
@@ -465,12 +464,12 @@ if __name__ == "__main__":
             O_f_average[j] = o_f_matrix[j]
 
     # Save the learned data
-    with open('A_avg_it5_f10_R.pickle', 'wb') as f_a:
+    with open('A_it10_f10_0.pickle', 'wb') as f_a:
         pickle.dump(A_average, f_a)
 
-    with open('O_avg_it5_f10_R.pickle', 'wb') as f_o:
+    with open('O_it10_f10_0.pickle', 'wb') as f_o:
         pickle.dump(O_average, f_o)
 
-    with open('O_f_avg_it5_f10_R.pickle', 'wb') as f_of:
+    with open('O_f_it10_f10_0.pickle', 'wb') as f_of:
         pickle.dump(O_f_average, f_of)
 
