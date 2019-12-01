@@ -84,27 +84,31 @@ print(time.clock())
 print(time.clock())
 '''
 
-with open('A_avg_it5_f10_R.pickle', 'rb') as f_a:
+with open('A_it3_f10_1.pickle', 'rb') as f_a:
     A_average = pickle.load(f_a)
 #
-with open('O_avg_it5_f10_R.pickle', 'rb') as f_o:
+with open('O_it3_f10_1.pickle', 'rb') as f_o:
     O_average = pickle.load(f_o)
 
-with open('O_f_avg_it5_f10_R.pickle', 'rb') as f_of:
+with open('O_f_it3_f10_1.pickle', 'rb') as f_of:
     O_f_average = pickle.load(f_of)
 
 # for f, pf in enumerate(O_f_average):
 #     print(pf,'\n')
 
-# print('O_f_average')
-# print(O_f_average)
+# print('O_average')
+# print(O_average)
 #
-# prob_emission_f = CRBM.CRBM('emission_f')
-# O_f_average = prob_emission_f._o_jf()
+prob_emission_f = CRBM.CRBM('emission')
+O_average_0 = prob_emission_f._o_jk()
+
+O_average[0] = O_average_0[0]
+
+
 
 # barchart([O_f_average[24], O_f_average[104], O_f_average[120], O_f_average[124]])
-barchart(O_f_average)
-show()
+# barchart(O_average)
+# show()
 
 # constants
 input_num = 10

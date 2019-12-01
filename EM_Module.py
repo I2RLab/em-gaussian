@@ -351,22 +351,6 @@ if __name__ == "__main__":
     [training_input_seq, training_output_seq, feedback_seq_all] = TrainingD.io_sequence_generator()
     training_total_len = len(training_input_seq)
 
-    def to(s, b):
-        return int(s, b)
-
-    # feedback_seq_all = list()
-
-    for i, input_value in enumerate(training_input_seq):
-        input_string = str(int((input_value[0]-0.1)/2))+str(int((input_value[1]-0.1)/2))+str(int((input_value[2]-0.1)/2))
-        # input_string = str(int((input_value[2]-0.1)/2))+str(int((input_value[1]-0.1)/2))+str(int((input_value[0]-0.1)/2))
-
-        # value_base_10 = to(input_string, 5)
-        value_base_10 = int(input_string, 5)
-
-        # feedback_seq_all.append(124-value_base_10)
-
-        # print(i, input_value, input_string, value_base_10)
-
     feedback_tperiod = 10
 
     training_output_f_seq = np.zeros((int(len(training_input_seq)//feedback_tperiod)+1,))
@@ -447,7 +431,10 @@ if __name__ == "__main__":
             if np.sum(O_jl_list[i][j]) > 0:
                 O_avg_temp += O_jl_list[i][j] * (i + 1)
                 o_count += i + 1
-        O_average[j] = O_avg_temp / o_count
+        if o_count != 0:
+            O_average[j] = O_avg_temp / o_count
+        else:
+            O_average[j] = o_matrix[j]
 
     for j in range(125):
         O_f_avg_temp = np.zeros((125,))
@@ -464,12 +451,21 @@ if __name__ == "__main__":
             O_f_average[j] = o_f_matrix[j]
 
     # Save the learned data
-    with open('A_it10_f10_0.pickle', 'wb') as f_a:
+    with open('A_it10_f10_1.pickle', 'wb') as f_a:
         pickle.dump(A_average, f_a)
 
-    with open('O_it10_f10_0.pickle', 'wb') as f_o:
+    with open('O_it10_f10_1.pickle', 'wb') as f_o:
         pickle.dump(O_average, f_o)
 
-    with open('O_f_it10_f10_0.pickle', 'wb') as f_of:
+    with open('O_f_it10_f10_1.pickle', 'wb') as f_of:
         pickle.dump(O_f_average, f_of)
+
+    try:
+        data_backup = [A_ijk_list, O_jl_list, O_jf_list]
+        with open('DataBackUp.pickle', 'wb') as f_backup:
+            pickle.dump(data_backup, f_backup)
+    except:
+        pass
+
+
 

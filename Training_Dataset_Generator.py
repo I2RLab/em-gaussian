@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+np.set_printoptions(linewidth=700)
+np.set_printoptions(precision=3, edgeitems=50)
+
 class TrainingData:
     def __init__(self):
         self.input_output_dict = dict()
@@ -10,48 +13,84 @@ class TrainingData:
         self.output_f_training = list()
         self.feebacklist = [0, 124, 24, 104, 120]
 
+    def feedback_generator(self, input, output):
+        feedback_base5 = ''
+        for r, u_r in enumerate(input):
+            if output - 2 == r:  # if true means robot r is in the manual mode
+                # if u_r > 9:
+                #     f_r = '4'
+                if u_r > 7:
+                    f_r = '3'
+                elif u_r > 5:
+                    f_r = '2'
+                elif u_r > 3:
+                    f_r = '1'
+                else:
+                    f_r = '0'
+            else:
+                if u_r > 7:
+                    f_r = '4'
+                elif u_r > 5:
+                    f_r = '3'
+                elif u_r > 3:
+                    f_r = '2'
+                elif u_r > 1:
+                    f_r = '1'
+                else:
+                    f_r = '0'
+
+            feedback_base5 += f_r
+        # print('input {}   output {}   f_5 {}   f_125 {}'.format(input, output, feedback_base5, int(feedback_base5, 5)))
+
+        return int(feedback_base5, 5)
+
+
+
+
+
+
     def io_sequence_generator(self):
         t = 0
 
         for i1 in range(1, self.input_num_units):
             for i2 in range(1, self.input_num_units):
                 for i3 in range(1, self.input_num_units):
-                    u = [i1, i2, i3]
-                    indexes = [(i, x) for i, x in enumerate(u) if x == min(u)]
-
+                    input3 = [i1, i2, i3]
+                    indexes = [(i, x) for i, x in enumerate(input3) if x == min(input3)]
                     for i_r in indexes:
-                        if i_r[1] < 7:
-                            self.input_output_dict[t, i1, i2, i3] = i_r[0] + 2
+                        if i_r[1] < 9:
+                            output_y = i_r[0] + 2
+                            feedback = self.feedback_generator(input3, output_y)
+                            self.input_output_dict[t, i1, i2, i3] = output_y
 
                             self.input_training.append([i1, i2, i3])
-                            self.output_training.append([i_r[0] + 2])
-                            self.output_f_training.append([self.feebacklist[i_r[0] + 2]])
+                            self.output_training.append(output_y)
+                            self.output_f_training.append([feedback])
 
                             self.input_training.append([i1, i2, i3])
-                            self.output_training.append([i_r[0] + 2])
-                            self.output_f_training.append([self.feebacklist[i_r[0] + 2]])
+                            self.output_training.append(output_y)
+                            self.output_f_training.append([feedback])
 
-                            # self.output_training.append([i_r[0] + 2])
-                            # self.input_training.append([i1, i2, i3])
-                            # self.output_f_training.append([self.feebacklist[i_r[0] + 2]])
                         else:
+                            output_y = 1
+                            feedback = self.feedback_generator(input3, output_y)
                             self.input_output_dict[t, i1, i2, i3] = 1
 
                             self.input_training.append([i1, i2, i3])
-                            self.output_training.append([1])
-                            self.output_f_training.append([124])
+                            self.output_training.append([output_y])
+                            self.output_f_training.append([feedback])
 
                             self.input_training.append([i1, i2, i3])
-                            self.output_training.append([1])
-                            self.output_f_training.append([124])
+                            self.output_training.append([output_y])
+                            self.output_f_training.append([feedback])
 
                             self.input_training.append([i1, i2, i3])
-                            self.output_training.append([1])
-                            self.output_f_training.append([124])
-
-                            self.input_training.append([i1, i2, i3])
-                            self.output_training.append([1])
-                            self.output_f_training.append([124])
+                            self.output_training.append([output_y])
+                            self.output_f_training.append([feedback])
+                            #
+                            # self.input_training.append([i1, i2, i3])
+                            # self.output_training.append([output_y])
+                            # self.output_f_training.append([feedback])
 
                         t += 1
         '''
@@ -82,5 +121,12 @@ class TrainingData:
 if __name__ == '__main__':
 
     TD = TrainingData()
-    [i,o] = TD.io_sequence_generator()
-    print(i,'\n', o)
+    [i, o, o_f] = TD.io_sequence_generator()
+    # print(i,'\n', o, '\n', o_f)
+
+
+    # for output in range(1, 5):
+    #     for input1 in range(1,11):
+    #         for input2 in range(1,11):
+    #             for input3 in range(1,11):
+    #                 TD.feedback_generator([input1, input2, input3], output)
