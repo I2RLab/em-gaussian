@@ -59,7 +59,7 @@ class EM:
         for i in range(1, self.output_num + 1):
             self.output_lambda[i] = np.where(output_seq == i)[0]
 
-        print('output f seq {}'.format(output_f_seq))
+        # print('output f seq {}'.format(output_f_seq))
 
         self.feedback_length = len(output_f_seq)
 
@@ -68,7 +68,7 @@ class EM:
             # if len(np.where(output_f_seq == i)[0]) > 0:
             #     self.feedback_length += 1
 
-        print('output_f lambda: {}'.format(self.output_f_lambda))
+        # print('output_f lambda: {}'.format(self.output_f_lambda))
 
         self.input_k = dict()
 
@@ -91,17 +91,12 @@ class EM:
 
         self.A_init = self.transition_probability_sequence(a_matrix)
         self.O_init = self.emission_probability_sequence(o_matrix)
-        # print('o f matrix: {}'.format(o_f_matrix))
         self.O_f_init = self.emission_f_probability_sequence(o_f_matrix)
-
-        # print('A init\n', self.A_init)
-        # print('O init\n', self.O_init)
-        # print('O_f init\n', self.O_f_init)
 
         self.A, self.O, self.O_f = np.copy(self.A_init), np.copy(self.O_init), np.copy(self.O_f_init)  # take copies, as we modify them
 
         self.alpha, self.beta = np.zeros((self.N, self.S)), np.zeros((self.N, self.S))  # initialize alpha and beta
-        self.alpha_f, self.beta_f = np.zeros((self.feedback_length, self.S)), np.zeros((self.feedback_length, self.S))  # initialize alpha and beta
+        self.alpha_f, self.beta_f = np.zeros((self.feedback_length, self.S)), np.zeros((self.feedback_length, self.S))  # initialize alpha_f and beta_f
 
         self.A_ijk = dict()
         self.O_jl = dict()
@@ -128,10 +123,6 @@ class EM:
         o_jft = np.zeros((self.feedback_length, self.state_total))
         for i, input_f in enumerate(output_f_seq):
             o_jft[i] = o_jf[input_f]
-        # for id, output_id in enumerate(self.output_f_lambda):
-        #     for ti, output_time in enumerate(self.output_f_lambda[output_id]):
-        #         print('output time {}, id {} output id {}'.format(output_time, id, output_id))
-        #         o_jft[ti] = o_jf[id]
 
         return o_jft
 
@@ -351,7 +342,11 @@ if __name__ == "__main__":
     [training_input_seq, training_output_seq, feedback_seq_all] = TrainingD.io_sequence_generator()
     training_total_len = len(training_input_seq)
 
-    feedback_tperiod = 10
+    for i in range(training_total_len):
+        print(training_input_seq[i], training_output_seq[i], feedback_seq_all[i])
+
+
+    feedback_tperiod = 5
 
     training_output_f_seq = np.zeros((int(len(training_input_seq)//feedback_tperiod)+1,))
 
@@ -371,7 +366,6 @@ if __name__ == "__main__":
     session_len = 250
 
     for chunk_i in range(training_total_len // session_len + 1):
-        print('chunk begining', time.clock())
         print(chunk_i * session_len, min(chunk_i * session_len + session_len, training_total_len))
 
         input_seq = np.copy(training_input_seq[chunk_i * session_len: min(chunk_i * session_len + session_len, training_total_len)])
@@ -395,7 +389,7 @@ if __name__ == "__main__":
                 print('u {} y {} y_f {}'.format(input_seq[k], output_seq[k], output_f_seq[k_f]))
         '''
 
-        em = EM(10, input_seq, output_seq, output_f_seq, a_matrix, o_matrix, o_f_matrix, output_f_time_stamp, output_f_index)
+        em = EM(7, input_seq, output_seq, output_f_seq, a_matrix, o_matrix, o_f_matrix, output_f_time_stamp, output_f_index)
 
         pi_trained, A_trained, O_trained, A_ijk, O_jl, O_jf = em.baum_welch()
 
@@ -431,10 +425,10 @@ if __name__ == "__main__":
             if np.sum(O_jl_list[i][j]) > 0:
                 O_avg_temp += O_jl_list[i][j] * (i + 1)
                 o_count += i + 1
-        if o_count != 0:
-            O_average[j] = O_avg_temp / o_count
-        else:
-            O_average[j] = o_matrix[j]
+        # if o_count != 0:
+        O_average[j] = O_avg_temp / o_count
+        # else:
+        #     O_average[j] = o_matrix[j]
 
     for j in range(125):
         O_f_avg_temp = np.zeros((125,))
@@ -451,18 +445,18 @@ if __name__ == "__main__":
             O_f_average[j] = o_f_matrix[j]
 
     # Save the learned data
-    with open('A_it10_f10_1.pickle', 'wb') as f_a:
+    with open('A_it7_f5_7.pickle', 'wb') as f_a:
         pickle.dump(A_average, f_a)
 
-    with open('O_it10_f10_1.pickle', 'wb') as f_o:
+    with open('O_it7_f5_7.pickle', 'wb') as f_o:
         pickle.dump(O_average, f_o)
 
-    with open('O_f_it10_f10_1.pickle', 'wb') as f_of:
+    with open('O_f_it7_f5_7.pickle', 'wb') as f_of:
         pickle.dump(O_f_average, f_of)
 
     try:
         data_backup = [A_ijk_list, O_jl_list, O_jf_list]
-        with open('DataBackUp.pickle', 'wb') as f_backup:
+        with open('DataBackUp7.pickle', 'wb') as f_backup:
             pickle.dump(data_backup, f_backup)
     except:
         pass
