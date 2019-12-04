@@ -58,17 +58,10 @@ class EM:
         for i in range(1, self.output_num + 1):
             self.output_lambda[i] = np.where(output_seq == i)[0]
 
-        # for i in range(len(self.output_lambda)):
-        #     print(len(self.output_lambda[i+1]))
-
         self.feedback_length = len(output_f_seq)
 
         for i in range(self.output_f_num):
             self.output_f_lambda[i] = np.where(output_f_seq == i)[0]
-            # if len(np.where(output_f_seq == i)[0]) > 0:
-            #     self.feedback_length += 1
-
-        # print('output_f lambda: {}'.format(self.output_f_lambda))
 
         self.input_k = dict()
 
@@ -127,76 +120,94 @@ class EM:
         return o_jft
 
     def forward(self):
-        self.alpha = np.zeros((self.N, self.S))
+        # self.alpha = np.zeros((self.N, self.S))
+        self.alpha = np.zeros((self.N+1, self.S))
 
         # base case
         for s in range(self.S):
             self.alpha[0, :] = self.pi * self.O[0]
 
         # recursive case
-        for k in range(1, self.N):
+        # for k in range(1, self.N):
+        for k in range(1, self.N + 1):
             for j in range(self.S):
                 for i in range(self.S):
                     if np.where(self.timestamp_feedback == k)[0].size == 0:
-                        self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j]
+                        # self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j]
+                        self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k - 1, i, j] * self.O[k - 1, j]
                     else:
                         k_f = np.where(self.timestamp_feedback == k)[0][0]
                         # print('k {} k_f {}'.format(k, k_f))
-                        self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j] * self.O_f[k_f - 1, j]
+                        # self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j] * self.O_f[k_f - 1, j]
+                        self.alpha[k, j] += self.alpha[k - 1, i] * self.A[k - 1, i, j] * self.O[k - 1, j] * self.O_f[k_f - 1, j]
 
-
-        return max(np.sum(self.alpha[self.N - 1, :]), 10 ** -300)
+        # return max(np.sum(self.alpha[self.N - 1, :]), 10 ** -300)
+        return max(np.sum(self.alpha[-1, :]), 10 ** -300)
 
     def backward(self):
-        self.beta = np.zeros((self.N, self.S))
+        self.beta = np.zeros((self.N + 1, self.S))
 
         # base case
-        self.beta[self.N - 1, :] = 1
+        # self.beta[self.N - 1, :] = 1
+        self.beta[-1, :] = 1
 
         # recursive case
-        for k in range(self.N - 2, -1, -1):
-            # print('k {}'.format(k))
+        # for k in range(self.N - 2, -1, -1):
+        for k in range(self.N - 1, -1, -1):
             for i in range(self.S):
                 for j in range(self.S):
                     if np.where(self.timestamp_feedback == k)[0].size == 0:
-                        self.beta[k, i] += self.beta[k + 1, j] * self.A[k + 1, i, j] * self.O[k + 1, j]
+                        # self.beta[k, i] += self.beta[k + 1, j] * self.A[k + 1, i, j] * self.O[k + 1, j]
+                        self.beta[k, i] += self.beta[k + 1, j] * self.A[k, i, j] * self.O[k, j]
                     else:
                         k_f = np.where(self.timestamp_feedback == k)[0][0]
-                        # print('k ={},,, k_f = {}'.format(k, k_f))
-                        self.beta[k, i] += self.beta[k + 1, j] * self.A[k + 1, i, j] * self.O[k + 1, j] * self.O_f[k_f, j]
+                        # self.beta[k, i] += self.beta[k + 1, j] * self.A[k + 1, i, j] * self.O[k + 1, j] * self.O_f[k_f, j]
+                        self.beta[k, i] += self.beta[k + 1, j] * self.A[k, i, j] * self.O[k, j] * self.O_f[k_f, j]
 
         return max(np.sum(self.pi * self.O[0] * self.beta[0, :]), 10 ** -300)
 
     def forward_feedback(self):
-        self.alpha_f = np.zeros((self.feedback_length, self.S))
+        # self.alpha_f = np.zeros((self.feedback_length, self.S))
+        self.alpha_f = np.zeros((self.feedback_length + 1, self.S))
 
         # base case
         for s in range(self.S):
             self.alpha_f[0, :] = self.pi * self.O_f[0]
 
         # recursive case
-        for k_f in range(1, self.feedback_length):
-            k = self.timestamp_feedback[self.output_f_index[k_f]]
+        for k_f in range(1, self.feedback_length + 1):
+            # k = self.timestamp_feedback[self.output_f_index[k_f]]
+            k = self.timestamp_feedback[self.output_f_index[k_f-1]]
+            print('f')
+            print(k, k_f, int(k % 250))
             for j in range(self.S):
                 for i in range(self.S):
-                    self.alpha_f[k_f, j] += self.alpha_f[k_f - 1, i] * self.A[int(k % 250), i, j] * self.O[int(k % 250), j] * self.O_f[k_f, j]
-                    # self.alpha_f[k_f, j] += self.alpha_f[k_f - 1, i] * self.A[int(k % 250), i, j] * self.O_f[k_f, j]
 
-        return max(np.sum(self.alpha_f[self.feedback_length - 1, :]), 10 ** -300)
+                    # self.alpha_f[k_f, j] += self.alpha_f[k_f - 1, i] * self.A[int(k % 250), i, j] * self.O[int(k % 250), j] * self.O_f[k_f, j]
+                    self.alpha_f[k_f, j] += self.alpha_f[k_f - 1, i] * self.A[int(k % 250), i, j] * self.O[int(k % 250), j] * self.O_f[k_f - 1, j]
+
+        # return max(np.sum(self.alpha_f[self.feedback_length - 1, :]), 10 ** -300)
+        return max(np.sum(self.alpha_f[-1, :]), 10 ** -300)
 
     def backward_feedback(self):
-        self.beta_f = np.zeros((self.feedback_length, self.S))
+        # self.beta_f = np.zeros((self.feedback_length, self.S))
+        self.beta_f = np.zeros((self.feedback_length + 1, self.S))
 
         # base case
-        self.beta_f[self.feedback_length - 1, :] = 1
+        # self.beta_f[self.feedback_length - 1, :] = 1
+        self.beta_f[-1, :] = 1
 
         # recursive case
-        for k_f in range(self.feedback_length - 2, -1, -1):
+        # for k_f in range(self.feedback_length - 2, -1, -1):
+        for k_f in range(self.feedback_length - 1, -1, -1):
+            # k = self.timestamp_feedback[self.output_f_index[k_f]]
             k = self.timestamp_feedback[self.output_f_index[k_f]]
+            print('b')
+            print(k_f, k, int(k % 250))
             for i in range(self.S):
                 for j in range(self.S):
-                    self.beta_f[k_f, i] += self.beta_f[k_f + 1, j] * self.A[int(k % 250 + 1), i, j] * self.O[int(k % 250 + 1), j] * self.O_f[k_f + 1, j]
-                    # self.beta_f[k_f, i] += self.beta_f[k_f + 1, j] * self.A[int(k % 250) + 1, i, j] * self.O_f[k_f + 1, j]
+                    # self.beta_f[k_f, i] += self.beta_f[k_f + 1, j] * self.A[int(k % 250 + 1), i, j] * self.O[int(k % 250 + 1), j] * self.O_f[k_f + 1, j]
+                    self.beta_f[k_f, i] += self.beta_f[k_f+1, j] * self.A[int(k % 250), i, j] * self.O[int(k % 250), j] * self.O_f[k_f, j]
 
         return max(np.sum(self.pi * self.O[0] * self.beta_f[0, :]), 10 ** -300)
 
@@ -208,6 +219,7 @@ class EM:
             self.h_ijt = np.zeros_like(self.A)
             self.a_ijt_new = np.zeros_like(self.A)
             self.g_jlt = np.zeros((self.N, self.S))
+            # self.g_jlt = np.zeros((self.N + 1, self.S))
             self.O_new = np.zeros_like(self.O)
             self.g_jft = np.zeros((self.feedback_length, self.S))
             self.O_f_new = np.zeros_like(self.g_jft)
@@ -235,17 +247,21 @@ class EM:
             self.pi_new += self.alpha[0, :] * self.beta[0, :] / za
             self.pi = self.pi_new / max(np.sum(self.pi_new), 10 ** -300)  # normalise pi_new
 
-            for k in range(0, self.N):
+            # for k in range(0, self.N):
+            for k in range(1, self.N):
                 self.g_jlt[k] += self.alpha[k, :] * self.beta[k, :] / za
 
             if self.feedback_length > 0:
-                for k_f in range(self.feedback_length):
+                # for k_f in range(self.feedback_length):
+                for k_f in range(1, self.feedback_length):
                     self.g_jft[k_f] += self.alpha_f[k_f, :] * self.beta_f[k_f, :] / za_f
 
-            for k in range(1, self.N):
+            # for k in range(1, self.N):
+            for k in range(1, self.N + 1):
                 for j in range(self.S):
                     for i in range(self.S):
-                        self.h_ijt[k - 1, i, j] = self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j] * self.beta[k, j] / za
+                        # self.h_ijt[k - 1, i, j] = self.alpha[k - 1, i] * self.A[k, i, j] * self.O[k, j] * self.beta[k, j] / za
+                        self.h_ijt[k - 1, i, j] = self.alpha[k - 1, i] * self.A[k - 1, i, j] * self.O[k - 1, j] * self.beta[k, j] / za
 
             # A re-estimation
             for k, ti in enumerate(self.input_lambda.values()):
@@ -333,9 +349,9 @@ class EM:
 
 
 if __name__ == "__main__":
-    num_str = '20'
+    num_str = '22'
 
-    itr = 2
+    itr = 5
     feedback_tperiod = 5
     session_len = 250
 
