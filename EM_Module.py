@@ -178,8 +178,8 @@ class EM:
         for k_f in range(1, self.feedback_length + 1):
             # k = self.timestamp_feedback[self.output_f_index[k_f]]
             k = self.timestamp_feedback[self.output_f_index[k_f-1]]
-            print('f')
-            print(k, k_f, int(k % 250))
+            # print('f')
+            # print(k, k_f, int(k % 250))
             for j in range(self.S):
                 for i in range(self.S):
 
@@ -202,8 +202,8 @@ class EM:
         for k_f in range(self.feedback_length - 1, -1, -1):
             # k = self.timestamp_feedback[self.output_f_index[k_f]]
             k = self.timestamp_feedback[self.output_f_index[k_f]]
-            print('b')
-            print(k_f, k, int(k % 250))
+            # print('b')
+            # print(k_f, k, int(k % 250))
             for i in range(self.S):
                 for j in range(self.S):
                     # self.beta_f[k_f, i] += self.beta_f[k_f + 1, j] * self.A[int(k % 250 + 1), i, j] * self.O[int(k % 250 + 1), j] * self.O_f[k_f + 1, j]
@@ -349,7 +349,7 @@ class EM:
 
 
 if __name__ == "__main__":
-    num_str = '23'
+    num_str = '25'
 
     itr = 5
     feedback_tperiod = 5

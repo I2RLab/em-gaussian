@@ -58,7 +58,8 @@ with open('O_f_it{}_f{}_{}_g{}.pickle'.format(it_str, f_str, num_str, k_gain), '
 #     view(azimuth=180, elevation=180)
 #     show()
 # barchart(O_f_average)
-# show()
+barchart(O_average)
+show()
 #
 # constants
 input_num = 10
@@ -178,23 +179,23 @@ bel_state[:, 5] = bel_state[:, 11] = -.1
 # bel_state[:, 12] = bel_state[:, 25] = -.1
 
 for i in range(1, len(belief_filtered)):
-    max_bel_state_1st = np.where(belief_filtered[i]==np.max(belief_filtered[i]))[0][0]
-    max_bel_state_2nd = np.where(belief_filtered[i]==sorted(list(set(belief_filtered[i].flatten().tolist())))[-2])[0][0]
-    max_bel_state_3rd = np.where(belief_filtered[i]==sorted(list(set(belief_filtered[i].flatten().tolist())))[-3])[0][0]
-    max_bel_state_4th = np.where(belief_filtered[i]==sorted(list(set(belief_filtered[i].flatten().tolist())))[-4])[0][0]
+    max_bel_state_1st = np.where(belief_filtered[i] == np.max(belief_filtered[i]))[0][0]
+    max_bel_state_2nd = np.where(belief_filtered[i] == sorted(list(set(belief_filtered[i].flatten().tolist())))[-2])[0][0]
+    max_bel_state_3rd = np.where(belief_filtered[i] == sorted(list(set(belief_filtered[i].flatten().tolist())))[-3])[0][0]
+    max_bel_state_4th = np.where(belief_filtered[i] == sorted(list(set(belief_filtered[i].flatten().tolist())))[-4])[0][0]
     for r in range(3):
         bel_state[i-1, int(prob_emission.frm(max_bel_state_1st, 5)[r])+6*r] = np.max(belief_filtered[i])
-        bel_state[i-1, int(prob_emission.frm(max_bel_state_2nd, 5)[r])+6*r] = sorted(list(set(belief_filtered[i].flatten().tolist())))[-2]
+        # bel_state[i-1, int(prob_emission.frm(max_bel_state_2nd, 5)[r])+6*r] = sorted(list(set(belief_filtered[i].flatten().tolist())))[-2]
         # bel_state[i-1, int(prob_emission.frm(max_bel_state_4th, 5)[r])+6*r] = sorted(list(set(belief_filtered[i].flatten().tolist())))[-3]
         # bel_state[i-1, int(prob_emission.frm(max_bel_state_3rd, 5)[r])+6*r] = sorted(list(set(belief_filtered[i].flatten().tolist())))[-4]
 
 for i in range(test_session_len//200):
-    figure(size=(1400, 700))
-    barchart(bel_state[i*200:((i+1)*200)],lateral_scale=.8, scale_factor=2., vmin=0, vmax=0.5)
-    view(0.0, 0.0, 180, array([9.950e+01, 8.000e+00, 6.055e-04]))
+    figure(size=(1400, 300))
+    barchart(bel_state[i*200:((i+1)*200)],lateral_scale=.8)
+    view(0.0, 0.0, 70)
 
-    # view(azimuth=360, elevation=360)
-    # print(view())
+    view(azimuth=360, elevation=360)
+    print(view())
 
     show()
 

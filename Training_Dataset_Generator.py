@@ -91,7 +91,7 @@ class TrainingData:
                             self.output_training.append(output_y)
                             self.output_f_training.append(feedback)
 
-                        if i_r[1] > 6:
+                        if i_r[1] > 7:
                         # else:
                             output_y = 1
                             feedback = self.feedback_generator(input3, output_y)
@@ -107,13 +107,13 @@ class TrainingData:
                             self.output_training.append(output_y)
                             self.output_f_training.append(feedback)
 
-                            # self.input_training.append([i1, i2, i3])
-                            # self.output_training.append(output_y)
-                            # self.output_f_training.append(feedback)
+                            self.input_training.append([i1, i2, i3])
+                            self.output_training.append(output_y)
+                            self.output_f_training.append(feedback)
 
-                            # self.input_training.append([i1, i2, i3])
-                            # self.output_training.append(output_y)
-                            # self.output_f_training.append(feedback)
+                            self.input_training.append([i1, i2, i3])
+                            self.output_training.append(output_y)
+                            self.output_f_training.append(feedback)
 
         '''
         # plot data
