@@ -323,8 +323,8 @@ class EM:
             if len(ti) > 0:
                 self.A_ijk[k] = self.A[ti[0]]
             else:
-                self.A_ijk[k] = np.zeros_like(self.A[0])
-                # self.A_ijk[k] = a_matrix[k]
+                # self.A_ijk[k] = np.zeros_like(self.A[0])
+                self.A_ijk[k] = a_matrix[k]
 
         for l, to in enumerate(self.output_lambda):
             if len(self.output_lambda[to]) > 0:
@@ -349,7 +349,7 @@ class EM:
 
 
 if __name__ == "__main__":
-    num_str = '22'
+    num_str = '23'
 
     itr = 5
     feedback_tperiod = 5

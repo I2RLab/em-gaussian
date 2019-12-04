@@ -9,6 +9,7 @@ import CRBM
 import Training_Dataset_Generator as trainingData
 import Test_Dataset_Generator as testdata
 from mayavi.mlab import *
+
 from scipy import *
 import pickle
 
@@ -52,9 +53,12 @@ with open('O_it{}_f{}_{}_g{}.pickle'.format(it_str, f_str, num_str, k_gain), 'rb
 with open('O_f_it{}_f{}_{}_g{}.pickle'.format(it_str, f_str, num_str, k_gain), 'rb') as f_of:
     O_f_average = pickle.load(f_of)
 
-
-barchart(O_f_average)
-show()
+# for i in arange(0, 1000, 5):
+#     barchart(A_average[i])
+#     view(azimuth=180, elevation=180)
+#     show()
+# barchart(O_f_average)
+# show()
 #
 # constants
 input_num = 10
@@ -140,7 +144,7 @@ for t in range(len(data_input)):
 matched_output_num = 0
 
 for i in range(len(prob_yl)):
-    print('U {},    Y -> {} - {} <- MLE(Y), prob(yl) {}'.format(data_input[i], data_output[i], np.where(prob_yl[i] == np.max(prob_yl[i]))[0][0] + 1, prob_yl[i]))
+    print('{} U {},    Y -> {} - {} <- MLE(Y), prob(yl) {}'.format(i, data_input[i], data_output[i], np.where(prob_yl[i] == np.max(prob_yl[i]))[0][0] + 1, prob_yl[i]))
     if (np.where(prob_yl[i] == np.max(prob_yl[i]))[0][0] + 1) == data_output[i]:
         matched_output_num += 1
 
@@ -169,17 +173,43 @@ print('smoothed belief')
 print(belief_smoothed)
 print('\n\n\n')
 '''
+bel_state = np.zeros((test_session_len, 17))
+bel_state[:, 5] = bel_state[:, 11] = -.1
+# bel_state[:, 12] = bel_state[:, 25] = -.1
+
+for i in range(1, len(belief_filtered)):
+    max_bel_state_1st = np.where(belief_filtered[i]==np.max(belief_filtered[i]))[0][0]
+    max_bel_state_2nd = np.where(belief_filtered[i]==sorted(list(set(belief_filtered[i].flatten().tolist())))[-2])[0][0]
+    max_bel_state_3rd = np.where(belief_filtered[i]==sorted(list(set(belief_filtered[i].flatten().tolist())))[-3])[0][0]
+    max_bel_state_4th = np.where(belief_filtered[i]==sorted(list(set(belief_filtered[i].flatten().tolist())))[-4])[0][0]
+    for r in range(3):
+        bel_state[i-1, int(prob_emission.frm(max_bel_state_1st, 5)[r])+6*r] = np.max(belief_filtered[i])
+        bel_state[i-1, int(prob_emission.frm(max_bel_state_2nd, 5)[r])+6*r] = sorted(list(set(belief_filtered[i].flatten().tolist())))[-2]
+        # bel_state[i-1, int(prob_emission.frm(max_bel_state_4th, 5)[r])+6*r] = sorted(list(set(belief_filtered[i].flatten().tolist())))[-3]
+        # bel_state[i-1, int(prob_emission.frm(max_bel_state_3rd, 5)[r])+6*r] = sorted(list(set(belief_filtered[i].flatten().tolist())))[-4]
+
+for i in range(test_session_len//200):
+    figure(size=(1400, 700))
+    barchart(bel_state[i*200:((i+1)*200)],lateral_scale=.8, scale_factor=2., vmin=0, vmax=0.5)
+    view(0.0, 0.0, 180, array([9.950e+01, 8.000e+00, 6.055e-04]))
+
+    # view(azimuth=360, elevation=360)
+    # print(view())
+
+    show()
+
+
 
 # plot filtered belief
 # figure(1)
-barchart(belief_filtered[1:] * 50)
+# barchart(belief_filtered[1:] * 50)
 # barchart(belief_filtered_no_yl[1:] * 50)
 
-xlabel('Time')
-ylabel('Trust')
-zlabel('Belief')
+# xlabel('Time')
+# ylabel('Trust')
+# zlabel('Belief')
 #
 # figure(2)
 # barchart(prob_yl[1:])
 #
-show()
+# show()
