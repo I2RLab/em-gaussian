@@ -17,11 +17,18 @@ sys.path.insert(0, '../Categorical_Boltzmann_Machines')
 np.set_printoptions(linewidth=700)
 np.set_printoptions(precision=3, edgeitems=25)
 
-prob_transition = CRBM.CRBM('transition')
+# prob_transition = CRBM.CRBM('transition')
+# A_average = prob_transition.total_transition_probs()
+# for i in arange(0, 1000, 5):
+#     barchart(A_average[i])
+#     view(azimuth=180, elevation=180)
+#     show()
+#
 prob_emission = CRBM.CRBM('emission')
-
-a_matrix = prob_transition.total_transition_probs()
-o_matrix = prob_emission._o_jk()
+# O_average = prob_emission._o_jk()
+#
+# prob_emission_f = CRBM.CRBM('emission_f')
+# O_f_average = prob_emission_f._o_jf()
 
 # TestD = testdata.TrainingData()
 # [test_input_seq, test_output_seq, test_output_f_seq] = TestD.io_sequence_generator()
@@ -30,30 +37,25 @@ TrainingD = trainingData.TrainingData()
 [test_input_seq, test_output_seq, test_output_f_seq] = TrainingD.io_sequence_generator()
 
 
-with open('A_it3_f5_6.pickle', 'rb') as f_a:
+with open('data_info.pickle', 'rb') as d_i:
+    data_info = pickle.load(d_i)
+
+[it_str, f_str, num_str, k_gain] = data_info
+print('data info {}'.format(data_info))
+
+with open('A_it{}_f{}_{}_g{}.pickle'.format(it_str, f_str, num_str, k_gain), 'rb') as f_a:
     A_average = pickle.load(f_a)
-#
-with open('O_it3_f5_6.pickle', 'rb') as f_o:
+
+with open('O_it{}_f{}_{}_g{}.pickle'.format(it_str, f_str, num_str, k_gain), 'rb') as f_o:
     O_average = pickle.load(f_o)
 
-with open('O_f_it3_f5_6.pickle', 'rb') as f_of:
+with open('O_f_it{}_f{}_{}_g{}.pickle'.format(it_str, f_str, num_str, k_gain), 'rb') as f_of:
     O_f_average = pickle.load(f_of)
 
 
-# prob_emission = CRBM.CRBM('emission')
-# O_average_0 = prob_emission._o_jk()
-
-# O_average[0] = O_average_0[0]
-
-# prob_emission_f = CRBM.CRBM('emission_f')
-# O_f_average_0 = prob_emission_f._o_jf()
-#
-# print(O_f_average_0[120:,120:])
-
-# barchart(O_f_average_0[120:,120:])
 barchart(O_f_average)
 show()
-
+#
 # constants
 input_num = 10
 output_num = 4
@@ -122,6 +124,7 @@ for t in range(len(data_input)):
     belief_filtered[t + 1] = np.copy(belief_bar_ij)
 
     belief_bar_ij_no_yl = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered_no_yl[t], 1), O_f_average[int(data_output_f[t])])
+    # print('belief_bar_no_yl {} \n'.format(belief_bar_ij_no_yl))
     # belief_bar_ij_no_yf = np.multiply(np.sum(A_average[input_sequence[t]] * belief_filtered_no_yf[t], 1), O_average[int(data_output[t] - 1)])
 
     for k in range(4):
@@ -137,7 +140,7 @@ for t in range(len(data_input)):
 matched_output_num = 0
 
 for i in range(len(prob_yl)):
-    print('U/Y/MLE(Y)/Y_f {}, {}, {}, {}, {}'.format(data_input[i], data_output[i], np.where(prob_yl[i] == np.max(prob_yl[i]))[0][0] + 1, data_output_f[i], prob_yl[i]))
+    print('U {},    Y -> {} - {} <- MLE(Y), prob(yl) {}'.format(data_input[i], data_output[i], np.where(prob_yl[i] == np.max(prob_yl[i]))[0][0] + 1, prob_yl[i]))
     if (np.where(prob_yl[i] == np.max(prob_yl[i]))[0][0] + 1) == data_output[i]:
         matched_output_num += 1
 
@@ -151,8 +154,8 @@ print('output prediction accuracy is %{}\n'.format(matched_output_num/len(prob_y
 # print('output_f prediction accuracy is %{}\n'.format(matched_output_f_num/len(prob_yf)*100))
 
 
-print('belief filtered no output')
-print(belief_filtered_no_yl)
+# print('belief filtered no output')
+# print(belief_filtered_no_yl)
 
 '''
 # compute smoothed belief
@@ -168,15 +171,15 @@ print('\n\n\n')
 '''
 
 # plot filtered belief
-figure(1)
-barchart(belief_filtered[1:])
-# barchart(belief_filtered_no_yl[1:])
+# figure(1)
+barchart(belief_filtered[1:] * 50)
+# barchart(belief_filtered_no_yl[1:] * 50)
 
 xlabel('Time')
 ylabel('Trust')
 zlabel('Belief')
-
+#
 # figure(2)
 # barchart(prob_yl[1:])
-
+#
 show()

@@ -45,19 +45,44 @@ class TrainingData:
 
 
     def io_sequence_generator(self):
-        t = 0
-
         for i1 in reversed(range(1, self.input_num_units)):
-            for i2 in reversed(range(1, self.input_num_units)):
-                for i3 in reversed(range(1, self.input_num_units)):
+            for i2 in range(1, self.input_num_units):
+                for i3 in range(1, 6):
                     input3 = [i1, i2, i3]
                     indexes = [(i, x) for i, x in enumerate(input3) if x == min(input3)]
                     for i_r in indexes:
                         if i_r[1] < 8:
                             output_y = i_r[0] + 2
                             feedback = self.feedback_generator(input3, output_y)
-                            self.input_output_dict[t, i1, i2, i3] = output_y
+                            self.input_training.append([i1, i2, i3])
+                            self.output_training.append(output_y)
+                            self.output_f_training.append(feedback)
 
+                            self.input_training.append([i1, i2, i3])
+                            self.output_training.append(output_y)
+                            self.output_f_training.append(feedback)
+
+                        # if i_r[1] > 6:
+                        else:
+                            output_y = 1
+                            feedback = self.feedback_generator(input3, output_y)
+                            self.input_training.append([i1, i2, i3])
+                            self.output_training.append(output_y)
+                            self.output_f_training.append(feedback)
+
+                            self.input_training.append([i1, i2, i3])
+                            self.output_training.append(output_y)
+                            self.output_f_training.append(feedback)
+
+        for i1 in range(1, self.input_num_units):
+            for i2 in range(1, self.input_num_units):
+                for i3 in range(6, self.input_num_units):
+                    input3 = [i1, i2, i3]
+                    indexes = [(i, x) for i, x in enumerate(input3) if x == min(input3)]
+                    for i_r in indexes:
+                        if i_r[1] < 8:
+                            output_y = i_r[0] + 2
+                            feedback = self.feedback_generator(input3, output_y)
                             self.input_training.append([i1, i2, i3])
                             self.output_training.append(output_y)
                             self.output_f_training.append(feedback)
@@ -67,10 +92,9 @@ class TrainingData:
                             self.output_f_training.append(feedback)
 
                         if i_r[1] > 6:
+                        # else:
                             output_y = 1
                             feedback = self.feedback_generator(input3, output_y)
-                            self.input_output_dict[t, i1, i2, i3] = 1
-
                             self.input_training.append([i1, i2, i3])
                             self.output_training.append(output_y)
                             self.output_f_training.append(feedback)
@@ -79,15 +103,14 @@ class TrainingData:
                             self.output_training.append(output_y)
                             self.output_f_training.append(feedback)
 
-                            self.input_training.append([i1, i2, i3])
-                            self.output_training.append(output_y)
-                            self.output_f_training.append(feedback)
+                            # self.input_training.append([i1, i2, i3])
+                            # self.output_training.append(output_y)
+                            # self.output_f_training.append(feedback)
                             #
                             # self.input_training.append([i1, i2, i3])
                             # self.output_training.append(output_y)
                             # self.output_f_training.append(feedback)
 
-                        t += 1
         '''
         # plot data
         ax1 = plt.subplot(211)
